@@ -1,48 +1,45 @@
 package ProductPage.ProductPage;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-/** Launches the independently built JavaFX modules from the shared Team Hub. */
+/** Displays each independently maintained module in the Team Hub's current window. */
 public final class ModuleLauncher {
 
     private ModuleLauncher() { }
 
-    public static void launch(String module, String startView) throws IOException {
-        Path root = findRepositoryRoot();
-        Path wrapper = root.resolve("modules/finance/mvnw.cmd");
-        Path pom = root.resolve("modules").resolve(module).resolve("pom.xml");
-        if (!Files.isRegularFile(wrapper)) {
-            throw new IOException("Maven wrapper not found: " + wrapper);
-        }
-        if (!Files.isRegularFile(pom)) {
-            throw new IOException("Module pom.xml not found: " + pom);
+    public static void showInCurrentWindow(Scene currentScene, String module, String startView)
+            throws Exception {
+        if (currentScene == null || !(currentScene.getWindow() instanceof Stage)) {
+            throw new IllegalStateException("The Team Hub window is not available.");
         }
 
-        Path logs = root.resolve("logs");
-        Files.createDirectories(logs);
-        ProcessBuilder process = new ProcessBuilder(
-                "cmd.exe", "/c", wrapper.toString(),
-                "-f", pom.toString(),
-                "-Dloop.start=" + startView,
-                "-Dloop.db.path=" + root.resolve("database/loop.db").toAbsolutePath(),
-                "javafx:run");
-        process.directory(root.toFile());
-        process.redirectOutput(ProcessBuilder.Redirect.appendTo(logs.resolve(module + ".log").toFile()));
-        process.redirectError(ProcessBuilder.Redirect.appendTo(logs.resolve(module + ".log").toFile()));
-        process.start();
-    }
+        Stage stage = (Stage) currentScene.getWindow();
+        System.setProperty("loop.start", startView);
 
-    private static Path findRepositoryRoot() throws IOException {
-        Path current = Path.of(System.getProperty("user.dir")).toAbsolutePath();
-        while (current != null) {
-            if (Files.isDirectory(current.resolve("modules"))
-                    && Files.isRegularFile(current.resolve("database/loop.db"))) {
-                return current;
-            }
-            current = current.getParent();
+        switch (module) {
+            case "customer":
+                new application.Main().start(stage);
+                break;
+            case "orders":
+                new orders.App().start(stage);
+                break;
+            case "delivery":
+                new main.App().start(stage);
+                break;
+            case "inventory":
+                new LoopsFirstYearProject.LoopsFirstYearProject.App().start(stage);
+                break;
+            case "reviews":
+                new loop.reviews.App().start(stage);
+                break;
+            case "finance":
+                new gp.loop.App().start(stage);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown module: " + module);
         }
-        throw new IOException("Run the Product hub from the LOOP-Group-Project repository root.");
+
+        HubNavigation.install(stage);
     }
 }

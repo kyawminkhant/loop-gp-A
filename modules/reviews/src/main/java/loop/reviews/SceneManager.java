@@ -25,6 +25,7 @@ public final class SceneManager {
 
     public static void init(Stage primaryStage) {
         stage = primaryStage;
+        scene = primaryStage.getScene();
     }
 
     public static Stage getStage() {
@@ -33,7 +34,7 @@ public final class SceneManager {
 
     /**
      * Load the FXML at /fxml/{name}.fxml and set it as the scene root.
-     * @param name file name without path or extension, e.g. "login".
+     * @param name file name without path or extension, e.g. "home".
      */
     public static void switchTo(String name) {
         try {
@@ -47,15 +48,17 @@ public final class SceneManager {
 
             if (scene == null) {
                 scene = new Scene(root, 1180, 760);
-                URL css = SceneManager.class.getResource("/css/style.css");
-                if (css != null) {
-                    scene.getStylesheets().add(css.toExternalForm());
-                } else {
-                    System.err.println("[WARN] style.css not found on classpath.");
-                }
                 stage.setScene(scene);
             } else {
                 scene.setRoot(root);
+            }
+
+            URL css = SceneManager.class.getResource("/css/style.css");
+            if (css != null) {
+                scene.getStylesheets().setAll(css.toExternalForm());
+            } else {
+                scene.getStylesheets().clear();
+                System.err.println("[WARN] style.css not found on classpath.");
             }
         } catch (Exception e) {
             // Do NOT swallow - print and show.

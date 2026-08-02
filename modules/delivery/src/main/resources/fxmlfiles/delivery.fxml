@@ -38,10 +38,6 @@
     			onAction="#showSummary"
             	styleClass="summary-button"/>
     </HBox>
-            
-     <Button text="← Back"
-                    onAction="#goBack"
-                    styleClass="back-button"/>
 </VBox>
 </center>
 </BorderPane>

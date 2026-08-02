@@ -25,7 +25,14 @@ public class App extends Application {
         }
          
         String startView = System.getProperty("loop.start", "dashboard");
-        scene = new Scene(loadFXML(startView), 840, 700);
+        Parent root = loadFXML(startView);
+        scene = stage.getScene();
+        if (scene == null) {
+            scene = new Scene(root, 840, 700);
+        } else {
+            scene.setRoot(root);
+        }
+        scene.getStylesheets().clear();
          
         stage.setScene(scene);
         stage.setTitle("Inventory Management System");

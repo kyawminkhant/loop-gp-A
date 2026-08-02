@@ -14,7 +14,14 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         String requested = System.getProperty("loop.start", "admin");
         String startView = "driver".equalsIgnoreCase(requested) ? "deliveryaccept" : "delivery";
-        scene = new Scene(loadFXML(startView), 900,650);
+        Parent root = loadFXML(startView);
+        scene = stage.getScene();
+        if (scene == null) {
+            scene = new Scene(root, 900, 650);
+        } else {
+            scene.setRoot(root);
+        }
+        scene.getStylesheets().clear();
         stage.setScene(scene);
         stage.setTitle("LOOP - Delivery & Logistics");
         stage.show();

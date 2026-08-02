@@ -12,6 +12,38 @@
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
+        <!-- The hub keeps each component as its own Maven module while loading
+             its FXML into the current JavaFX window. -->
+        <dependency>
+            <groupId>loop</groupId>
+            <artifactId>loop-customer</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>orders</groupId>
+            <artifactId>OrdersApp</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>LoopProject</groupId>
+            <artifactId>loopproject</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>LoopsFirstYearProject</groupId>
+            <artifactId>LoopsFirstYearProject</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>loop</groupId>
+            <artifactId>loop-reviews</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>gp</groupId>
+            <artifactId>loop</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>

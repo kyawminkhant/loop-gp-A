@@ -98,8 +98,4 @@ public class HomeController {
 
     @FXML private void openMyReviews() { SceneManager.switchTo("my_reviews"); }
     @FXML private void openAdmin() { SceneManager.switchTo("admin_moderation"); }
-    @FXML private void logout() {
-        Session.logout();
-        SceneManager.switchTo("login");
-    }
 }

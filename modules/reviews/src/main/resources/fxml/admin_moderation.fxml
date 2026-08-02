@@ -21,7 +21,6 @@
                 <Button text="&lt; Home" styleClass="btn-ghost" onAction="#goHome"/>
                 <Label text="Admin Moderation" styleClass="topbar-brand"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Log Out" styleClass="btn-ghost" onAction="#logout"/>
             </HBox>
         </top>
         <center>

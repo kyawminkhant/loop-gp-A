@@ -15,7 +15,7 @@ import loop.reviews.model.User;
  *  - Installs a global uncaught-exception handler on the JavaFX thread so
  *    nothing fails silently (STEP 3).
  *  - Initialises the SQLite database (creates tables + seeds sample data).
- *  - Boots the SceneManager on the primary Stage and shows the login screen.
+ *  - Boots the SceneManager on the primary Stage and opens the requested role view.
  */
 public class App extends Application {
 

@@ -49,7 +49,7 @@ public class MyReviewsController {
 
     @FXML
     private void initialize() {
-        if (Session.getCurrentUser() == null) { SceneManager.switchTo("login"); return; }
+        if (Session.getCurrentUser() == null) { SceneManager.switchTo("home"); return; }
         buildList();
         ticker = new Timeline(new KeyFrame(Duration.seconds(1), e -> tick()));
         ticker.setCycleCount(Animation.INDEFINITE);

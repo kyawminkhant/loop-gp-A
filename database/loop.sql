@@ -13,6 +13,9 @@ CREATE TABLE customer_CustomerPreference(preferenceID TEXT PRIMARY KEY,customerI
 CREATE TABLE customer_Customers(customerID TEXT PRIMARY KEY,personID TEXT NOT NULL,deliveryAddress TEXT NOT NULL,idCardNo TEXT UNIQUE NOT NULL,idCardImagePath TEXT,status TEXT NOT NULL DEFAULT 'Active',FOREIGN KEY(personID) REFERENCES customer_People(personID));
 CREATE TABLE customer_OrderHistoryDummy(orderID TEXT PRIMARY KEY,customerID TEXT NOT NULL,orderDate TEXT NOT NULL,status TEXT NOT NULL,totalAmount REAL NOT NULL,FOREIGN KEY(customerID) REFERENCES customer_Customers(customerID));
 CREATE TABLE customer_People(personID TEXT PRIMARY KEY,name TEXT NOT NULL,email TEXT UNIQUE NOT NULL,mobile TEXT NOT NULL,passwordHash TEXT NOT NULL);
+INSERT INTO "customer_People" VALUES('demo-person-001','Demo Customer','customer@loop.com','07123456789','b041c0aeb35bb0fa4aa668ca5a920b590196fdaf9a00eb852c9b7f4d123cc6d6');
+INSERT INTO "customer_Customers" VALUES('demo-customer-001','demo-person-001','1 Loop Street, London','LOOP-DEMO-001',NULL,'Active');
+INSERT INTO "customer_CustomerPreference" VALUES('demo-preference-001','demo-customer-001','General','Enabled','');
 CREATE TABLE "delivery_AllDeliveries" (
 	"DeliveryId"	TEXT,
 	"OderId"	INTEGER,

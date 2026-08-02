@@ -293,5 +293,4 @@ public class AdminModerationController {
         render();
     }
     @FXML private void goHome() { SceneManager.switchTo("home"); }
-    @FXML private void logout() { Session.logout(); SceneManager.switchTo("login"); }
 }

@@ -1,11 +1,7 @@
 package Utils;
 
-import java.io.IOException;
-
-import LoopsFirstYearProject.LoopsFirstYearProject.App;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
 import model.User;
 
@@ -29,39 +25,7 @@ public class ProfileMenu {
         username.setDisable(true);
 
 
-        MenuItem logout =
-                new MenuItem("Logout");
-
-
-        logout.setOnAction(e -> {
-
-            AuditLogger.log(
-                    "LOGOUT",
-                    "User logged out"
-            );
-
-
-            Session.logout();
-
-
-            try {
-            	
-                App.setRoot("login");
-
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-
-            }
-
-        });
-
-
-        menu.getItems().addAll(
-                username,
-                new SeparatorMenuItem(),
-                logout
-        );
+        menu.getItems().add(username);
 
 
         profileIcon.setOnMouseClicked(e ->

@@ -53,11 +53,11 @@ public class ModuleMenuController {
 
     private void launch(String view) {
         try {
-            ModuleLauncher.launch(module, view);
             statusLabel.setText("Opening " + module + "...");
-        } catch (IOException ex) {
+            ModuleLauncher.showInCurrentWindow(statusLabel.getScene(), module, view);
+        } catch (Exception ex) {
             ex.printStackTrace();
-            statusLabel.setText("Could not launch " + module + ": " + ex.getMessage());
+            statusLabel.setText("Could not open " + module + ": " + ex.getMessage());
         }
     }
 

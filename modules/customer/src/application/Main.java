@@ -19,8 +19,13 @@ public class Main extends Application {
             DatabaseConnection.initializeDatabase();
 
             Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-            Scene scene = new Scene(root, 1000, 650);
-            scene.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
+            Scene scene = primaryStage.getScene();
+            if (scene == null) {
+                scene = new Scene(root, 1000, 650);
+            } else {
+                scene.setRoot(root);
+            }
+            scene.getStylesheets().setAll(getClass().getResource("/styles/app.css").toExternalForm());
 
             primaryStage.getIcons().addAll(
                     new Image(getClass().getResourceAsStream("/images/app_icon_16.png")),

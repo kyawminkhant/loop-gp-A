@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class TeamHubController {
@@ -34,11 +33,11 @@ public class TeamHubController {
     }
 
     public void openCustomers(ActionEvent event) {
-        launch("customer", "login", "Customers");
+        openModule(event, "customer", "login", "Customers");
     }
 
     public void openOrders(ActionEvent event) {
-        launch("orders", "orders", "Orders");
+        openModule(event, "orders", "orders", "Orders");
     }
 
     public void openDelivery(ActionEvent event) {
@@ -48,7 +47,7 @@ public class TeamHubController {
     }
 
     public void openInventory(ActionEvent event) {
-        launch("inventory", "dashboard", "Inventory / Warehousing");
+        openModule(event, "inventory", "dashboard", "Inventory / Warehousing");
     }
 
     public void openReviews(ActionEvent event) {
@@ -58,16 +57,16 @@ public class TeamHubController {
     }
 
     public void openFinance(ActionEvent event) {
-        launch("finance", "finance-dashboard", "Finance & Reporting");
+        openModule(event, "finance", "finance-dashboard", "Finance & Reporting");
     }
 
-    private void launch(String module, String view, String componentName) {
+    private void openModule(ActionEvent event, String module, String view, String componentName) {
         try {
-            ModuleLauncher.launch(module, view);
             statusLabel.setText("Opening " + componentName + "...");
-        } catch (IOException ex) {
+            ModuleLauncher.showInCurrentWindow(((Node) event.getSource()).getScene(), module, view);
+        } catch (Exception ex) {
             ex.printStackTrace();
-            statusLabel.setText("Could not launch " + componentName + ": " + ex.getMessage());
+            statusLabel.setText("Could not open " + componentName + ": " + ex.getMessage());
         }
     }
 

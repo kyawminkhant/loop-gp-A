@@ -15,8 +15,13 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Orders.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 1200, 780);
-        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        Scene scene = stage.getScene();
+        if (scene == null) {
+            scene = new Scene(root, 1200, 780);
+        } else {
+            scene.setRoot(root);
+        }
+        scene.getStylesheets().setAll(getClass().getResource("styles.css").toExternalForm());
 
         stage.setTitle("Loop - Orders");
         stage.setScene(scene);

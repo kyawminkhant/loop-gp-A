@@ -39,9 +39,6 @@
                <center>
                   <Label styleClass="dashboard-hero-title" text="Finance &amp; reporting" BorderPane.alignment="CENTER" />
                </center>
-               <right>
-                  <Button mnemonicParsing="false" onAction="#signOut" styleClass="dashboard-signout-btn" text="Sign out" />
-               </right>
             </BorderPane>
          </children>
       </VBox>

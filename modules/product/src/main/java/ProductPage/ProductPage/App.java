@@ -29,19 +29,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("Team Hub"), 1280, 800);
-        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("team-hub.css").toExternalForm());
+        showHub(stage);
 
         Image icon = new Image(getClass().getResourceAsStream("images/appicon.png"));
         stage.getIcons().add(icon);
-        stage.setTitle("Loop");
-
-        stage.setScene(scene);
-        stage.setMinWidth(980);
-        stage.setMinHeight(640);
-        stage.setMaximized(true);
-        stage.show();
     }
 
     @Override
@@ -55,6 +46,26 @@ public class App extends Application {
 
     static void setRoot(Parent root) {
         scene.setRoot(root);
+    }
+
+    static void showHub(Stage stage) throws IOException {
+        Parent hubRoot = loadFXML("Team Hub");
+        scene = stage.getScene();
+        if (scene == null) {
+            scene = new Scene(hubRoot, 1280, 800);
+            stage.setScene(scene);
+        } else {
+            scene.setRoot(hubRoot);
+        }
+
+        scene.getStylesheets().setAll(
+                App.class.getResource("styles.css").toExternalForm(),
+                App.class.getResource("team-hub.css").toExternalForm());
+        stage.setTitle("Loop Team Hub");
+        stage.setMinWidth(980);
+        stage.setMinHeight(640);
+        stage.setMaximized(true);
+        stage.show();
     }
 
     public static Parent loadFXML(String fxml) throws IOException {

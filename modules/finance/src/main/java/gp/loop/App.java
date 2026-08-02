@@ -21,11 +21,16 @@ public class App extends Application {
         }
         String startView = System.getProperty("loop.start", "finance-dashboard");
         Parent root = loadFXML(startView);
-        scene = new Scene(root, 1400, 900);
+        scene = stage.getScene();
+        if (scene == null) {
+            scene = new Scene(root, 1400, 900);
+        } else {
+            scene.setRoot(root);
+        }
         /* Matches dashboard edge so no bright ring if the root is translucent. */
         scene.setFill(Color.web("#FFF8E1"));
 
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        scene.getStylesheets().setAll(getClass().getResource("style.css").toExternalForm());
         
         stage.setScene(scene);
         stage.setTitle("Weekly Food Delivery - Finance & Reporting");

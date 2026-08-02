@@ -68,7 +68,7 @@
 
                 <Button mnemonicParsing="false"
                         onAction="#openProducts"
-                        styleClass="component-card, component-card-live"
+                        styleClass="component-card"
                         GridPane.columnIndex="0"
                         GridPane.rowIndex="0">
                     <graphic>

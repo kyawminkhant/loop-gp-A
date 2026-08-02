@@ -58,8 +58,4 @@ public class Delivery {
         App.setRoot("deliverysummary");
     }
     
-    @FXML
-    private void goBack() throws IOException {
-        App.setRoot("login");
-    }
 }

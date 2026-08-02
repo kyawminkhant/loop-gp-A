@@ -324,11 +324,6 @@ public class FinanceDashboardController {
         App.setRoot("break-even-analysis");
     }
 
-    @FXML
-    private void signOut() throws IOException {
-        App.setRoot("signup");
-    }
-
     private void clipToRoundedBorder(StackPane pane, double radius) {
         Rectangle clip = new Rectangle();
         clip.setArcWidth(radius * 2);

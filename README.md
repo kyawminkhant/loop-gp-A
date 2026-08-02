@@ -12,11 +12,26 @@ This repository collects the seven Java/JavaFX components in separate, intention
 - `modules/inventory` - inventory and warehousing
 - `modules/product` - product pages and seller product management
 
-The modules retain their original build layouts and run as separate JavaFX processes, launched from the shared Team Hub. Domain prefixes prevent incompatible same-named tables from colliding.
+The modules retain their original build layouts. The shared Team Hub loads the selected module into the current JavaFX window, so hub buttons switch pages instead of opening additional application windows. Domain prefixes prevent incompatible same-named tables from colliding.
 
 ## Run the integrated Team Hub
 
-On Windows, double-click `run-hub.cmd` from the repository root. The Java launcher opens the Product Team Hub, whose buttons start each connected module. Delivery and Reviews provide separate role views; Customer retains its login page.
+On Windows, double-click `run-hub.cmd` from the repository root. The Java launcher opens the Product Team Hub, whose buttons display each connected module in the same window. Delivery and Reviews provide separate role views; Customer retains its login page.
+
+## Login details
+
+Only the **Customers** component has authentication. A ready-to-use customer and the Customer Super Admin access are included:
+
+| Access | Email | Password |
+| --- | --- | --- |
+| Demo Customer | `customer@loop.com` | `customer123` |
+| Customer Super Admin | No email required | `admin123` |
+
+Use **Super Admin** on the Customer login page for administrator access. New customers can also select **Register** and create their own account.
+
+Products, Orders, Delivery, Inventory, Reviews, and Finance do not require login and contain no login pages. Every component page includes a **Back to Team Hub** button.
+
+For Eclipse development, follow [`ECLIPSE_SETUP.md`](ECLIPSE_SETUP.md) and import the root project using **Maven > Existing Maven Projects**.
 
 ## Database
 
