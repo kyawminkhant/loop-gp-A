@@ -16,7 +16,6 @@
     <Pane mouseTransparent="true" maxWidth="Infinity" maxHeight="Infinity" styleClass="background-overlay" />
     <VBox maxWidth="Infinity" maxHeight="Infinity" spacing="24" styleClass="team-hub-frame">
         <HBox alignment="CENTER_LEFT" spacing="24" styleClass="team-hub-header">
-            <Button text="&lt;  Back To Hub" onAction="#backToHub" styleClass="hub-back-button" />
             <ImageView fitWidth="100" fitHeight="100" preserveRatio="true">
                 <image><Image url="@images/nobglooplogo.png" /></image>
             </ImageView>

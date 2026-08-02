@@ -5,16 +5,21 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import javafx.beans.value.ChangeListener;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-/** Keeps a Back to Team Hub control available on every page inside a module. */
+/** Makes each module's LOOP logo return to the single, connected Team Hub. */
 final class HubNavigation {
 
-    private static final String BUTTON_ID = "loop-back-to-hub";
+    private static final String INJECTED_LOGO_ID = "loop-hub-logo";
+    private static final String NAVIGATION_MARKER = "loopHubNavigation";
     private static final Map<Stage, HubNavigation> ACTIVE = new WeakHashMap<>();
 
     private final Stage stage;
@@ -49,35 +54,93 @@ final class HubNavigation {
             return;
         }
 
-        rootListener = (observable, oldRoot, newRoot) -> addBackButton(newRoot);
+        rootListener = (observable, oldRoot, newRoot) -> addHubLogo(newRoot);
         scene.rootProperty().addListener(rootListener);
-        addBackButton(scene.getRoot());
+        addHubLogo(scene.getRoot());
     }
 
-    private void addBackButton(Parent root) {
-        if (!(root instanceof Pane) || root.lookup("#" + BUTTON_ID) != null) {
+    private void addHubLogo(Parent root) {
+        if (root == null) {
             return;
         }
 
-        Button backButton = new Button("\u2190  Back to Team Hub");
-        backButton.setId(BUTTON_ID);
-        backButton.setManaged(false);
-        backButton.setFocusTraversable(false);
-        backButton.setLayoutX(18);
-        backButton.setLayoutY(18);
-        backButton.setStyle(
-                "-fx-background-color: #68151f;"
-                + "-fx-text-fill: white;"
-                + "-fx-font-size: 14px;"
-                + "-fx-font-weight: bold;"
-                + "-fx-padding: 10 18 10 18;"
-                + "-fx-background-radius: 22;"
-                + "-fx-cursor: hand;"
-                + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 10, 0.25, 0, 3);");
-        backButton.setOnAction(event -> returnToHub());
+        ImageView logo = findLoopLogo(root);
+        if (logo == null && root instanceof Pane) {
+            logo = createHubLogo();
+            ((Pane) root).getChildren().add(logo);
+            logo.toFront();
+        }
 
-        ((Pane) root).getChildren().add(backButton);
-        backButton.toFront();
+        if (logo != null) {
+            wireLogo(logo);
+        }
+    }
+
+    private ImageView findLoopLogo(Node node) {
+        if (node instanceof ImageView && isLoopLogo((ImageView) node)) {
+            return (ImageView) node;
+        }
+
+        if (node instanceof Parent) {
+            for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
+                ImageView match = findLoopLogo(child);
+                if (match != null) {
+                    return match;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isLoopLogo(ImageView imageView) {
+        String id = lower(imageView.getId());
+        if (id.equals("logo") || id.contains("looplogo") || id.contains("loop-logo")
+                || id.contains("dashboardlogo") || id.equals(INJECTED_LOGO_ID)) {
+            return true;
+        }
+
+        boolean logoStyle = imageView.getStyleClass().stream()
+                .map(this::lower)
+                .anyMatch(style -> style.contains("loop-logo") || style.contains("looplogo"));
+        if (logoStyle) {
+            return true;
+        }
+
+        Image image = imageView.getImage();
+        String url = image == null ? "" : lower(image.getUrl());
+        return url.contains("nobglooplogo") || url.contains("loop-logo");
+    }
+
+    private ImageView createHubLogo() {
+        ImageView logo = new ImageView(new Image(
+                HubNavigation.class.getResource("images/nobglooplogo.png").toExternalForm()));
+        logo.setId(INJECTED_LOGO_ID);
+        logo.setManaged(false);
+        logo.setFitWidth(88);
+        logo.setFitHeight(64);
+        logo.setPreserveRatio(true);
+        logo.setPickOnBounds(true);
+        logo.setLayoutX(18);
+        logo.setLayoutY(14);
+        return logo;
+    }
+
+    private void wireLogo(ImageView logo) {
+        if (Boolean.TRUE.equals(logo.getProperties().get(NAVIGATION_MARKER))) {
+            return;
+        }
+
+        logo.getProperties().put(NAVIGATION_MARKER, true);
+        logo.setPickOnBounds(true);
+        logo.setCursor(Cursor.HAND);
+        logo.setFocusTraversable(true);
+        logo.setAccessibleText("Back to Loop Team Hub");
+        Tooltip.install(logo, new Tooltip("Back to Loop Team Hub"));
+        logo.setOnMouseClicked(event -> returnToHub());
+    }
+
+    private String lower(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     private void returnToHub() {

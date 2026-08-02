@@ -1,12 +1,6 @@
 package ProductPage.ProductPage;
 
-import java.io.IOException;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
@@ -59,12 +53,5 @@ public class ModuleMenuController {
             ex.printStackTrace();
             statusLabel.setText("Could not open " + module + ": " + ex.getMessage());
         }
-    }
-
-    @FXML
-    private void backToHub(ActionEvent event) throws IOException {
-        Parent root = App.loadFXML("Team Hub");
-        Scene scene = ((Node) event.getSource()).getScene();
-        scene.setRoot(root);
     }
 }

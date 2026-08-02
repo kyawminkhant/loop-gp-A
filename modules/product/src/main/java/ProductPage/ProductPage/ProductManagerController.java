@@ -85,11 +85,6 @@ public class ProductManagerController {
     }
 
     @FXML
-    private void backToHub() {
-        setRoot("Team Hub");
-    }
-
-    @FXML
     private void openAddProduct() {
         SellerPageController.prepareAddProduct();
         setRoot("Seller Page");

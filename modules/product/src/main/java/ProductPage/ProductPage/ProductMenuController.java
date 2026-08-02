@@ -26,10 +26,6 @@ public class ProductMenuController {
         });
     }
 
-    public void backToHub() {
-        setRoot("Team Hub");
-    }
-
     public void openMainPage() {
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("Main Page.fxml"));

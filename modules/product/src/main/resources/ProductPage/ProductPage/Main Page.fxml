@@ -49,11 +49,6 @@
                 <Insets left="-8" right="-8" />
             </VBox.margin>
 
-            <Button text="&lt; Hub"
-                    mnemonicParsing="false"
-                    onAction="#goBackToHub"
-                    styleClass="hub-return-button" />
-
             <ImageView fitWidth="120"
                        fitHeight="120"
                        pickOnBounds="true"

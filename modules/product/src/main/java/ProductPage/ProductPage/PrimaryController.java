@@ -252,15 +252,6 @@ public class PrimaryController {
     }
 
     @FXML
-    private void goBackToHub() {
-        try {
-            App.setRoot("Team Hub");
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    @FXML
     private void toggleSortPopup() {
         closeFoodDetails();
         closeHealthPlanner();

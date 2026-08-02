@@ -29,11 +29,6 @@
         <HBox alignment="CENTER_LEFT"
               spacing="24"
               styleClass="team-hub-header">
-            <Button text="&lt;  Back To Hub"
-                    mnemonicParsing="false"
-                    onAction="#backToHub"
-                    styleClass="hub-back-button" />
-
             <ImageView fitWidth="100"
                        fitHeight="100"
                        preserveRatio="true"

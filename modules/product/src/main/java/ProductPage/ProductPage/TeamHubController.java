@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class TeamHubController {
@@ -79,7 +80,9 @@ public class TeamHubController {
             ModuleMenuController controller = loader.getController();
             controller.configure(title, subtitle, module, firstTitle, firstCaption, firstView,
                     secondTitle, secondCaption, secondView);
-            ((Node) event.getSource()).getScene().setRoot(root);
+            Scene scene = ((Node) event.getSource()).getScene();
+            scene.setRoot(root);
+            HubNavigation.install((Stage) scene.getWindow());
         } catch (IOException ex) {
             ex.printStackTrace();
             statusLabel.setText("Could not open the " + title + " menu.");
@@ -98,6 +101,7 @@ public class TeamHubController {
 
             Scene currentScene = ((Node) event.getSource()).getScene();
             currentScene.setRoot(root);
+            HubNavigation.install((Stage) currentScene.getWindow());
         } catch (IOException ex) {
             ex.printStackTrace();
             statusLabel.setText("Could not open " + fxmlName + ".fxml. Check the file name and controller.");
