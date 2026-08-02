@@ -1,0 +1,199 @@
+.root-pane {
+    -fx-background-color: #f5eedc; /* Cream beige */
+    -fx-padding: 30px;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.logo-container {
+    -fx-spacing: 2px;
+    -fx-alignment: center-left;
+}
+.logo-icon {
+    -fx-text-fill: #034d28;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+.logo-text {
+    -fx-text-fill: #034d28;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.page-title {
+    -fx-text-fill: #000000;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0;
+}
+
+.main-container-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 25px;
+    -fx-padding: 30px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.04), 10, 0, 0, 4);
+}
+
+.product-card {
+    -fx-background-color: #cbe5ca; /* Light muted green background */
+    -fx-background-radius: 15px;
+    -fx-padding: 15px;
+    -fx-alignment: center;
+    -fx-min-width: 180px;
+}
+.product-name-label {
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 0 0 10px 0;
+}
+
+.grid-pane {
+    -fx-hgap: 12px;
+    -fx-vgap: 12px;
+}
+.table-header-cell {
+    -fx-background-color: #cbe5ca;
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center;
+    -fx-min-width: 80px;
+}
+.table-location-cell {
+    -fx-background-color: #cbe5ca;
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center-left;
+    -fx-min-width: 110px;
+}
+.table-data-cell {
+    -fx-background-color: #cbe5ca;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center;
+    -fx-min-width: 80px;
+}
+
+.add-stock-bar {
+    -fx-background-color: #faedd3; /* Warm peach */
+    -fx-background-radius: 40px;
+    -fx-padding: 15px 30px;
+}
+.add-stock-title {
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+.add-stock-link {
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-underline: true;
+}
+
+.control-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #034d28;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+.control-button-delete {
+    -fx-background-color: transparent;
+    -fx-text-fill: #a18c75;
+    -fx-font-size: 18px;
+}
+
+.back-button {
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+    -fx-font-size: 22px;
+    -fx-underline: false;
+}
+
+.popup-root {
+    -fx-background-color: #f5eedc;
+    -fx-background-radius: 25px;
+    -fx-padding: 25px;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.06), 15, 0, 0, 5);
+}
+
+.logo-container {
+    -fx-spacing: 2px;
+    -fx-alignment: center-left;
+}
+
+.logo-icon {
+    -fx-text-fill: #034d28;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.logo-text {
+    -fx-text-fill: #034d28;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.popup-root > .label {
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+}
+
+.popup-root > .stack-pane {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15px;
+    -fx-border-color: #cbe5ca;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-padding: 10px;
+}
+
+.popup-root > .grid-pane {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.04), 10, 0, 0, 4);
+}
+
+.popup-root > .grid-pane > .label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 14px;
+}
+
+.popup-root > .grid-pane > .label:header {
+    -fx-text-fill: #034d28;
+    -fx-font-weight: bold;
+}
+
+.popup-root > .button {
+    -fx-background-color: #034d28;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 40px;
+    -fx-padding: 10px 25px;
+    -fx-cursor: hand;
+}
+
+.popup-root > .button:hover {
+    -fx-background-color: #cbe5ca;
+    -fx-text-fill: #034d28;
+}
+
+.logo-container > .button {
+    -fx-text-fill: #a18c75;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.logo-container > .button:hover {
+    -fx-text-fill: #034d28;
+}

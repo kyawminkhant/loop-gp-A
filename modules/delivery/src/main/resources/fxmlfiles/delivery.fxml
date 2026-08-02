@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="LoopProject.loopproject.controllers.Delivery"
+            stylesheets="@../styles/delivery.css"
+            styleClass="root">
+<center>
+    <VBox spacing="45">
+
+        <Label text="Loop" styleClass="logo-text"/>
+
+        <VBox spacing="0" styleClass="table-area">
+            <Label text="All Deliveries" styleClass="section-title"/>
+
+            <TableView fx:id="deliveryTable" styleClass="delivery-table">
+                <columns>
+                    <TableColumn fx:id="deliveryId" text="Delivery Id"/>
+                    <TableColumn fx:id="orderId" text="Order Id"/>
+                    <TableColumn fx:id="customer" text="Customer"/>
+                    <TableColumn fx:id="customerId" text="Cus ID"/>
+                    <TableColumn fx:id="total" text="Total"/>
+                    <TableColumn fx:id="status" text="Status"/>
+                    <TableColumn fx:id="driver" text="Driver"/>
+                    <TableColumn fx:id="action" text="Action"/>
+                </columns>
+            </TableView>
+        </VBox>
+    
+	<HBox spacing= "16">
+		<Button text="Assign Drivers"
+                onAction="#handleAssignDrivers"
+                styleClass="assign-drivers-button"/>
+    	<Button text="View Delivery Summary"
+    			onAction="#showSummary"
+            	styleClass="summary-button"/>
+    </HBox>
+            
+     <Button text="← Back"
+                    onAction="#goBack"
+                    styleClass="back-button"/>
+</VBox>
+</center>
+</BorderPane>

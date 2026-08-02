@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1200.0"
+            stylesheets="@../styles/dashboard.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.Dashboard"
+            styleClass="main-container">
+   <top>
+      <HBox alignment="CENTER_LEFT">
+         <padding>
+            <Insets top="20" right="30" bottom="10" left="30"/>
+         </padding>
+         <children>
+            <VBox styleClass="greenBorder">
+               <children>
+                  <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
+               </children>
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS" />
+            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <ScrollPane fitToWidth="true"
+                  fitToHeight="true"
+                  hbarPolicy="NEVER"
+                  vbarPolicy="AS_NEEDED"
+                  styleClass="main-container">
+         <VBox spacing="30" alignment="CENTER">
+            <padding>
+               <Insets top="10" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <VBox spacing="10" alignment="CENTER">
+               <ImageView fx:id="dashboardLogo"
+                          fitWidth="160"
+                          fitHeight="160"
+                          preserveRatio="true"/>
+               <Label text="Inventory Dashboard"
+                      styleClass="title-label"/>
+            </VBox>
+              
+            <VBox alignment="CENTER"
+                  styleClass="dashboard-container"
+                  maxWidth="1000"
+                  VBox.vgrow="ALWAYS">
+      
+               <FlowPane alignment="CENTER"
+                         columnHalignment="CENTER"
+                         hgap="40"
+                         vgap="40"
+                         styleClass="dashboard-card"
+                         maxWidth="900"
+                         prefWidth="900">
+      
+                  <VBox alignment="CENTER"
+                        prefWidth="180"
+                        prefHeight="180"
+                        spacing="15"
+                        styleClass="dashboard-tile"
+                        onMouseClicked="#Product_dashboard">
+                     <ImageView fx:id="add_stock"
+                                fitHeight="80"
+                                fitWidth="80"
+                                preserveRatio="true"/>
+                     <Label text="Add Stock"
+                            styleClass="menu-label"/>
+                  </VBox>
+      
+                  <VBox alignment="CENTER"
+                        prefWidth="180"
+                        prefHeight="180"
+                        spacing="15"
+                        styleClass="dashboard-tile"
+                        onMouseClicked="#GenerateReport">
+                     <ImageView fx:id="generate_report"
+                                fitHeight="80"
+                                fitWidth="80"
+                                preserveRatio="true"/>
+                     <Label text="Generate Report"
+                            styleClass="menu-label"/>
+                  </VBox>
+      
+                  <VBox alignment="CENTER"
+                        prefWidth="180"
+                        prefHeight="180"
+                        spacing="15"
+                        styleClass="dashboard-tile"
+                        onMouseClicked="#Analytics">
+                     <ImageView fx:id="analytics"
+                                fitHeight="80"
+                                fitWidth="80"
+                                preserveRatio="true"/>
+                     <Label text="Analytics"
+                            styleClass="menu-label"/>
+                  </VBox>
+      
+                  <VBox alignment="CENTER"
+                        prefWidth="180"
+                        prefHeight="180"
+                        spacing="15"
+                        styleClass="dashboard-tile"
+                        onMouseClicked="#ManageStock">
+                     <ImageView fx:id="manage_stock"
+                                fitHeight="80"
+                                fitWidth="80"
+                                preserveRatio="true"/>
+                     <Label text="Manage Stock"
+                            styleClass="menu-label"/>
+                  </VBox>
+      
+                  <VBox alignment="CENTER"
+                        prefWidth="180"
+                        prefHeight="180"
+                        spacing="15"
+                        styleClass="dashboard-tile"
+                        onMouseClicked="#ProductQuery">
+                     <ImageView fx:id="product_query"
+                                fitHeight="80"
+                                fitWidth="80"
+                                preserveRatio="true"/>
+                     <Label text="Product Query"
+                            styleClass="menu-label"/>
+                  </VBox>
+               </FlowPane>
+            </VBox>
+         </VBox>
+      </ScrollPane>
+   </center>
+</BorderPane>

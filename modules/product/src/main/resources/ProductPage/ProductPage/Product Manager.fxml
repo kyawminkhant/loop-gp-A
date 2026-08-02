@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ProductPage.ProductPage.ProductManagerController"
+           maxWidth="Infinity"
+           maxHeight="Infinity"
+           styleClass="team-hub-page">
+
+    <fx:define>
+        <ToggleGroup fx:id="managerSortGroup" />
+        <ToggleGroup fx:id="managerStatusGroup" />
+        <ToggleGroup fx:id="managerDietaryGroup" />
+        <ToggleGroup fx:id="managerHealthyGroup" />
+        <ToggleGroup fx:id="managerCuisineGroup" />
+    </fx:define>
+
+    <Pane mouseTransparent="true"
+          maxWidth="Infinity"
+          maxHeight="Infinity"
+          styleClass="background-overlay" />
+
+    <ScrollPane fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="NEVER"
+                styleClass="manager-scroll">
+        <content>
+            <StackPane alignment="TOP_CENTER"
+                       styleClass="manager-content-shell">
+            <VBox spacing="28"
+                  minWidth="760"
+                  maxWidth="Infinity"
+                  styleClass="manager-frame">
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="18"
+                      styleClass="manager-topbar">
+                    <Button text="&lt;  Back To Hub"
+                            mnemonicParsing="false"
+                            onAction="#backToHub"
+                            styleClass="manager-back-link" />
+                </HBox>
+
+                <VBox spacing="22"
+                      styleClass="manager-body">
+                    <Label text="Product Management"
+                           styleClass="manager-title" />
+                    <Pane prefHeight="2"
+                          styleClass="manager-rule" />
+
+                    <HBox alignment="CENTER"
+                          spacing="18"
+                          styleClass="manager-toolbar">
+                        <HBox alignment="CENTER_LEFT"
+                              spacing="14"
+                              HBox.hgrow="ALWAYS"
+                              styleClass="manager-search-box">
+                            <TextField fx:id="searchField"
+                                       promptText="Search products..."
+                                       HBox.hgrow="ALWAYS"
+                                       styleClass="manager-search-field" />
+                            <Button mnemonicParsing="false"
+                                    onAction="#runSearch"
+                                    styleClass="manager-search-button">
+                                <graphic>
+                                    <ImageView fitWidth="24"
+                                               fitHeight="24"
+                                               preserveRatio="true"
+                                               pickOnBounds="true">
+                                        <image>
+                                            <Image url="@images/search.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                        <Button text="Add New Product"
+                                mnemonicParsing="false"
+                                onAction="#openAddProduct"
+                                styleClass="manager-add-button" />
+                    </HBox>
+
+                    <HBox alignment="TOP_LEFT"
+                          spacing="18">
+                        <VBox spacing="8">
+                            <Button fx:id="managerFilterButton"
+                                    text="Sort &amp; Filter"
+                                    mnemonicParsing="false"
+                                    onAction="#toggleFilterPopup"
+                                    styleClass="manager-filter-button" />
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="totalProductsLabel"
+                               text="Total Products: 0"
+                               styleClass="manager-total-label" />
+                    </HBox>
+
+                    <VBox spacing="12"
+                          styleClass="manager-table">
+                        <HBox alignment="CENTER_LEFT"
+                              spacing="16"
+                              maxWidth="Infinity"
+                              styleClass="manager-table-header">
+                            <Label text="Product"
+                                   maxWidth="Infinity"
+                                   HBox.hgrow="ALWAYS"
+                                   styleClass="manager-col-product" />
+                            <Label text="Category"
+                                   styleClass="manager-col-category" />
+                            <Label text="Price"
+                                   styleClass="manager-col-money" />
+                            <Label text="Cost"
+                                   styleClass="manager-col-money" />
+                            <Label text="Last Updated"
+                                   maxWidth="Infinity"
+                                   HBox.hgrow="ALWAYS"
+                                   styleClass="manager-col-date" />
+                            <Label text="Actions"
+                                   styleClass="manager-col-action" />
+                        </HBox>
+
+                        <VBox fx:id="productRows"
+                              maxWidth="Infinity"
+                              spacing="10" />
+                    </VBox>
+
+                    <Label fx:id="statusLabel"
+                           text=""
+                           styleClass="manager-status-label" />
+                </VBox>
+            </VBox>
+
+    <VBox fx:id="managerFilterPopup"
+          visible="false"
+          managed="false"
+          minWidth="640"
+          prefWidth="820"
+          maxWidth="Infinity"
+          minHeight="-Infinity"
+          prefHeight="-1"
+          maxHeight="-Infinity"
+          spacing="4"
+          styleClass="manager-filter-popup-card"
+          StackPane.alignment="TOP_LEFT">
+
+        <HBox alignment="CENTER_LEFT" spacing="14" styleClass="sort-popup-header">
+            <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
+                <image>
+                    <Image url="@images/sort.png" />
+                </image>
+            </ImageView>
+            <Label text="Sort &amp; Filter" styleClass="popup-title" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="ALWAYS"
+                    pannable="true"
+                    maxHeight="224"
+                    prefViewportHeight="224"
+                    styleClass="manager-filter-popup-scroll">
+            <content>
+        <HBox spacing="18" styleClass="manager-filter-popup-body-columns">
+            <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="manager-filter-column">
+                <VBox spacing="8" styleClass="popup-section">
+                    <Label text="SORT BY" styleClass="popup-section-title" />
+                    <FlowPane hgap="10" vgap="8" prefWrapLength="356" styleClass="popup-button-row">
+                        <ToggleButton fx:id="managerNewestToggle" text="Newest" selected="true" toggleGroup="$managerSortGroup" mnemonicParsing="false" styleClass="popup-select-button" />
+                        <ToggleButton fx:id="managerNameToggle" text="Name" toggleGroup="$managerSortGroup" mnemonicParsing="false" styleClass="popup-select-button" />
+                        <ToggleButton fx:id="managerCheapestToggle" text="Cheapest" toggleGroup="$managerSortGroup" mnemonicParsing="false" styleClass="popup-select-button" />
+                        <ToggleButton fx:id="managerHighestToggle" text="Highest Price" toggleGroup="$managerSortGroup" mnemonicParsing="false" styleClass="popup-select-button" />
+                    </FlowPane>
+                </VBox>
+
+                <VBox spacing="8" styleClass="popup-section">
+                    <Label text="DIETARY" styleClass="popup-section-title" />
+                    <FlowPane hgap="10" vgap="8" prefWrapLength="356" styleClass="popup-button-row">
+                        <ToggleButton fx:id="managerVegetarianToggle" toggleGroup="$managerDietaryGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/vegetarian.png" /></image>
+                                    </ImageView>
+                                    <Label text="Vegetarian" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerVeganToggle" toggleGroup="$managerDietaryGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/vegan.png" /></image>
+                                    </ImageView>
+                                    <Label text="Vegan" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerHalalToggle" toggleGroup="$managerDietaryGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/halal.png" /></image>
+                                    </ImageView>
+                                    <Label text="Halal" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerGlutenFreeToggle" toggleGroup="$managerDietaryGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/gluten-free.png" /></image>
+                                    </ImageView>
+                                    <Label text="Gluten-Free" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerPescatarianToggle" toggleGroup="$managerDietaryGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/pescatarian.png" /></image>
+                                    </ImageView>
+                                    <Label text="Pescatarian" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                    </FlowPane>
+                </VBox>
+
+                <VBox spacing="8" styleClass="popup-section manager-filter-last-section">
+                    <Label text="STATUS" styleClass="popup-section-title" />
+                    <FlowPane hgap="10" vgap="8" prefWrapLength="356" styleClass="popup-button-row">
+                        <ToggleButton fx:id="managerStatusOnToggle" text="On" toggleGroup="$managerStatusGroup" mnemonicParsing="false" styleClass="popup-select-button" />
+                        <ToggleButton fx:id="managerStatusOffToggle" text="Off" toggleGroup="$managerStatusGroup" mnemonicParsing="false" styleClass="popup-select-button" />
+                    </FlowPane>
+                </VBox>
+            </VBox>
+
+            <Separator orientation="VERTICAL" styleClass="manager-filter-column-separator" />
+
+            <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="manager-filter-column">
+                <VBox spacing="8" styleClass="popup-section">
+                    <Label text="CUISINE" styleClass="popup-section-title" />
+                    <FlowPane hgap="10" vgap="8" prefWrapLength="356" styleClass="popup-button-row">
+                        <ToggleButton fx:id="managerAsianToggle" toggleGroup="$managerCuisineGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/asian.png" /></image>
+                                    </ImageView>
+                                    <Label text="Asian" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerSoutheastAsianToggle" toggleGroup="$managerCuisineGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/southeast-asian.png" /></image>
+                                    </ImageView>
+                                    <Label text="Southeast Asian" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerSouthAsianToggle" toggleGroup="$managerCuisineGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/south-asian.png" /></image>
+                                    </ImageView>
+                                    <Label text="South Asian" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerMiddleEasternToggle" toggleGroup="$managerCuisineGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/middle-eastern.png" /></image>
+                                    </ImageView>
+                                    <Label text="Middle Eastern" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerWesternToggle" toggleGroup="$managerCuisineGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/western.png" /></image>
+                                    </ImageView>
+                                    <Label text="Western" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerMediterraneanToggle" toggleGroup="$managerCuisineGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/mediterranean.png" /></image>
+                                    </ImageView>
+                                    <Label text="Mediterranean" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                    </FlowPane>
+                </VBox>
+
+                <VBox spacing="8" styleClass="popup-section">
+                    <Label text="HEALTHY GOALS" styleClass="popup-section-title" />
+                    <FlowPane hgap="10" vgap="8" prefWrapLength="356" styleClass="popup-button-row">
+                        <ToggleButton fx:id="managerWeightLossToggle" toggleGroup="$managerHealthyGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/weight-loss.png" /></image>
+                                    </ImageView>
+                                    <Label text="Weight Loss" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerHighProteinToggle" toggleGroup="$managerHealthyGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/high-protein.png" /></image>
+                                    </ImageView>
+                                    <Label text="High Protein" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="managerBalancedMealsToggle" toggleGroup="$managerHealthyGroup" mnemonicParsing="false" styleClass="popup-chip">
+                            <graphic>
+                                <HBox alignment="CENTER" spacing="6">
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true" styleClass="popup-icon-image">
+                                        <image><Image url="@FilterBox/balanced-meals.png" /></image>
+                                    </ImageView>
+                                    <Label text="Balanced Meals" />
+                                </HBox>
+                            </graphic>
+                        </ToggleButton>
+                    </FlowPane>
+                </VBox>
+
+                <VBox spacing="8" styleClass="popup-section manager-filter-last-section">
+                    <Label text="PRICE RANGE" styleClass="popup-section-title" />
+                    <HBox alignment="CENTER_LEFT" spacing="0" styleClass="price-row">
+                        <TextField fx:id="managerMinPriceField" promptText="Min Price" styleClass="price-field" />
+                        <Region styleClass="price-connector" />
+                        <TextField fx:id="managerMaxPriceField" promptText="Max Price" styleClass="price-field" />
+                    </HBox>
+                    <Label fx:id="managerPriceErrorLabel"
+                           text=""
+                           visible="false"
+                           managed="false"
+                           styleClass="price-error" />
+                </VBox>
+            </VBox>
+        </HBox>
+            </content>
+        </ScrollPane>
+
+        <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="popup-apply-row">
+            <Button text="Clear"
+                    mnemonicParsing="false"
+                    onAction="#clearManagerFilters"
+                    styleClass="popup-clear-button" />
+            <Button text="Apply"
+                    mnemonicParsing="false"
+                    onAction="#applyManagerFilters"
+                    styleClass="popup-apply-button" />
+        </HBox>
+    </VBox>
+            </StackPane>
+        </content>
+    </ScrollPane>
+
+    <VBox fx:id="managerActionPopup"
+          visible="false"
+          managed="false"
+          spacing="0"
+          minWidth="178"
+          prefWidth="178"
+          maxWidth="178"
+          minHeight="162"
+          prefHeight="162"
+          maxHeight="162"
+          styleClass="manager-action-popup"
+          StackPane.alignment="TOP_LEFT">
+        <Button text="Toggle Status"
+                mnemonicParsing="false"
+                onAction="#toggleSelectedProductStatus">
+            <styleClass>
+                <String fx:value="manager-action-popup-button" />
+                <String fx:value="manager-action-popup-first" />
+            </styleClass>
+        </Button>
+        <Button text="Modify Product"
+                mnemonicParsing="false"
+                onAction="#modifySelectedProduct">
+            <styleClass>
+                <String fx:value="manager-action-popup-button" />
+            </styleClass>
+        </Button>
+        <Button text="Delete Product"
+                mnemonicParsing="false"
+                onAction="#deleteSelectedProduct">
+            <styleClass>
+                <String fx:value="manager-action-popup-button" />
+                <String fx:value="manager-action-popup-last" />
+            </styleClass>
+        </Button>
+    </VBox>
+
+</StackPane>

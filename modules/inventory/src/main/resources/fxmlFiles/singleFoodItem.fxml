@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+
+
+<VBox alignment="CENTER" 
+      prefHeight="70.0" 
+      prefWidth="140.0" 
+      styleClass="inventory-card" 
+      stylesheets="@../styles/product_dashboard.css"
+      xmlns="http://javafx.com/javafx/8.0.171" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.SingleFoodItemController">
+   
+   <padding>
+      <Insets bottom="6.0" left="10.0" right="10.0" top="6.0" />
+   </padding>
+   
+   <children>
+      <Label fx:id="ingredientId" 
+             styleClass="card-id-text" 
+             text="#00" />
+             
+      <ImageView fx:id="foodImage"
+      		   fitWidth="80"
+               fitHeight="80"
+               preserveRatio="true"/>
+               
+      <Label fx:id="ingredientName" 
+             alignment="CENTER" 
+             prefWidth="120.0" 
+             styleClass="card-name-text" 
+             text="Ingredient" 
+             textAlignment="CENTER" 
+             wrapText="true" />
+   </children>
+</VBox>

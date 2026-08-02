@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.DashboardController"
+            styleClass="page-root">
+
+    <top>
+        <StackPane styleClass="header-bar">
+            <padding><Insets top="16" right="20" bottom="6" left="20"/></padding>
+
+            <!-- True window-centered logo -->
+            <ImageView fx:id="headerLogo" fitWidth="160" preserveRatio="true" smooth="true"
+                       StackPane.alignment="CENTER">
+                <image><Image url="@/images/nobglooplogo.png"/></image>
+            </ImageView>
+
+            <!-- Log Out overlays on the right without shifting the logo -->
+            <HBox alignment="CENTER_RIGHT" maxWidth="Infinity" mouseTransparent="false">
+                <Button text="Log Out" onAction="#handleLogout" styleClass="back-button"/>
+            </HBox>
+        </StackPane>
+    </top>
+
+    <center>
+        <TabPane fx:id="mainTabPane" styleClass="main-tabs" tabClosingPolicy="UNAVAILABLE">
+
+            <Tab text="My Profile">
+                <ScrollPane fitToWidth="true" styleClass="tab-scroll">
+                    <VBox spacing="18" styleClass="tab-body">
+                        <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
+
+                        <Label text="Update your name, contact details and delivery address. Email and ID card are locked after registration."
+                               styleClass="section-intro"/>
+
+                        <HBox spacing="18">
+                            <VBox styleClass="info-card" spacing="13" HBox.hgrow="ALWAYS">
+                                <Label text="Account Details" styleClass="card-title"/>
+                                <Separator/>
+                                <GridPane hgap="20" vgap="12">
+                                    <Label text="Name" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <Label fx:id="profileNameDisplayLabel" styleClass="field-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                    <Label text="Email" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <VBox spacing="2" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                        <Label fx:id="profileEmailLabel" styleClass="field-value"/>
+                                        <Label text="Locked — only Super Admin can change" styleClass="locked-note"/>
+                                    </VBox>
+                                    <Label text="ID Card No" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <VBox spacing="6" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                                        <Label fx:id="profileIdCardLabel" styleClass="field-value"/>
+                                        <ImageView fx:id="profileIdCardImage" fitWidth="140" fitHeight="90" preserveRatio="true"
+                                                   styleClass="id-preview"/>
+                                        <Label text="Locked — only Super Admin can change" styleClass="locked-note"/>
+                                    </VBox>
+                                    <Label text="Status" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                    <Label fx:id="profileStatusLabel" styleClass="field-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                </GridPane>
+                            </VBox>
+
+                            <VBox styleClass="info-card" spacing="13" HBox.hgrow="ALWAYS">
+                                <Label text="Edit Profile" styleClass="card-title"/>
+                                <Separator/>
+                                <Label text="Full Name" styleClass="field-label"/>
+                                <TextField fx:id="profileNameField" styleClass="glass-input" maxWidth="Infinity"/>
+                                <Label text="Mobile Number" styleClass="field-label"/>
+                                <TextField fx:id="profileMobileField" styleClass="glass-input" maxWidth="Infinity"
+                                           promptText="10–15 digits"/>
+                                <Label text="Delivery Address" styleClass="field-label"/>
+                                <TextField fx:id="profileAddressField" styleClass="glass-input" maxWidth="Infinity"
+                                           promptText="Your delivery address"/>
+                                <Label fx:id="profileMessageLabel" styleClass="message-label" wrapText="true"/>
+                                <Button text="Save Changes" onAction="#handleSaveProfile" styleClass="primary-button" maxWidth="Infinity"/>
+                            </VBox>
+                        </HBox>
+
+                        <VBox styleClass="danger-card" spacing="12">
+                            <Label text="Danger Zone" styleClass="card-title-danger"/>
+                            <Label text="Deactivating your account prevents future logins and orders. Your data is kept for historical reporting."
+                                   styleClass="helper-text" wrapText="true"/>
+                            <Button text="Deactivate My Account" onAction="#handleDeactivateAccount" styleClass="danger-button"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <Tab text="Preferences">
+                <ScrollPane fitToWidth="true" styleClass="tab-scroll">
+                    <VBox spacing="18" styleClass="tab-body">
+                        <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
+
+                        <Label text="Set dietary preferences, notifications and delivery instructions. These are saved to your preference profile."
+                               styleClass="section-intro"/>
+
+                        <VBox styleClass="info-card" spacing="14">
+                            <Label text="Dietary Preferences" styleClass="card-title"/>
+                            <Separator/>
+                            <FlowPane hgap="22" vgap="12">
+                                <CheckBox fx:id="prefVegan" text="Vegan" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefVegetarian" text="Vegetarian" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefKeto" text="Keto" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefGlutenFree" text="Gluten-Free" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefHalal" text="Halal" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefLowCalorie" text="Low-Calorie" styleClass="pref-check"/>
+                            </FlowPane>
+                        </VBox>
+
+                        <VBox styleClass="info-card" spacing="14">
+                            <Label text="Notifications" styleClass="card-title"/>
+                            <Separator/>
+                            <CheckBox fx:id="notificationsCheckBox"
+                                      text="Receive promotional notifications while logged in (timer-based)"
+                                      styleClass="pref-check"/>
+                        </VBox>
+
+                        <VBox styleClass="info-card" spacing="14">
+                            <Label text="Delivery Instructions" styleClass="card-title"/>
+                            <Separator/>
+                            <TextArea fx:id="deliveryInstructionsArea" prefHeight="85" wrapText="true"
+                                      styleClass="glass-input" maxWidth="Infinity"
+                                      promptText="e.g. Leave at the door, ring twice..."/>
+                        </VBox>
+
+                        <Label fx:id="prefMessageLabel" styleClass="message-label"/>
+                        <Button text="Save Preferences" onAction="#handleSavePreferences" styleClass="primary-button" maxWidth="220"/>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <Tab text="Order History">
+                <VBox spacing="18" styleClass="tab-body">
+                    <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
+
+                    <Label text="Read-only view of your past orders (dummy data)."
+                           styleClass="section-intro"/>
+
+                    <HBox spacing="18">
+                        <VBox styleClass="stat-card" alignment="CENTER" spacing="6">
+                            <Label fx:id="totalOrdersLabel" text="0" styleClass="stat-number"/>
+                            <Label text="Total Orders" styleClass="stat-desc"/>
+                        </VBox>
+                        <VBox styleClass="stat-card" alignment="CENTER" spacing="6">
+                            <Label fx:id="totalSpentLabel" text="£0.00" styleClass="stat-number"/>
+                            <Label text="Total Spent" styleClass="stat-desc"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox styleClass="info-card" spacing="12" VBox.vgrow="ALWAYS">
+                        <Label text="Your Orders" styleClass="card-title"/>
+                        <Separator/>
+                        <TableView fx:id="orderTable" VBox.vgrow="ALWAYS" prefHeight="300">
+                            <placeholder>
+                                <Label text="No orders yet for this account." styleClass="helper-text"/>
+                            </placeholder>
+                            <columns>
+                                <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="210"/>
+                                <TableColumn fx:id="orderDateColumn" text="Date" prefWidth="120"/>
+                                <TableColumn fx:id="orderStatusColumn" text="Status" prefWidth="120"/>
+                                <TableColumn fx:id="orderTotalColumn" text="Total (£)" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </VBox>
+            </Tab>
+
+            <Tab text="Chef Reviews">
+                <ScrollPane fitToWidth="true" styleClass="tab-scroll">
+                    <VBox spacing="18" styleClass="tab-body">
+                        <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
+
+                        <Label text="Rate a chef from 1–5 stars and leave a short review. One review per chef."
+                               styleClass="section-intro"/>
+
+                        <HBox spacing="18">
+                            <VBox styleClass="info-card" spacing="13" HBox.hgrow="ALWAYS">
+                                <Label text="Write a Review" styleClass="card-title"/>
+                                <Separator/>
+                                <Label text="Select a Chef" styleClass="field-label"/>
+                                <ComboBox fx:id="chefComboBox" promptText="Choose a chef..." maxWidth="Infinity"/>
+                                <Label text="Your Rating" styleClass="field-label"/>
+                                <ComboBox fx:id="ratingComboBox" promptText="Select rating..." maxWidth="Infinity"/>
+                                <Label text="Your Review (10–500 characters)" styleClass="field-label"/>
+                                <TextArea fx:id="reviewTextArea" prefHeight="95" wrapText="true"
+                                          styleClass="glass-input" maxWidth="Infinity"
+                                          promptText="Share your honest experience with this chef..."/>
+                                <Label fx:id="reviewMessageLabel" styleClass="message-label" wrapText="true"/>
+                                <Button text="Submit Review" onAction="#handleSubmitReview" styleClass="primary-button" maxWidth="Infinity"/>
+                            </VBox>
+
+                            <VBox styleClass="info-card" spacing="13" prefWidth="250" minWidth="230">
+                                <Label text="Selected Chef" styleClass="card-title"/>
+                                <Separator/>
+                                <Label text="Name" styleClass="field-label"/>
+                                <Label fx:id="selectedChefNameLabel" text="—" styleClass="field-value" wrapText="true"/>
+                                <Label text="Speciality" styleClass="field-label"/>
+                                <Label fx:id="selectedChefSpecialityLabel" text="—" styleClass="field-value" wrapText="true"/>
+                                <Label text="Average Rating" styleClass="field-label"/>
+                                <Label fx:id="selectedChefRatingLabel" text="—" styleClass="star-label"/>
+                            </VBox>
+                        </HBox>
+
+                        <VBox styleClass="info-card" spacing="12">
+                            <Label text="My Reviews" styleClass="card-title"/>
+                            <Separator/>
+                            <TableView fx:id="reviewTable" prefHeight="200">
+                                <placeholder>
+                                    <Label text="You have not submitted any reviews yet." styleClass="helper-text"/>
+                                </placeholder>
+                                <columns>
+                                    <TableColumn fx:id="reviewChefNameColumn" text="Chef" prefWidth="160"/>
+                                    <TableColumn fx:id="reviewRatingColumn" text="Rating" prefWidth="100"/>
+                                    <TableColumn fx:id="reviewTextColumn" text="Review" prefWidth="290"/>
+                                    <TableColumn fx:id="reviewDateColumn" text="Date" prefWidth="110"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>

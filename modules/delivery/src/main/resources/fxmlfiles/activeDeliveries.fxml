@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="LoopProject.loopproject.controllers.ActiveDeliveries"
+            stylesheets="@../styles/activeDeliveries.css"
+            styleClass="ActiveDeliveries">
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="10">
+            <!-- FIXED: Removed the self-closing '/' on ImageView -->
+            <ImageView fx:id="logo" fitWidth="150" preserveRatio="true">
+                <image>
+                    <Image url="@../images/logo.png" />
+                </image>
+            </ImageView>
+
+            <VBox styleClass="main-container" alignment="TOP_CENTER">
+                <Label text="Active Deliveries" styleClass="section-title"/>
+            
+                <VBox>
+                    <VBox styleClass="deliverybox">
+                        <Label text="DRV-05784" styleClass="delivery-id"/>
+                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
+                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
+                    </VBox>
+                    
+                    <VBox styleClass="deliverybox">
+                        <Label text="DRV-14812" styleClass="delivery-id"/>
+                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
+                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
+                    </VBox>
+                    
+                    <VBox styleClass="deliverybox">
+                        <Label text="DRV-15902" styleClass="delivery-id"/>
+                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
+                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
+                    </VBox>
+                    
+                    <VBox styleClass="deliverybox">
+                        <Label text="DRV-35289" styleClass="delivery-id"/>
+                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
+                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
+                    </VBox>
+                    
+                    <VBox styleClass="deliverybox">
+                        <Label text="DRV-46429" styleClass="delivery-id"/>
+                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
+                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+            
+            <Button text="← Back"
+                    onAction="#goBack"
+                    styleClass="back-button"/>
+        </VBox>
+    </center>
+</BorderPane>

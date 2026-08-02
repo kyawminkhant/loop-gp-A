@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="orders.OrdersController"
+           maxWidth="Infinity"
+           maxHeight="Infinity"
+           styleClass="app-background">
+
+    <VBox maxWidth="Infinity"
+          maxHeight="Infinity"
+          spacing="20"
+          styleClass="app-frame">
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT"
+              spacing="20"
+              styleClass="app-header">
+            <Label text="Loop"
+                   styleClass="app-logo" />
+            <VBox spacing="4">
+                <Label text="Orders"
+                       styleClass="app-title" />
+                <Label text="Individual component - order management"
+                       styleClass="app-subtitle" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="totalOrdersLabel"
+                   text="Total Orders: 0"
+                   styleClass="app-count-pill" />
+        </HBox>
+
+        <HBox spacing="20"
+              maxWidth="Infinity"
+              VBox.vgrow="ALWAYS">
+
+            <!-- Quick menu / cart panel -->
+            <VBox spacing="14"
+                  styleClass="side-panel"
+                  prefWidth="400"
+                  minWidth="380">
+
+                <Label text="Quick Menu"
+                       styleClass="panel-title" />
+                <Label text="Add a few items to demo placing an order"
+                       styleClass="panel-caption"
+                       wrapText="true" />
+
+                <ScrollPane fitToWidth="true"
+                            maxHeight="240"
+                            styleClass="panel-scroll">
+                    <VBox fx:id="menuItemsBox" spacing="8" />
+                </ScrollPane>
+
+                <Label text="Cart"
+                       styleClass="panel-title" />
+                <ScrollPane fitToWidth="true"
+                            maxHeight="150"
+                            styleClass="panel-scroll">
+                    <VBox fx:id="cartLinesBox" spacing="6" />
+                </ScrollPane>
+
+                <Label fx:id="cartTotalLabel"
+                       text="Cart Total: £0.00"
+                       styleClass="cart-total-label" />
+
+                <TextField fx:id="customerNameField"
+                           promptText="Customer name (defaults to Guest)"
+                           styleClass="name-field" />
+
+                <HBox spacing="10">
+                    <Button text="Place Order"
+                            mnemonicParsing="false"
+                            onAction="#placeOrderFromCart"
+                            styleClass="place-order-button" />
+                    <Button text="Clear Cart"
+                            mnemonicParsing="false"
+                            onAction="#clearCart"
+                            styleClass="clear-cart-button" />
+                </HBox>
+            </VBox>
+
+            <!-- Orders list -->
+            <VBox spacing="14"
+                  maxWidth="Infinity"
+                  HBox.hgrow="ALWAYS"
+                  styleClass="orders-panel">
+
+                <HBox alignment="CENTER_LEFT" spacing="14">
+                    <Label text="All Orders"
+                           styleClass="panel-title" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label text="Filter:" styleClass="panel-caption" />
+                    <ComboBox fx:id="statusFilterCombo" styleClass="status-filter" />
+                    <Button text="Refresh"
+                            mnemonicParsing="false"
+                            onAction="#refreshOrders"
+                            styleClass="refresh-button" />
+                </HBox>
+
+                <ScrollPane fitToWidth="true"
+                            maxWidth="Infinity"
+                            maxHeight="Infinity"
+                            VBox.vgrow="ALWAYS"
+                            styleClass="panel-scroll">
+                    <VBox fx:id="orderRows" spacing="12" />
+                </ScrollPane>
+            </VBox>
+        </HBox>
+
+        <Label fx:id="statusLabel"
+               text=""
+               styleClass="status-bar" />
+    </VBox>
+</StackPane>

@@ -1,0 +1,280 @@
+/*
+ * LOOP Reviews & Ratings - shared stylesheet.
+ * Matched to the group's "Product Page" component:
+ *   Times New Roman serif, warm restaurant background scene,
+ *   cream panels with maroon trim, gold accents, green LOOP wordmark.
+ */
+
+.root {
+    -fx-font-family: "Times New Roman", "Georgia", serif;
+    -fx-font-size: 14px;
+
+    /* Brand palette */
+    -loop-cream:      #FFF8EA;   /* card + input surface */
+    -loop-cream-2:    #E9D4AC;   /* tan hairline borders */
+    -loop-header:     #FFF3DC;   /* rounded header bar */
+    -loop-green:      #8A2B2B;   /* PRIMARY (maroon) */
+    -loop-green-dk:   #68151F;   /* darker maroon */
+    -loop-maroon-br:  #7B1E22;   /* maroon trim / borders */
+    -loop-title:      #2E1614;   /* near-black brown dish titles */
+    -loop-logo:       #2E7D46;   /* green LOOP wordmark */
+    -loop-gold:       #E3A63F;   /* gold accent */
+    -loop-gold-lt:    #F4C764;   /* light gold (hover) */
+    -loop-sage:       #4E9A62;   /* positive / success green */
+    -loop-sage-lt:    #D6E8D6;   /* light green surface */
+    -loop-peach:      #E3A63F;   /* accent = gold */
+    -loop-ink:        #3B211C;   /* dark brown text */
+    -loop-muted:      #7A5A4A;   /* muted brown text */
+    -loop-danger:     #B24C3C;   /* warning / destructive */
+}
+
+/* Simple, classic warm-cream backdrop. */
+.app-bg {
+    -fx-background-color: linear-gradient(to bottom, #FBF3E2 0%, #F2E6C9 100%);
+}
+
+.content {
+    -fx-background-color: transparent;
+}
+
+/* ---------- Top / header bar (rounded cream header) ---------- */
+.topbar {
+    -fx-background-color: -loop-header;
+    -fx-background-radius: 0 0 30 30;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-width: 0 0 3 0;
+    -fx-effect: dropshadow(gaussian, rgba(38,10,8,0.28), 16, 0.12, 0, 5);
+}
+.topbar-brand {
+    -fx-text-fill: -loop-maroon-br;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+.topbar-sub {
+    -fx-text-fill: -loop-maroon-br;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.topbar-user {
+    -fx-text-fill: -loop-muted;
+    -fx-font-size: 13px;
+}
+
+/* ---------- Cards & surfaces ---------- */
+.card {
+    -fx-background-color: -loop-cream;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(38,10,8,0.22), 16, 0.10, 0, 5);
+}
+.scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.scroll .viewport { -fx-background-color: transparent; }
+
+/* ---------- Login ---------- */
+.brand {
+    -fx-text-fill: -loop-logo;
+    -fx-font-size: 50px;
+    -fx-font-weight: bold;
+}
+.brand-sub {
+    -fx-text-fill: -loop-maroon-br;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Typography ---------- */
+.page-title {
+    -fx-text-fill: -loop-title;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+.page-subtitle { -fx-text-fill: -loop-muted; -fx-font-size: 14px; }
+.section-title {
+    -fx-text-fill: -loop-maroon-br;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+.field-label { -fx-text-fill: -loop-maroon-br; -fx-font-weight: bold; -fx-font-size: 13px; }
+.hint { -fx-text-fill: -loop-muted; -fx-font-size: 12px; }
+.error-text { -fx-text-fill: -loop-danger; -fx-font-size: 13px; -fx-font-weight: bold; }
+.empty-state { -fx-text-fill: -loop-muted; -fx-font-size: 14.5px; -fx-padding: 24; }
+
+/* ---------- Inputs (rounded, cream) ---------- */
+.text-field, .password-field, .combo-box {
+    -fx-background-color: -loop-cream;
+    -fx-background-radius: 24;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-radius: 24;
+    -fx-border-width: 1.5;
+    -fx-padding: 9 18;
+}
+.text-area {
+    -fx-background-color: -loop-cream;
+    -fx-background-radius: 14;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-radius: 14;
+    -fx-border-width: 1.5;
+    -fx-padding: 6 10;
+}
+.text-area .content { -fx-background-color: -loop-cream; -fx-background-radius: 12; }
+.text-field:focused, .password-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: -loop-gold;
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+    -fx-background-color: -loop-green;
+    -fx-text-fill: #FFF7E8;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-radius: 14;
+    -fx-border-width: 2;
+    -fx-padding: 9 22;
+    -fx-cursor: hand;
+}
+.btn-primary:hover { -fx-background-color: -loop-green-dk; }
+.btn-primary:disabled { -fx-opacity: 0.5; }
+
+.btn-ghost {
+    -fx-background-color: -loop-cream;
+    -fx-text-fill: -loop-maroon-br;
+    -fx-font-weight: bold;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-border-width: 2;
+    -fx-padding: 8 18;
+    -fx-cursor: hand;
+}
+.btn-ghost:hover { -fx-background-color: -loop-gold-lt; }
+.topbar .btn-ghost { -fx-text-fill: -loop-maroon-br; -fx-border-color: -loop-maroon-br; }
+.topbar .btn-ghost:hover { -fx-background-color: -loop-gold-lt; }
+
+.btn-danger {
+    -fx-background-color: -loop-danger;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14;
+    -fx-border-color: #7A2A20;
+    -fx-border-radius: 14;
+    -fx-border-width: 2;
+    -fx-padding: 8 18;
+    -fx-cursor: hand;
+}
+.btn-danger:hover { -fx-background-color: #9B3F31; }
+.btn-danger:disabled { -fx-opacity: 0.45; }
+
+.btn-vote {
+    -fx-background-color: -loop-cream;
+    -fx-text-fill: -loop-maroon-br;
+    -fx-background-radius: 20;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-padding: 5 16;
+    -fx-cursor: hand;
+}
+.btn-vote:hover { -fx-background-color: -loop-gold-lt; -fx-text-fill: -loop-maroon-br; }
+.btn-vote:disabled { -fx-opacity: 0.5; }
+
+/* ---------- Product cards ---------- */
+.product-card {
+    -fx-background-color: -loop-cream;
+    -fx-background-radius: 16;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-radius: 16;
+    -fx-border-width: 2;
+    -fx-padding: 16 22;
+    -fx-effect: dropshadow(gaussian, rgba(38,10,8,0.18), 12, 0.08, 0, 4);
+}
+.product-name { -fx-text-fill: -loop-title; -fx-font-size: 20px; -fx-font-weight: bold; }
+.product-meta { -fx-text-fill: -loop-muted; -fx-font-size: 13px; }
+
+.badge-purchased {
+    -fx-background-color: -loop-sage-lt; -fx-text-fill: #1F5C30;
+    -fx-background-radius: 20; -fx-padding: 3 12; -fx-font-size: 12px; -fx-font-weight: bold;
+}
+.badge-muted {
+    -fx-background-color: #F4E4C2; -fx-text-fill: -loop-muted;
+    -fx-background-radius: 20; -fx-padding: 3 12; -fx-font-size: 12px;
+}
+
+/* ---------- Stars & ratings ---------- */
+.stars { -fx-text-fill: -loop-gold; -fx-font-size: 17px; }
+.stars-big { -fx-text-fill: -loop-gold; -fx-font-size: 26px; }
+.avg-value { -fx-text-fill: -loop-title; -fx-font-size: 17px; -fx-font-weight: bold; }
+
+/* ---------- Rating distribution bars ---------- */
+.dist-star { -fx-text-fill: -loop-ink; -fx-font-size: 13px; }
+.dist-fill { -fx-background-color: -loop-gold; -fx-background-radius: 6; -fx-min-height: 12; -fx-pref-height: 12; }
+.dist-track { -fx-min-height: 12; }
+.dist-count { -fx-text-fill: -loop-muted; -fx-font-size: 12.5px; }
+
+/* ---------- Review cards ---------- */
+.review-card {
+    -fx-background-color: -loop-cream;
+    -fx-background-radius: 16;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-radius: 16;
+    -fx-border-width: 2;
+    -fx-padding: 16 22;
+    -fx-effect: dropshadow(gaussian, rgba(38,10,8,0.16), 12, 0.06, 0, 4);
+}
+.review-author { -fx-text-fill: -loop-maroon-br; -fx-font-weight: bold; -fx-font-size: 15px; }
+.review-date { -fx-text-fill: -loop-muted; -fx-font-size: 12px; }
+.review-comment { -fx-text-fill: -loop-ink; -fx-font-size: 14px; }
+
+/* ---------- Status pills ---------- */
+.status-active {
+    -fx-background-color: -loop-sage-lt; -fx-text-fill: #1F5C30;
+    -fx-background-radius: 20; -fx-padding: 2 12; -fx-font-size: 11.5px; -fx-font-weight: bold;
+}
+.status-flagged {
+    -fx-background-color: #FBE7BE; -fx-text-fill: #8A5A16;
+    -fx-background-radius: 20; -fx-padding: 2 12; -fx-font-size: 11.5px; -fx-font-weight: bold;
+}
+.status-removed {
+    -fx-background-color: #F1D3CD; -fx-text-fill: -loop-danger;
+    -fx-background-radius: 20; -fx-padding: 2 12; -fx-font-size: 11.5px; -fx-font-weight: bold;
+}
+
+/* ---------- Countdown ---------- */
+.countdown { -fx-text-fill: -loop-maroon-br; -fx-font-weight: bold; -fx-font-size: 13px; }
+.countdown-closed { -fx-text-fill: -loop-danger; -fx-font-weight: bold; -fx-font-size: 13px; }
+
+/* ---------- Moderation log ---------- */
+.log-line { -fx-text-fill: -loop-muted; -fx-font-size: 12.5px; }
+
+/* ---------- Sentiment ---------- */
+.sent-fill { -fx-background-radius: 6; -fx-min-height: 14; -fx-pref-height: 14; }
+.sent-pos { -fx-background-color: -loop-sage; }
+.sent-neu { -fx-background-color: -loop-gold; }
+.sent-neg { -fx-background-color: -loop-danger; }
+
+/* ---------- Toast ---------- */
+.toast-success {
+    -fx-background-color: #257238;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10 18;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 3);
+}
+.toast-error {
+    -fx-background-color: -loop-danger;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10 18;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 3);
+}
+
+/* ---------- Charts ---------- */
+.chart { -fx-background-color: transparent; }
+.chart-content { -fx-padding: 6; }

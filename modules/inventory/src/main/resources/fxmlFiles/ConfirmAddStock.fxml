@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.ConfirmAddStockController"
+      alignment="CENTER"
+      stylesheets="@../styles/confirm_add_stock.css"
+      spacing="15">
+
+
+    <ImageView fx:id="image"
+               fitWidth="120"
+               fitHeight="120"/>
+
+
+    <Label fx:id="details"/>
+
+
+    <Button text="Confirm"
+            onAction="#confirm"/>
+
+
+    <Button text="Cancel"
+            onAction="#cancel"/>
+
+
+</VBox>

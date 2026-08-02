@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ProductPage.ProductPage.SellerPageController"
+           maxWidth="Infinity"
+           maxHeight="Infinity"
+           styleClass="seller-page">
+
+    <Pane mouseTransparent="true"
+          maxWidth="Infinity"
+          maxHeight="Infinity"
+          styleClass="background-overlay" />
+
+    <ScrollPane fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="NEVER"
+                styleClass="seller-scroll">
+        <content>
+            <StackPane alignment="TOP_CENTER"
+                       styleClass="seller-scroll-content">
+            <VBox minWidth="760"
+                  maxWidth="Infinity"
+                  spacing="0"
+                  styleClass="seller-panel">
+                <HBox alignment="CENTER_LEFT"
+                      spacing="14"
+                      styleClass="seller-header">
+                    <Button text="&lt;  Back To Product Manager"
+                            mnemonicParsing="false"
+                            onAction="#backToProductManager"
+                            styleClass="detail-back-button" />
+                </HBox>
+
+                <VBox spacing="28"
+                      styleClass="seller-body">
+                    <Label fx:id="sellerTitleLabel"
+                           text="Add New Product"
+                           styleClass="seller-title" />
+
+                    <Region minHeight="2"
+                            prefHeight="2"
+                            maxHeight="2"
+                            styleClass="seller-divider" />
+
+                    <HBox spacing="42"
+                          alignment="TOP_LEFT">
+                        <VBox spacing="28"
+                              HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT"
+                                  spacing="34">
+                                <StackPane styleClass="seller-image-box">
+                                    <ImageView fx:id="mainPhotoPreview"
+                                               fitWidth="170"
+                                               fitHeight="170"
+                                               preserveRatio="false"
+                                               smooth="true" />
+                                    <Label fx:id="mainPhotoPlaceholder"
+                                           text="Main PNG"
+                                           styleClass="seller-image-placeholder" />
+                                </StackPane>
+
+                                <VBox spacing="14">
+                                    <Label text="Upload Product Photos"
+                                           styleClass="seller-section-label" />
+                                    <Button text="Upload PNGs"
+                                            mnemonicParsing="false"
+                                            onAction="#uploadProductImages"
+                                            styleClass="seller-upload-button" />
+                                    <Label fx:id="imageUploadStatusLabel"
+                                           text="Select multiple .png files. First image becomes main photo."
+                                           wrapText="true"
+                                           styleClass="seller-help-text" />
+                                    <Label fx:id="imageErrorLabel"
+                                           text=""
+                                           managed="false"
+                                           visible="false"
+                                           wrapText="true"
+                                           styleClass="seller-error-label" />
+                                </VBox>
+                            </HBox>
+
+                            <VBox spacing="10">
+                                <Label text="Product Name"
+                                       styleClass="seller-section-label" />
+                                <TextField fx:id="productNameField"
+                                           promptText="Kimchi Fried Rice"
+                                           styleClass="seller-text-field" />
+                                <Label fx:id="productNameErrorLabel"
+                                       text=""
+                                       managed="false"
+                                       visible="false"
+                                       wrapText="true"
+                                       styleClass="seller-error-label" />
+                            </VBox>
+                        </VBox>
+
+                        <Region minWidth="2"
+                                prefWidth="2"
+                                maxWidth="2"
+                                minHeight="350"
+                                styleClass="seller-vertical-divider" />
+
+                        <VBox spacing="16"
+                              HBox.hgrow="ALWAYS">
+                            <Label text="Image Order"
+                                   styleClass="seller-section-label" />
+                            <VBox fx:id="imageOrderList"
+                                  spacing="8"
+                                  styleClass="seller-image-order-list" />
+
+                            <VBox spacing="10">
+                                <Label text="Status"
+                                       styleClass="seller-section-label" />
+                                <CheckBox fx:id="statusCheckBox"
+                                          text="On"
+                                          selected="true"
+                                          styleClass="seller-status-toggle" />
+                            </VBox>
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="10">
+                        <Label text="Short Description"
+                               styleClass="seller-section-label" />
+                        <TextArea fx:id="shortDescriptionArea"
+                                  promptText="A bold and satisfying short description."
+                                  prefRowCount="4"
+                                  wrapText="true"
+                                  styleClass="seller-text-area" />
+                        <Label fx:id="shortDescriptionErrorLabel"
+                               text=""
+                               managed="false"
+                               visible="false"
+                               wrapText="true"
+                               styleClass="seller-error-label" />
+                    </VBox>
+
+                    <VBox spacing="10">
+                        <Label text="Extended Description"
+                               styleClass="seller-section-label" />
+                        <TextArea fx:id="extendedDescriptionArea"
+                                  promptText="Write the full product overview here."
+                                  prefRowCount="8"
+                                  wrapText="true"
+                                  styleClass="seller-text-area" />
+                        <Label fx:id="extendedDescriptionErrorLabel"
+                               text=""
+                               managed="false"
+                               visible="false"
+                               wrapText="true"
+                               styleClass="seller-error-label" />
+                    </VBox>
+
+                    <Region minHeight="2"
+                            prefHeight="2"
+                            maxHeight="2"
+                            styleClass="seller-divider" />
+
+                    <HBox alignment="TOP_LEFT"
+                          spacing="42">
+                        <GridPane hgap="16"
+                                  vgap="14"
+                                  HBox.hgrow="ALWAYS">
+                            <Label text="Dietary"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="0" />
+                            <ComboBox fx:id="dietaryComboBox"
+                                      promptText="Vegetarian"
+                                      styleClass="seller-combo"
+                                      GridPane.columnIndex="1"
+                                      GridPane.rowIndex="0" />
+                            <Label text="Health Goal"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="1" />
+                            <ComboBox fx:id="goalComboBox"
+                                      promptText="Balanced Meals"
+                                      styleClass="seller-combo"
+                                      GridPane.columnIndex="1"
+                                      GridPane.rowIndex="1" />
+                            <Label text="Cuisine"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="2" />
+                            <ComboBox fx:id="cuisineComboBox"
+                                      promptText="Asian"
+                                      styleClass="seller-combo"
+                                      GridPane.columnIndex="1"
+                                      GridPane.rowIndex="2" />
+                        </GridPane>
+
+                        <Region minWidth="2"
+                                prefWidth="2"
+                                maxWidth="2"
+                                minHeight="175"
+                                styleClass="seller-vertical-divider" />
+
+                        <GridPane hgap="16"
+                                  vgap="14"
+                                  HBox.hgrow="ALWAYS">
+                            <Label text="Ingredients"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="0" />
+                            <Button fx:id="pickBaseButton"
+                                    text="Pick Base"
+                                    mnemonicParsing="false"
+                                    onAction="#pickBase"
+                                    styleClass="seller-small-button"
+                                    GridPane.columnIndex="1"
+                                    GridPane.rowIndex="0" />
+                            <Label fx:id="baseErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   styleClass="seller-error-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="0" />
+                            <Button fx:id="pickProteinButton"
+                                    text="Pick Protein"
+                                    mnemonicParsing="false"
+                                    onAction="#pickProtein"
+                                    styleClass="seller-small-button"
+                                    GridPane.columnIndex="1"
+                                    GridPane.rowIndex="1" />
+                            <Label fx:id="proteinErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   styleClass="seller-error-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="1" />
+                            <Button fx:id="pickAddonsButton"
+                                    text="Pick Add-ons"
+                                    mnemonicParsing="false"
+                                    onAction="#pickAddons"
+                                    styleClass="seller-small-button"
+                                    GridPane.columnIndex="1"
+                                    GridPane.rowIndex="2" />
+                            <Label fx:id="addonErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   styleClass="seller-warning-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="2" />
+                        </GridPane>
+                    </HBox>
+
+                    <Region minHeight="2"
+                            prefHeight="2"
+                            maxHeight="2"
+                            styleClass="seller-divider" />
+
+                    <HBox alignment="TOP_LEFT"
+                          spacing="54"
+                          styleClass="seller-bottom-fields">
+                        <GridPane hgap="16"
+                                  vgap="14"
+                                  prefWidth="620"
+                                  styleClass="seller-form-grid"
+                                  HBox.hgrow="ALWAYS">
+                            <Label text="Spice Level"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="0" />
+                            <HBox alignment="CENTER"
+                                  spacing="0"
+                                  styleClass="seller-spice-counter"
+                                  GridPane.columnIndex="1"
+                                  GridPane.rowIndex="0">
+                                <Button text="-"
+                                        mnemonicParsing="false"
+                                        onAction="#decreaseSpiceLevel"
+                                        styleClass="seller-counter-button" />
+                                <Spinner fx:id="spiceLevelSpinner"
+                                         prefWidth="68"
+                                         styleClass="seller-spinner" />
+                                <Button text="+"
+                                        mnemonicParsing="false"
+                                        onAction="#increaseSpiceLevel"
+                                        styleClass="seller-counter-button" />
+                            </HBox>
+                            <Label fx:id="spiceErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   wrapText="true"
+                                   styleClass="seller-error-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="0" />
+                            <Label text="Cost"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="1" />
+                            <TextField fx:id="costField"
+                                       promptText="5.40"
+                                       styleClass="seller-small-field"
+                                       GridPane.columnIndex="1"
+                                       GridPane.rowIndex="1" />
+                            <Label fx:id="costErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   wrapText="true"
+                                   styleClass="seller-error-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="1" />
+                            <Label text="Price"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="2" />
+                            <TextField fx:id="priceField"
+                                       promptText="9.99"
+                                       styleClass="seller-small-field"
+                                       GridPane.columnIndex="1"
+                                       GridPane.rowIndex="2" />
+                            <Label fx:id="priceErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   wrapText="true"
+                                   styleClass="seller-error-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="2" />
+                            <Label text="Country"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="3" />
+                            <ComboBox fx:id="countryComboBox"
+                                      promptText="Type or choose country"
+                                      styleClass="seller-combo"
+                                      GridPane.columnIndex="1"
+                                      GridPane.rowIndex="3" />
+                            <Label fx:id="countryErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   wrapText="true"
+                                   styleClass="seller-error-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="3" />
+                        </GridPane>
+
+                        <GridPane hgap="16"
+                                  vgap="14"
+                                  prefWidth="520"
+                                  styleClass="seller-chef-grid"
+                                  HBox.hgrow="ALWAYS">
+                            <Label text="Chef"
+                                   styleClass="seller-section-label"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="0" />
+                            <Button fx:id="pickChefButton"
+                                    text="Pick Chef"
+                                    mnemonicParsing="false"
+                                    onAction="#pickChef"
+                                    styleClass="seller-small-button"
+                                    GridPane.columnIndex="1"
+                                    GridPane.rowIndex="0" />
+                            <Label fx:id="chefErrorLabel"
+                                   text=""
+                                   managed="false"
+                                   visible="false"
+                                   wrapText="true"
+                                   styleClass="seller-error-label"
+                                   GridPane.columnIndex="2"
+                                   GridPane.rowIndex="0" />
+                        </GridPane>
+                    </HBox>
+
+                    <HBox alignment="CENTER_RIGHT"
+                          spacing="18"
+                          styleClass="seller-action-row">
+                        <Button text="Discard"
+                                mnemonicParsing="false"
+                                onAction="#discardForm"
+                                styleClass="seller-discard-button" />
+                        <Button fx:id="saveProductButton"
+                                text="Save Product"
+                                mnemonicParsing="false"
+                                onAction="#saveProduct"
+                                styleClass="seller-save-button" />
+                    </HBox>
+
+                    <Label fx:id="sellerStatusLabel"
+                           text="Upload PNG photos. Main image is saved as order 1. Sequential images use the selected order."
+                           wrapText="true"
+                           styleClass="seller-status-label" />
+                </VBox>
+            </VBox>
+            </StackPane>
+        </content>
+    </ScrollPane>
+
+    <StackPane fx:id="sellerOverlay"
+               alignment="TOP_CENTER"
+               visible="false"
+               managed="false"
+               styleClass="seller-picker-overlay">
+        <VBox fx:id="ingredientPickerPane"
+              visible="false"
+              managed="false"
+              prefWidth="960"
+              maxWidth="960"
+              prefHeight="760"
+              maxHeight="760"
+              StackPane.alignment="TOP_CENTER"
+              styleClass="seller-picker-panel">
+            <HBox alignment="CENTER_LEFT"
+                  styleClass="seller-picker-header">
+                <Button text="&lt;  Back"
+                        mnemonicParsing="false"
+                        onAction="#closePickerPane"
+                        styleClass="seller-picker-back-button" />
+            </HBox>
+            <VBox spacing="24"
+                  styleClass="seller-picker-body">
+                <Label fx:id="ingredientPickerTitle"
+                       text="Set Bases"
+                       styleClass="seller-title" />
+                <Region minHeight="2"
+                        prefHeight="2"
+                        maxHeight="2"
+                        styleClass="seller-divider" />
+                <VBox styleClass="ingredient-option-card">
+                    <HBox alignment="CENTER_LEFT"
+                          styleClass="ingredient-option-header">
+                        <Label fx:id="ingredientPickerHeading"
+                               text="Choose Base Options"
+                               styleClass="ingredient-option-heading" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="ingredientSelectedFirstCheckBox"
+                                  text="Sort Selected First"
+                                  selected="true"
+                                  onAction="#sortIngredientPickerSelectedFirst"
+                                  styleClass="ingredient-select-all" />
+                        <Region minWidth="24"
+                                prefWidth="24"
+                                maxWidth="24" />
+                        <CheckBox fx:id="ingredientSelectAllCheckBox"
+                                  text="Select All"
+                                  onAction="#toggleAllIngredients"
+                                  styleClass="ingredient-select-all" />
+                    </HBox>
+                    <ScrollPane fx:id="ingredientListScroll"
+                                fitToWidth="true"
+                                hbarPolicy="NEVER"
+                                vbarPolicy="AS_NEEDED"
+                                prefHeight="430"
+                                maxHeight="430"
+                                styleClass="ingredient-list-scroll">
+                        <content>
+                            <VBox fx:id="ingredientOptionList"
+                                  styleClass="ingredient-option-list" />
+                        </content>
+                    </ScrollPane>
+                    <Button text="+  Add Ingredient"
+                            mnemonicParsing="false"
+                            onAction="#openAddIngredientPane"
+                            styleClass="ingredient-add-row-button" />
+                </VBox>
+                <HBox alignment="CENTER"
+                      spacing="18">
+                    <Button text="Cancel"
+                            mnemonicParsing="false"
+                            onAction="#closePickerPane"
+                            styleClass="seller-picker-cancel-button" />
+                    <Button text="Confirm"
+                            mnemonicParsing="false"
+                            onAction="#confirmIngredientSelection"
+                            styleClass="seller-confirm-button" />
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <VBox fx:id="addIngredientPane"
+              visible="false"
+              managed="false"
+              prefWidth="960"
+              maxWidth="960"
+              prefHeight="760"
+              maxHeight="760"
+              StackPane.alignment="TOP_CENTER"
+              styleClass="seller-picker-panel">
+            <HBox alignment="CENTER_LEFT"
+                  styleClass="seller-picker-header">
+                <Button text="&lt;  Back"
+                        mnemonicParsing="false"
+                        onAction="#backToIngredientPicker"
+                        styleClass="seller-picker-back-button" />
+            </HBox>
+            <VBox spacing="24"
+                  styleClass="seller-picker-body">
+                <Label text="Add Ingredient"
+                       styleClass="seller-title" />
+                <Region minHeight="2"
+                        prefHeight="2"
+                        maxHeight="2"
+                        styleClass="seller-divider" />
+                <GridPane hgap="22"
+                          vgap="18">
+                    <Label text="Ingredient Name"
+                           styleClass="seller-section-label"
+                           GridPane.columnIndex="0"
+                           GridPane.rowIndex="0" />
+                    <TextField fx:id="newIngredientNameField"
+                               promptText="Extra Burmese Tea Leaf"
+                               styleClass="seller-text-field"
+                               GridPane.columnIndex="1"
+                               GridPane.rowIndex="0" />
+                    <Label text="Category"
+                           styleClass="seller-section-label"
+                           GridPane.columnIndex="0"
+                           GridPane.rowIndex="1" />
+                    <HBox spacing="18"
+                          GridPane.columnIndex="1"
+                          GridPane.rowIndex="1">
+                        <Button fx:id="addIngredientBaseButton"
+                                text="Base"
+                                mnemonicParsing="false"
+                                onAction="#selectNewIngredientBase"
+                                styleClass="seller-small-button" />
+                        <Button fx:id="addIngredientProteinButton"
+                                text="Protein"
+                                mnemonicParsing="false"
+                                onAction="#selectNewIngredientProtein"
+                                styleClass="seller-small-button" />
+                        <Button fx:id="addIngredientAddonButton"
+                                text="Add-On"
+                                mnemonicParsing="false"
+                                onAction="#selectNewIngredientAddon"
+                                styleClass="seller-small-button" />
+                    </HBox>
+                </GridPane>
+
+                <VBox spacing="18"
+                      styleClass="ingredient-nutrition-card">
+                    <Label text="Nutritional Information"
+                           styleClass="ingredient-option-heading" />
+                    <Region minHeight="2"
+                            prefHeight="2"
+                            maxHeight="2"
+                            styleClass="seller-divider" />
+                    <GridPane hgap="34"
+                              vgap="18">
+                        <Label text="Calories" styleClass="ingredient-field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="newCaloriesField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Fat" styleClass="ingredient-field-label" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <TextField fx:id="newFatField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <Label text="Protein" styleClass="ingredient-field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="newProteinField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Saturated Fat" styleClass="ingredient-field-label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <TextField fx:id="newSaturatedFatField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="Carbohydrates" styleClass="ingredient-field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="newCarbsField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Fiber" styleClass="ingredient-field-label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <TextField fx:id="newFiberField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label text="Sugars" styleClass="ingredient-field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="newSugarsField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Sodium" styleClass="ingredient-field-label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <TextField fx:id="newSodiumField" text="0" styleClass="ingredient-number-field" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                    </GridPane>
+                </VBox>
+
+                <Label fx:id="addIngredientStatusLabel"
+                       text=""
+                       managed="false"
+                       visible="false"
+                       wrapText="true"
+                       styleClass="seller-error-label" />
+                <HBox alignment="CENTER_RIGHT"
+                      spacing="18">
+                    <Button text="Discard"
+                            mnemonicParsing="false"
+                            onAction="#backToIngredientPicker"
+                            styleClass="seller-discard-button" />
+                    <Button text="Add Ingredient"
+                            mnemonicParsing="false"
+                            onAction="#addNewIngredient"
+                            styleClass="seller-save-button" />
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <VBox fx:id="chefPickerPane"
+              visible="false"
+              managed="false"
+              prefWidth="960"
+              maxWidth="960"
+              prefHeight="760"
+              maxHeight="760"
+              StackPane.alignment="TOP_CENTER"
+              styleClass="seller-picker-panel">
+            <HBox alignment="CENTER_LEFT"
+                  styleClass="seller-picker-header">
+                <Button text="&lt;  Back"
+                        mnemonicParsing="false"
+                        onAction="#closePickerPane"
+                        styleClass="seller-picker-back-button" />
+            </HBox>
+            <VBox spacing="24"
+                  styleClass="seller-picker-body">
+                <Label text="Choose Chef"
+                       styleClass="seller-title" />
+                <Region minHeight="2"
+                        prefHeight="2"
+                        maxHeight="2"
+                        styleClass="seller-divider" />
+                <ScrollPane fx:id="chefListScroll"
+                            fitToWidth="true"
+                            hbarPolicy="NEVER"
+                            vbarPolicy="AS_NEEDED"
+                            prefHeight="520"
+                            maxHeight="520"
+                            styleClass="ingredient-list-scroll">
+                    <content>
+                        <VBox fx:id="chefOptionList"
+                              spacing="12" />
+                    </content>
+                </ScrollPane>
+                <Label fx:id="chefPickerStatusLabel"
+                       text=""
+                       managed="false"
+                       visible="false"
+                       wrapText="true"
+                       styleClass="seller-error-label" />
+            </VBox>
+        </VBox>
+    </StackPane>
+</StackPane>

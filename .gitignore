@@ -1,0 +1,20 @@
+# Java/Maven/Eclipse generated files
+**/target/
+**/bin/
+*.class
+.classpath
+.project
+.settings/
+
+# Local/duplicate databases
+*.db
+!database/loop.db
+*-journal
+*-wal
+*-shm
+
+# OS and IDE
+.DS_Store
+._*
+.idea/
+.vscode/

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.Manage_stock"
+            styleClass="root-pane"
+            stylesheets="@../styles/manageStock.css">
+	    <top>
+	      <HBox alignment="CENTER_LEFT">
+	         <children>
+	            <VBox>
+	               <children>
+	                  <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
+	               </children>
+	            </VBox>
+	            <Pane HBox.hgrow="ALWAYS" />
+	            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+	         </children>
+	      </HBox>
+	   </top>
+
+
+    <center>
+
+        <ScrollPane fitToWidth="true"
+                    fitToHeight="false"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED">
+
+
+            <VBox fillWidth="true"
+                  spacing="20"
+                  styleClass="page-container">
+
+
+                <ImageView fx:id="logo"
+                           fitWidth="120"
+                           fitHeight="120"/>
+
+
+                <Label text="🔄 Manage Stock"
+                       styleClass="title"/>
+
+
+
+                <VBox styleClass="main-container"
+                      spacing="10">
+
+
+                    <!-- Dynamic transfer items appear here -->
+                    <VBox fx:id="transferContainer"
+                          spacing="20"/>
+
+
+
+                    <Button text="+ Add Another Product"
+                            onAction="#addTransferItem"
+                            styleClass="transfer-btn"/>
+
+
+                </VBox>
+
+
+
+                <VBox alignment="CENTER"
+                      styleClass="transfer-stock">
+
+
+                    <Button text="Transfer Stock"
+                            onAction="#openSummary"
+                            styleClass="btn"/>
+
+
+                </VBox>
+
+
+            </VBox>
+
+
+        </ScrollPane>
+
+
+    </center>
+
+
+</BorderPane>

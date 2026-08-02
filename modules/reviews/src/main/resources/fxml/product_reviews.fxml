@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="root" styleClass="app-bg" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="loop.reviews.controller.ProductReviewsController">
+    <BorderPane>
+        <top>
+            <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+                <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
+                <Button text="&lt; Back" styleClass="btn-ghost" onAction="#goBack"/>
+                <ImageView fitHeight="38" preserveRatio="true">
+                    <image><Image url="@../images/loop-logo.png"/></image>
+                </ImageView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Analytics" styleClass="btn-ghost" onAction="#openAnalytics"/>
+                <Button fx:id="writeButton" text="Write a Review" styleClass="btn-primary" onAction="#openSubmit"/>
+            </HBox>
+        </top>
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="scroll">
+                <VBox spacing="16" styleClass="content">
+                    <padding><Insets top="20" right="26" bottom="24" left="26"/></padding>
+
+                    <!-- Product header + average rating -->
+                    <VBox spacing="6" styleClass="card">
+                        <padding><Insets top="18" right="22" bottom="18" left="22"/></padding>
+                        <Label fx:id="productNameLabel" styleClass="page-title"/>
+                        <Label fx:id="productMetaLabel" styleClass="product-meta"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label fx:id="avgStarsLabel" styleClass="stars-big"/>
+                            <Label fx:id="avgValueLabel" styleClass="avg-value"/>
+                            <Label fx:id="reviewCountLabel" styleClass="product-meta"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Rating distribution -->
+                    <VBox fx:id="distributionBox" spacing="8" styleClass="card">
+                        <padding><Insets top="16" right="22" bottom="18" left="22"/></padding>
+                        <Label text="Rating distribution" styleClass="section-title"/>
+                    </VBox>
+
+                    <!-- Filter / sort / search controls -->
+                    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="card">
+                        <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
+                        <Label text="Sort" styleClass="field-label"/>
+                        <ComboBox fx:id="sortCombo"/>
+                        <Label text="Stars" styleClass="field-label"/>
+                        <ComboBox fx:id="starFilterCombo"/>
+                        <TextField fx:id="keywordField" promptText="Search comments..." HBox.hgrow="ALWAYS"/>
+                        <Button text="Apply" styleClass="btn-primary" onAction="#applyFilters"/>
+                        <Button text="Clear" styleClass="btn-ghost" onAction="#clearFilters"/>
+                    </HBox>
+
+                    <!-- Review list built in code -->
+                    <VBox fx:id="reviewList" spacing="12"/>
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</StackPane>

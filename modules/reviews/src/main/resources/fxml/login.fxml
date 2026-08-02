@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+
+<StackPane styleClass="app-bg" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="loop.reviews.controller.LoginController">
+    <VBox alignment="CENTER" spacing="18" maxWidth="440" styleClass="card">
+        <padding><Insets top="36" right="40" bottom="36" left="40"/></padding>
+        <ImageView fitHeight="88" preserveRatio="true">
+            <image><Image url="@../images/loop-logo.png"/></image>
+        </ImageView>
+        <Label text="Reviews &amp; Ratings" styleClass="brand-sub"/>
+        <Region prefHeight="6"/>
+        <VBox spacing="6">
+            <Label text="Email" styleClass="field-label"/>
+            <TextField fx:id="emailField" promptText="you@loop.com"/>
+        </VBox>
+        <VBox spacing="6">
+            <Label text="Password" styleClass="field-label"/>
+            <PasswordField fx:id="passwordField" promptText="min. 8 characters"/>
+        </VBox>
+        <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+        <Button fx:id="loginButton" text="Log In" maxWidth="Infinity"
+                styleClass="btn-primary" onAction="#handleLogin"/>
+    </VBox>
+</StackPane>

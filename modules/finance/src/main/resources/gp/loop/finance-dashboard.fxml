@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" spacing="12.0" styleClass="root dashboard-app-root finance-page finance-dashboard-root" style="-fx-background-color:#FFF8E1;" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gp.loop.finance.FinanceDashboardController">
+   <padding>
+      <Insets bottom="16.0" left="20.0" right="20.0" top="10.0" />
+   </padding>
+   <children>
+      <!-- ── Header banner ── -->
+      <VBox styleClass="dashboard-header-panel" spacing="10.0" maxWidth="1.7976931348623157E308">
+         <children>
+            <BorderPane maxWidth="1.7976931348623157E308">
+               <left>
+                  <ImageView fitHeight="130.0" pickOnBounds="true" preserveRatio="true" styleClass="dashboard-loop-logo">
+                     <image>
+                        <Image url="@/gp/loop/loop-logo.png" />
+                     </image>
+                  </ImageView>
+               </left>
+               <center>
+                  <Label styleClass="dashboard-hero-title" text="Finance &amp; reporting" BorderPane.alignment="CENTER" />
+               </center>
+               <right>
+                  <Button mnemonicParsing="false" onAction="#signOut" styleClass="dashboard-signout-btn" text="Sign out" />
+               </right>
+            </BorderPane>
+         </children>
+      </VBox>
+      <!-- Filter pills -->
+      <HBox alignment="CENTER" spacing="24.0" styleClass="dashboard-filter-row">
+         <children>
+            <MenuButton fx:id="menuDateRange" mnemonicParsing="false" styleClass="dashboard-date-range-pill" text="Date Range: Last 30 Days" style="-fx-font-size:20px;-fx-font-weight:700;-fx-padding:18 36 18 36;-fx-background-radius:999;-fx-border-radius:999;-fx-background-color:rgba(27, 94, 32, 0.35);-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-text-fill:#1a3a1a;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.12),14,0.3,0,5);">
+               <items>
+                  <MenuItem onAction="#dateRange7" text="Last 7 days" />
+                  <MenuItem onAction="#dateRange30" text="Last 30 days" />
+                  <MenuItem onAction="#dateRange90" text="Last 90 days" />
+               </items>
+            </MenuButton>
+            <MenuButton fx:id="menuCategory" mnemonicParsing="false" styleClass="dashboard-sage-menu" text="Category: All" style="-fx-font-size:20px;-fx-font-weight:700;-fx-padding:18 36 18 36;-fx-background-radius:999;-fx-border-radius:999;-fx-background-color:rgba(27, 94, 32, 0.35);-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-text-fill:#1a3a1a;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.12),14,0.3,0,5);">
+               <items>
+                  <MenuItem disable="true" text="All categories" />
+               </items>
+            </MenuButton>
+            <MenuButton fx:id="menuCustomer" mnemonicParsing="false" styleClass="dashboard-sage-menu" text="Customer: All" style="-fx-font-size:20px;-fx-font-weight:700;-fx-padding:18 36 18 36;-fx-background-radius:999;-fx-border-radius:999;-fx-background-color:rgba(27, 94, 32, 0.35);-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-text-fill:#1a3a1a;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.12),14,0.3,0,5);">
+               <items>
+                  <MenuItem disable="true" text="All customers" />
+               </items>
+            </MenuButton>
+            <Button mnemonicParsing="false" onAction="#exportCsv" styleClass="dashboard-export-csv" text="Export CSV" style="-fx-font-size:20px;-fx-font-weight:700;-fx-padding:18 36 18 36;-fx-background-radius:999;-fx-border-radius:999;-fx-background-color:rgba(255,136,0,0.35);-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-text-fill:#1a3a1a;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.12),14,0.3,0,5);" />
+         </children>
+      </HBox>
+      <!-- KPI cards -->
+      <HBox alignment="CENTER" spacing="16.0" styleClass="dashboard-kpi-row">
+         <children>
+            <VBox alignment="CENTER" spacing="12.0" styleClass="dashboard-kpi-card" HBox.hgrow="ALWAYS" style="-fx-background-color:rgba(255,255,255,0.45);-fx-background-radius:100;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:100;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),32,0.4,0,10);">
+               <children>
+                  <Label text="Total Revenue" style="-fx-font-size:13px;-fx-font-weight:700;-fx-text-fill:#1a3a1a;-fx-background-color:#a9c0a3;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 22 8 22;" />
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Label fx:id="kpiRevenueValue" text="—" style="-fx-font-size:19px;-fx-font-weight:800;-fx-background-color:#f4c88a;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 16 8 16;" />
+                        <Label fx:id="kpiRevenueDelta" styleClass="dashboard-kpi-delta-bubble" text="" style="-fx-background-color:linear-gradient(to bottom, #d8ffc8, #c3f5b4, #a8ea99);-fx-background-radius:100;-fx-padding:9 24 9 24;-fx-border-color:rgba(255,255,255,0.55);-fx-border-width:1;-fx-border-radius:100;-fx-font-size:16px;-fx-font-weight:800;-fx-text-fill:#000000;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="12.0" styleClass="dashboard-kpi-card" HBox.hgrow="ALWAYS" style="-fx-background-color:rgba(255,255,255,0.45);-fx-background-radius:100;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:100;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),32,0.4,0,10);">
+               <children>
+                  <Label text="Total Orders" style="-fx-font-size:13px;-fx-font-weight:700;-fx-text-fill:#1a3a1a;-fx-background-color:#a9c0a3;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 22 8 22;" />
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Label fx:id="kpiOrdersValue" text="—" style="-fx-font-size:19px;-fx-font-weight:800;-fx-background-color:#f4c88a;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 16 8 16;" />
+                        <Label fx:id="kpiOrdersDelta" styleClass="dashboard-kpi-delta-bubble" text="" style="-fx-background-color:linear-gradient(to bottom, #d8ffc8, #c3f5b4, #a8ea99);-fx-background-radius:100;-fx-padding:9 24 9 24;-fx-border-color:rgba(255,255,255,0.55);-fx-border-width:1;-fx-border-radius:100;-fx-font-size:16px;-fx-font-weight:800;-fx-text-fill:#000000;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="12.0" styleClass="dashboard-kpi-card" HBox.hgrow="ALWAYS" style="-fx-background-color:rgba(255,255,255,0.45);-fx-background-radius:100;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:100;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),32,0.4,0,10);">
+               <children>
+                  <Label text="Total Profit" style="-fx-font-size:13px;-fx-font-weight:700;-fx-text-fill:#1a3a1a;-fx-background-color:#a9c0a3;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 22 8 22;" />
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Label fx:id="kpiProfitValue" text="—" style="-fx-font-size:19px;-fx-font-weight:800;-fx-background-color:#f4c88a;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 16 8 16;" />
+                        <Label fx:id="kpiProfitDelta" styleClass="dashboard-kpi-delta-bubble" text="" style="-fx-background-color:linear-gradient(to bottom, #d8ffc8, #c3f5b4, #a8ea99);-fx-background-radius:100;-fx-padding:9 24 9 24;-fx-border-color:rgba(255,255,255,0.55);-fx-border-width:1;-fx-border-radius:100;-fx-font-size:16px;-fx-font-weight:800;-fx-text-fill:#000000;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="12.0" styleClass="dashboard-kpi-card" HBox.hgrow="ALWAYS" style="-fx-background-color:rgba(255,255,255,0.45);-fx-background-radius:100;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:100;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),32,0.4,0,10);">
+               <children>
+                  <Label text="Avg Order Value" style="-fx-font-size:13px;-fx-font-weight:700;-fx-text-fill:#1a3a1a;-fx-background-color:#a9c0a3;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 22 8 22;" />
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Label fx:id="kpiAovValue" text="—" style="-fx-font-size:19px;-fx-font-weight:800;-fx-background-color:#f4c88a;-fx-background-radius:100;-fx-background-insets:0;-fx-padding:8 16 8 16;" />
+                        <Label fx:id="kpiAovDelta" styleClass="dashboard-kpi-delta-bubble" text="" style="-fx-background-color:linear-gradient(to bottom, #d8ffc8, #c3f5b4, #a8ea99);-fx-background-radius:100;-fx-padding:9 24 9 24;-fx-border-color:rgba(255,255,255,0.55);-fx-border-width:1;-fx-border-radius:100;-fx-font-size:16px;-fx-font-weight:800;-fx-text-fill:#000000;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <!-- Charts + bottom combined -->
+      <HBox alignment="TOP_CENTER" spacing="18.0" VBox.vgrow="ALWAYS">
+         <children>
+            <!-- Left column: line chart on top, table below -->
+            <VBox spacing="10.0" prefWidth="600.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <StackPane fx:id="paneLineChart" styleClass="chart-card chart-card-interactive" prefHeight="260.0" minHeight="260.0" maxHeight="260.0" VBox.vgrow="NEVER" style="-fx-background-color:rgba(255,255,255,0.40);-fx-background-radius:100;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:100;-fx-padding:20 30;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),28,0.4,0,10);">
+                     <children>
+                        <LineChart fx:id="chartLine" animated="false" createSymbols="false" legendVisible="true" legendSide="BOTTOM" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="revenue-costs-chart dashboard-line-chart" title="">
+                           <xAxis>
+                              <CategoryAxis />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis autoRanging="true" />
+                           </yAxis>
+                        </LineChart>
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="paneTable" styleClass="chart-card chart-card-interactive table-glass-wrap" VBox.vgrow="ALWAYS" style="-fx-background-color:rgba(255,255,255,0.40);-fx-background-radius:40;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:40;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),28,0.4,0,10);">
+                     <children>
+                        <TableView fx:id="tableOrders" maxHeight="1.7976931348623157E308" styleClass="dashboard-table">
+                           <columns>
+                              <TableColumn fx:id="colDate" prefWidth="168.0" text="Order date" />
+                              <TableColumn fx:id="colTotal" prefWidth="118.0" text="Total price" />
+                              <TableColumn fx:id="colCost" prefWidth="104.0" text="Cost" />
+                              <TableColumn fx:id="colProfit" prefWidth="104.0" text="Profit" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </StackPane>
+               </children>
+            </VBox>
+            <!-- Right column: bar chart on top, pie below -->
+            <VBox spacing="10.0" prefWidth="600.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <StackPane fx:id="paneBarChart" styleClass="chart-card chart-card-interactive" prefHeight="260.0" minHeight="260.0" maxHeight="260.0" VBox.vgrow="NEVER" style="-fx-background-color:rgba(255,255,255,0.40);-fx-background-radius:100;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:100;-fx-padding:20 30;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),28,0.4,0,10);">
+                     <children>
+                        <BarChart fx:id="chartBar" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="customer-growth-chart dashboard-bar-chart" title="">
+                           <xAxis>
+                              <CategoryAxis />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis autoRanging="true" />
+                           </yAxis>
+                        </BarChart>
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="panePieChart" styleClass="chart-card chart-card-interactive pie-card" VBox.vgrow="ALWAYS" style="-fx-background-color:rgba(255,255,255,0.40);-fx-background-radius:100;-fx-border-color:rgba(255,255,255,0.75);-fx-border-width:1.6;-fx-border-radius:100;-fx-padding:24;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.14),28,0.4,0,10);">
+                     <children>
+                        <PieChart fx:id="chartPie" labelsVisible="false" legendVisible="true" legendSide="RIGHT" styleClass="cost-breakdown-chart dashboard-pie-chart" title="" />
+                     </children>
+                  </StackPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

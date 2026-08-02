@@ -1,0 +1,191 @@
+.root-pane {
+    -fx-background-color: #F7F4DB; 
+    -fx-padding: 40px;
+    -fx-border-color: #0E4822;   
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+	-fx-background-color: rgba(255, 255, 255, 0.18);
+	    -fx-background-radius: 20;
+	    -fx-border-color: rgba(255, 255, 255, 0.35);
+	    -fx-border-width: 1.5;
+	    -fx-border-radius: 20;
+
+	    -fx-effect: dropshadow(gaussian,
+	                            rgba(0,0,0,0.25),
+	                            20,
+	                            0.2,
+	                            0,
+	                            8);
+
+	    -fx-padding: 20;
+}
+
+.title-label {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1B5E20;
+}
+
+.header-container {
+    -fx-padding: 0 0 5px 15px;
+}
+
+.logo-fork {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-size: 38px;
+    -fx-text-fill: #0E4822;
+    -fx-font-weight: bold;
+}
+
+.logo-text {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 34px;
+    -fx-text-fill: #0E4822;
+}
+
+
+.page-container{
+    -fx-padding:20px 50px 20px 50px;
+}
+
+.subtitle-text {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #000000;
+}
+
+.main-card {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #AEB3B0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 24px;
+    -fx-background-radius: 24px;
+    -fx-padding: 35px 35px 25px 35px;
+}
+
+.food-card {
+    -fx-background-color: #C8E5C9;
+    -fx-background-radius: 12px;
+    -fx-padding: 12px;
+    -fx-pref-width: 155px;
+    -fx-pref-height: 185px;
+}
+
+.food-title {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-text-fill: #0E4822;
+}
+
+.image-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10px;
+    -fx-padding: 5px;
+}
+
+.table-header-cell {
+    -fx-background-color: #C1DEC3;
+    -fx-text-fill: #0E4822;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-padding: 7px 10px;
+    -fx-alignment: center-left;
+    -fx-border-color: #92C094;
+    -fx-border-width: 1px;
+}
+
+.table-cell {
+    -fx-background-color: #D2ECD4;
+    -fx-text-fill: #222222;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-size: 11px;
+    -fx-padding: 7px 10px;
+    -fx-alignment: center-left;
+    -fx-border-color: #A9D1AA;
+    -fx-border-width: 1px;
+}
+
+.table-cell-left {
+    -fx-background-color: #D2ECD4;
+    -fx-text-fill: #0E4822;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-padding: 7px 10px;
+    -fx-alignment: center-left;
+    -fx-border-color: #A9D1AA;
+    -fx-border-width: 1px;
+}
+
+.actions-bar {
+    -fx-background-color: #FCF4DA;
+    -fx-background-radius: 35px;
+    -fx-padding: 12px 35px;
+    -fx-pref-height: 60px;
+}
+
+.add-stock-label {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-weight: 900;
+    -fx-font-size: 26px;
+    -fx-text-fill: #0E4822;
+}
+
+.location-link {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-text-fill: #0E4822;
+    -fx-underline: true;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+.location-link:hover {
+    -fx-text-fill: #14612E;
+}
+
+.action-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0E4822;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.action-btn:hover {
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+.table-cell-selected {
+    -fx-background-color: yellow;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+}
+
+.trash-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #707070;
+    -fx-font-size: 22px;
+    -fx-cursor: hand;
+}
+
+.back-btn{
+	-fx-background-color: transparent;
+	-fx-text-fill: #0E4822;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.back-btn:hover {
+    -fx-text-fill: blue;
+}
+
+.trash-btn:hover {
+    -fx-text-fill: #FF3B30;
+}

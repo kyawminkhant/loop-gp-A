@@ -1,0 +1,61 @@
+.main-container {
+    -fx-background-color: #FFF8E1;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.title-label {
+    -fx-text-fill: #1B5E20;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.dashboard-container {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+.dashboard-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #1B5E20;
+    -fx-border-width: 1.5px;
+    -fx-padding: 40px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0.4, 0, 8);
+}
+
+.dashboard-tile {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-padding: 20px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0.3, 0, 4);
+}
+
+.dashboard-tile:hover {
+    -fx-background-color: #E8F5E9;
+    -fx-border-color: #1B5E20;
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(27, 94, 32, 0.2), 15, 0.4, 0, 6);
+}
+
+.menu-label {
+    -fx-text-fill: #1B5E20;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ProductPage.ProductPage.ProductMenuController"
+           maxWidth="Infinity"
+           maxHeight="Infinity"
+           styleClass="team-hub-page">
+
+    <Pane mouseTransparent="true"
+          maxWidth="Infinity"
+          maxHeight="Infinity"
+          styleClass="background-overlay" />
+
+    <VBox maxWidth="Infinity"
+          maxHeight="Infinity"
+          spacing="24"
+          styleClass="team-hub-frame">
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="24"
+              styleClass="team-hub-header">
+            <Button text="&lt;  Back To Hub"
+                    mnemonicParsing="false"
+                    onAction="#backToHub"
+                    styleClass="hub-back-button" />
+
+            <ImageView fitWidth="100"
+                       fitHeight="100"
+                       preserveRatio="true"
+                       pickOnBounds="true">
+                <image>
+                    <Image url="@images/nobglooplogo.png" />
+                </image>
+            </ImageView>
+
+            <VBox spacing="5">
+                <Label text="Products"
+                       styleClass="team-hub-title" />
+                <Label text="Choose which product workspace to open"
+                       styleClass="team-hub-subtitle" />
+            </VBox>
+        </HBox>
+
+        <VBox alignment="CENTER"
+              spacing="22"
+              styleClass="product-menu-content">
+            <HBox alignment="CENTER"
+                  spacing="28">
+                <Button mnemonicParsing="false"
+                        onAction="#openMainPage"
+                        styleClass="product-menu-card">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="14">
+                            <ImageView fitWidth="90" fitHeight="90" preserveRatio="true">
+                                <image>
+                                    <Image url="@hubs-icon/products.png" />
+                                </image>
+                            </ImageView>
+                            <Label text="Main Page"
+                                   styleClass="component-title" />
+                            <Label text="Open customer product catalogue"
+                                   wrapText="true"
+                                   styleClass="component-caption" />
+                        </VBox>
+                    </graphic>
+                </Button>
+
+                <Button mnemonicParsing="false"
+                        onAction="#openSellerPage"
+                        styleClass="product-menu-card">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="14">
+                            <ImageView fitWidth="90" fitHeight="90" preserveRatio="true">
+                                <image>
+                                    <Image url="@hubs-icon/inventory-warehousing.png" />
+                                </image>
+                            </ImageView>
+                            <Label text="Product Manager"
+                                   styleClass="component-title" />
+                            <Label text="Manage products and add seller items"
+                                   wrapText="true"
+                                   styleClass="component-caption" />
+                        </VBox>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <Label fx:id="statusLabel"
+                   text="Main Page and Product Manager are connected."
+                   styleClass="team-hub-status" />
+        </VBox>
+    </VBox>
+</StackPane>

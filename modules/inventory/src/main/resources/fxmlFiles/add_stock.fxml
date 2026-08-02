@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.AddStockController"
+      spacing="15"
+      alignment="CENTER">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Add Stock"/>
+
+    <ImageView fx:id="foodImage"
+               fitWidth="120"
+               fitHeight="120"
+               preserveRatio="true"/>
+
+    <Button text="Upload Image"
+            onAction="#uploadImage"/>
+
+
+    <TextField fx:id="ingredientID"
+               promptText="Ingredient ID"/>
+
+    <TextField fx:id="ingredientName"
+               promptText="Ingredient Name"/>
+
+    <TextField fx:id="stockQuantity"
+               promptText="Stock Quantity"/>
+
+    <TextField fx:id="warehouseID"
+               promptText="Warehouse ID"/>
+
+    <TextField fx:id="capacity"
+               promptText="Capacity"/>
+
+
+    <Button text="Continue"
+            onAction="#showConfirmation"/>
+
+</VBox>

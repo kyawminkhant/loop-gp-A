@@ -1,0 +1,13 @@
+.page {
+    -fx-background-color: white;
+    -fx-font-family: "Segoe UI";
+}
+
+.success-pill {
+    -fx-background-color: #9df5a4;
+    -fx-background-radius: 60;
+    -fx-text-fill: black;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-padding: 40 70;
+}

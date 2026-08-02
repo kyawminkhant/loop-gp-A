@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:controller="LoopProject.loopproject.controllers.DeliverySummary" styleClass="deliverysummary" stylesheets="@../styles/deliverySummary.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+
+    <center>
+        <VBox spacing="16" styleClass="page">
+        
+            <Button onAction="#goBack" styleClass="back-button" text="← Back"/>
+
+            <Label styleClass="title" text="Delivery Summary"/>
+
+            <HBox spacing="16" styleClass="summary-container">
+
+                <VBox styleClass="summary-card">
+                    <Label fx:id="activeDeliveriesNumber" styleClass="number" text="18"/>
+                    <Label styleClass="label" text="Active Deliveries"/>
+                    <Region styleClass="bar-green"/>
+                </VBox>
+
+                <VBox styleClass="summary-card">
+                    <Label fx:id="idleDriversNumber" styleClass="number" text="2"/>
+                    <Label styleClass="label" text="Idle Drivers"/>
+                    <Region styleClass="bar-yellow"/>
+                </VBox>
+
+                <VBox styleClass="summary-card">
+                    <Label fx:id="failedAttemptsNumber" styleClass="number" text="1"/>
+                    <Label styleClass="label" text="Failed Attempts"/>
+                    <Region styleClass="bar-red"/>
+                </VBox>
+
+                <VBox styleClass="summary-card">
+                    <Label fx:id="warehouseBacklogNumber" styleClass="number" text="6"/>
+                    <Label styleClass="label" text="Warehouse Backlog"/>
+                    <Region styleClass="bar-blue"/>
+                </VBox>
+
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>

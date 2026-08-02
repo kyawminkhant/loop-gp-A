@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
+
+<StackPane styleClass="app-bg" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="loop.reviews.controller.HomeController">
+    <BorderPane>
+        <top>
+            <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+                <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
+                <ImageView fitHeight="40" preserveRatio="true">
+                    <image><Image url="@../images/loop-logo.png"/></image>
+                </ImageView>
+                <Label text="Reviews &amp; Ratings" styleClass="topbar-sub"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="welcomeLabel" styleClass="topbar-user"/>
+                <Button fx:id="myReviewsButton" text="My Reviews" styleClass="btn-ghost" onAction="#openMyReviews"/>
+                <Button fx:id="adminButton" text="Admin Moderation" styleClass="btn-ghost" onAction="#openAdmin"/>
+                <Button text="Log Out" styleClass="btn-ghost" onAction="#logout"/>
+            </HBox>
+        </top>
+        <center>
+            <VBox spacing="12" styleClass="content">
+                <padding><Insets top="22" right="26" bottom="22" left="26"/></padding>
+                <Label text="Browse dishes to read or write reviews" styleClass="page-title"/>
+                <Label text="Products you have purchased are marked so you can leave a review." styleClass="page-subtitle"/>
+                <ScrollPane fitToWidth="true" styleClass="scroll" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="productList" spacing="12"/>
+                </ScrollPane>
+            </VBox>
+        </center>
+    </BorderPane>
+</StackPane>

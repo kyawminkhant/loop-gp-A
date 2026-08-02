@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<Button xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="ProductPage.ProductPage.FoodBarController"
+        fx:id="foodCardButton"
+        onAction="#handleFoodClick"
+        mnemonicParsing="false"
+        prefWidth="940"
+        maxWidth="940"
+        minHeight="170"
+        prefHeight="170"
+        maxHeight="170"
+        styleClass="food-card-button">
+    <graphic>
+        <HBox alignment="CENTER_LEFT"
+              prefWidth="900"
+              maxWidth="900"
+              minHeight="136"
+              prefHeight="136"
+              maxHeight="136"
+              spacing="24"
+              styleClass="food-bar">
+
+    <ImageView fx:id="foodImage"
+               fitWidth="142"
+               fitHeight="136"
+               pickOnBounds="true"
+               preserveRatio="false"
+               styleClass="food-image" />
+
+    <VBox alignment="CENTER_LEFT"
+          spacing="7"
+          HBox.hgrow="ALWAYS"
+          styleClass="food-details">
+        <HBox alignment="CENTER_LEFT">
+            <VBox spacing="7" HBox.hgrow="ALWAYS">
+                <Label fx:id="foodNameLabel"
+                       text="Kimchi Fried Rice"
+                       wrapText="false"
+                       styleClass="food-name" />
+
+                <HBox alignment="CENTER_LEFT" spacing="11">
+                    <HBox fx:id="ratingStarsBox"
+                          alignment="CENTER_LEFT"
+                          spacing="1"
+                          styleClass="rating-stars" />
+                    <Label fx:id="reviewCountLabel"
+                           text="(0)"
+                           styleClass="review-count" />
+                </HBox>
+            </VBox>
+
+            <HBox alignment="CENTER_RIGHT" spacing="8">
+                <Label fx:id="calorieLabel"
+                       id="calorieLabel"
+                       text="0 kcal"
+                       visible="false"
+                       managed="false"
+                       styleClass="food-calories" />
+                <Label fx:id="priceLabel"
+                       text="0.00"
+                       styleClass="food-price" />
+            </HBox>
+        </HBox>
+
+        <Region minHeight="1"
+                prefHeight="1"
+                maxHeight="1"
+                maxWidth="Infinity"
+                styleClass="food-divider" />
+
+        <HBox alignment="TOP_LEFT" spacing="20">
+            <VBox minWidth="142"
+                  prefWidth="142"
+                  maxWidth="142"
+                  spacing="7"
+                  styleClass="fact-list">
+                <HBox alignment="CENTER_LEFT" spacing="7">
+                    <ImageView fx:id="dietaryIcon"
+                               fitWidth="18"
+                               fitHeight="18"
+                               preserveRatio="true" />
+                    <Label fx:id="dietaryLabel"
+                           text="Vegetarian"
+                           styleClass="fact-text" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="7">
+                    <ImageView fx:id="goalIcon"
+                               fitWidth="18"
+                               fitHeight="18"
+                               preserveRatio="true" />
+                    <Label fx:id="goalLabel"
+                           text="Balanced Meals"
+                           styleClass="fact-text" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="7">
+                    <ImageView fx:id="cuisineIcon"
+                               fitWidth="18"
+                               fitHeight="18"
+                               preserveRatio="true" />
+                    <Label fx:id="cuisineLabel"
+                           text="Asian"
+                           styleClass="fact-text" />
+                </HBox>
+            </VBox>
+
+            <Region minWidth="1"
+                    prefWidth="1"
+                    maxWidth="1"
+                    minHeight="76"
+                    styleClass="facts-divider" />
+
+            <Label fx:id="descriptionLabel"
+                   HBox.hgrow="ALWAYS"
+                   maxWidth="Infinity"
+                   text="A bold and satisfying dish with rich flavour and a short product description."
+                   wrapText="true"
+                   styleClass="food-description" />
+        </HBox>
+    </VBox>
+
+        </HBox>
+    </graphic>
+</Button>

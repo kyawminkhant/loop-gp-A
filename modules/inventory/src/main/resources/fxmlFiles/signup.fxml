@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      stylesheets="@../styles/authentication.css"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.Signup">
+      <top>
+      	<VBox alignment="CENTER">
+      		<ImageView fx:id="logoImage"
+      				   preserveRatio="true"
+        			   fitWidth="120"
+      				   fitHeight="120"/>
+			<Label styleClass="main-title">Inventory</Label>
+		</VBox>
+     </top>
+<center>
+	<VBox spacing="20" maxWidth="650" prefWidth="650" maxHeight="500">
+		<VBox spacing="20" styleClass="signup-box" >
+			<Label styleClass="title">Username</Label>
+				<TextField fx:id="usernameField" promptText="Create a Username" styleClass="title2"/>
+			<Label styleClass="title">Password</Label>
+				<PasswordField fx:id="passwordField" promptText="Create a Password" styleClass="title2"/>
+				<HBox alignment="CENTER" spacing="30">
+					<Button text="Signup" onAction="#handleSignUp" styleClass="signup-button"/>	
+					<Button text="Login" onAction="#handleLogin" styleClass="login-button"/>
+				</HBox>
+				<VBox alignment="CENTER">
+					<Label fx:id="messageLabelAccess" styleClass="messageLabelAccess"/>
+				</VBox>
+		</VBox>
+	</VBox>
+</center>
+</BorderPane>

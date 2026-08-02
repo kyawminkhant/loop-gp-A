@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="popup-root" stylesheets="@../styles/add_stock.css"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.AddIngredientPopupController"
+      prefWidth="420" prefHeight="550" alignment="TOP_CENTER">
+    
+    <padding>
+        <Insets top="20" right="30" bottom="20" left="30"/>
+    </padding>
+
+    <HBox alignment="CENTER" spacing="10">
+        <HBox styleClass="logo-container">
+            <Label text="🔄" styleClass="logo-icon"/>
+            <Label text="oop" styleClass="logo-text"/>
+        </HBox>
+        <Label text="Manage Ingredient" styleClass="popup-title" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <Separator />
+
+    <VBox spacing="8" alignment="CENTER">
+        <Label text="Ingredient Photo" styleClass="input-label"/>
+        <StackPane styleClass="image-preview-holder" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-color: #f9f9f9;" prefWidth="120" prefHeight="120">
+            <ImageView fx:id="imgPreview" fitWidth="110" fitHeight="110" preserveRatio="true"/>
+        </StackPane>
+        <Button text="Choose Photo..." onAction="#handleSelectPhoto" styleClass="secondary-button"/>
+    </VBox>
+
+    <GridPane hgap="10" vgap="15" alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints minWidth="120" prefWidth="120" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        
+        <children>
+            <Label text="Ingredient ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="txtId" promptText="e.g., ING-01" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            
+            <Label text="Ingredient Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="txtName" promptText="e.g., Tomatoes" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            
+            <Label text="Initial Stock Qty:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="txtStock" promptText="e.g., 50" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        </children>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+        <Button text="Save New" onAction="#handleSave" styleClass="btn-save" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Update" onAction="#handleUpdate" styleClass="btn-update" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Delete" onAction="#handleDelete" styleClass="btn-delete" style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Cancel" onAction="#handleCancel" styleClass="btn-cancel" style="-fx-background-color: #757575; -fx-text-fill: white;"/>
+    </HBox>
+    
+</VBox>

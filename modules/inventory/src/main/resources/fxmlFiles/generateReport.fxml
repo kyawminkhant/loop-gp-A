@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.Generate_report"
+      styleClass="root-pane" stylesheets="@../styles/table.css">
+   <top>
+      <HBox alignment="CENTER_LEFT">
+         <padding>
+            <Insets top="20" right="30" bottom="10" left="30"/>
+         </padding>
+         <children>
+            <VBox styleClass="greenBorder">
+               <children>
+                  <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
+               </children>
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS" />
+            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox fillWidth="true" spacing="20" styleClass="page-container">
+         <children>
+            <VBox fillWidth="true" spacing="20" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="Inventory and Warehouse report" styleClass="title-label"/>
+                  <HBox spacing="50">
+                     <children>
+                        <HBox styleClass="button_containers" spacing="20">
+                           <children>
+                              <ComboBox promptText="CHOOSE YEAR" styleClass="btn" fx:id="year"/>
+                           </children>
+                        </HBox>
+                        <HBox styleClass="button_containers">
+                           <children>
+                              <Button text="GENERATE REPORT" onAction="#report" styleClass="btn"/>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <TableView fx:id="tableview" styleClass="table_text" VBox.vgrow="ALWAYS" prefHeight="400.0" minHeight="250.0">
+                     <columns>
+                        <TableColumn fx:id="ingredientID" text="Ingredient ID"/>
+                        <TableColumn fx:id="ingredientName" text="Ingredient Name"/>
+                        <TableColumn fx:id="stockQuantity" text="Stock Quantity"/>               
+                        <TableColumn fx:id="warehouseID" text="Warehouse ID"/>
+                        <TableColumn fx:id="capacity" text="Stock Capacity"/>            
+                     </columns>
+                  </TableView>
+                  <HBox styleClass="containers" spacing="180" alignment="CENTER">
+                     <children>
+                        <Button text="REFRESH" onAction="#refresh" styleClass="action_btn"/>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

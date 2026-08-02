@@ -1,0 +1,78 @@
+.root {
+    -fx-background-color: #ffffff;
+    -fx-font-family: "Segoe UI";
+}
+
+.main-container {
+    -fx-background-color: white;
+    -fx-padding: 25;
+    -fx-spacing: 20;
+}
+
+.logo-text {
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #174f2d;
+}
+
+.page-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d5d34;
+}
+
+.route-container {
+    -fx-background-color: white;
+    -fx-border-color: #4a8b50;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 20;
+    -fx-spacing: 18;
+}
+
+.route {
+    -fx-background-color: #eef8e9;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #5e9d62;
+    -fx-padding: 12;
+    -fx-spacing: 8;
+}
+
+.route-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+.delivery-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d5d34;
+}
+
+.status-button {
+    -fx-background-color: #b8e8aa;
+    -fx-text-fill: #2d5d34;
+    -fx-background-radius: 20;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 14;
+}
+
+.arrived-button {
+    -fx-background-color: #1e6f2b;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.arrived-button:hover {
+    -fx-background-color: #2a8a3c;
+}
+
+.label {
+    -fx-text-fill: #2d5d34;
+}

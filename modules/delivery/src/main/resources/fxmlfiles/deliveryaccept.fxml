@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="LoopProject.loopproject.controllers.Acceptdelivery"
+            stylesheets="@../styles/acceptdelivery.css"
+            styleClass="root">
+
+    <center>
+    	<VBox>
+    		<ImageView fx:id="logo"/>
+    		<VBox styleClass="main-container" spacing="20" alignment="TOP_CENTER">
+    			<Label text="Accept Delivery" styleClass = "header-label"/>
+    		</VBox>
+    	</VBox>
+    	
+    	 <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="edge-to-edge">
+
+    	<VBox styleClass="orders-container" spacing="12">
+    		
+    	<VBox  fx:id = "card204" styleClass="order-card">
+    		<Label text="ORD-204" styleClass="order-id-label"/>
+    		<Label text="P.James" styleClass="order-name-label"/>
+   			<Button text="ACCEPT" styleClass="accept-button" onAction="#handleAccept204"/>
+		</VBox>
+
+		<VBox  fx:id = "card205" styleClass="order-card">
+    		<Label text="ORD-205" styleClass="order-id-label"/>
+   			<Label text="C.Zoe" styleClass="order-name-label"/>
+   			<Button text="ACCEPT" styleClass="accept-button" onAction="#handleAccept205"/>
+		</VBox>
+		
+		<VBox   fx:id = "card203" styleClass="order-card">
+  	  		<Label text="ORD-203" styleClass="order-id-label"/>
+    		<Label text="S.Ali" styleClass="order-name-label"/>
+    		<Button text="ACCEPT" styleClass="accept-button" onAction="#handleAccept203"/>
+		</VBox>
+		
+		<VBox  fx:id = "card207" styleClass="order-card">
+    		<Label text="ORD-207" styleClass="order-id-label"/>
+    		<Label text="J.Peter" styleClass="order-name-label"/>
+    		<Button text="ACCEPT" styleClass="accept-button" onAction="#handleAccept207"/>
+		</VBox>
+			
+		<VBox  fx:id = "card208" styleClass="order-card">
+    		<Label text="ORD-208" styleClass="order-id-label"/>
+    		<Label text="	T.Brown" styleClass="order-name-label"/>
+    		<Button text="ACCEPT" styleClass="accept-button" onAction="#handleAccept208"/>
+		</VBox>
+    		
+    		</VBox>
+    		</ScrollPane>
+    </center>
+</BorderPane>

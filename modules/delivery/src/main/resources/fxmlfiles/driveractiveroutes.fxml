@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="LoopProject.loopproject.controllers.Activeroute"
+            stylesheets="@../styles/activeroute.css"
+            styleClass="root">
+    <center>
+        <HBox spacing="20">
+            <ImageView fx:id="ss" fitWidth="100" preserveRatio="true"/>
+            <VBox styleClass="main-container" spacing="16">
+                <Label text="Driver Active Route" styleClass="page-title"/>
+
+                <VBox styleClass="route-container" spacing="14">
+
+                    <VBox styleClass="route">
+                        <Label text="Current Task" styleClass="delivery-label"/>
+                        <Label text="DEL-087 - 14 Brook Street." styleClass="route-text"/>
+                        <Label text="In Transit" styleClass="status-button"/>
+                    </VBox>
+
+                    <VBox styleClass="route">
+                        <Label text="Current Task" styleClass="delivery-label"/>
+                        <Label text="DEL-088 - 105 The Alders." styleClass="route-text"/>
+                        <Label text="In Transit" styleClass="status-button"/>
+                    </VBox>
+
+                    <VBox styleClass="route">
+                        <Label text="Current Task" styleClass="delivery-label"/>
+                        <Label text="DEL-090 - 78 Priory Road." styleClass="route-text"/>
+                        <Label text="In Transit" styleClass="status-button"/>
+                    </VBox>
+
+                </VBox>
+
+                <Button text="Arrived at Location" onAction="#handleArrived" styleClass="arrived-button"/>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

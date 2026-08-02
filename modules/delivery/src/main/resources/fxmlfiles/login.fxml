@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ComboBox?>
+
+<BorderPane
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+fx:controller="LoopProject.loopproject.controllers.Login"
+            stylesheets="@../styles/login.css">
+
+    <center>
+
+        <VBox layoutX="210"
+              layoutY="60"
+              prefWidth="420"
+              styleClass="login-container">
+
+            <VBox styleClass="login-header">
+                <Label text="Loop" styleClass="logo-text"/>
+                <Label text="Delivery" styleClass="title"/>
+            </VBox>
+
+            <VBox styleClass="login-card">
+
+                <Label text="Username" styleClass="form-label"/>
+
+                <TextField fx:id="txtUsername"
+                           promptText="Enter your username"
+                           styleClass="input-field"/>
+
+                <Label text="Password" styleClass="form-label"/>
+
+                <PasswordField fx:id="txtPassword"
+                               promptText="Enter your password"
+                               styleClass="input-field"/>
+
+                <Label text="Select User" styleClass="form-label"/>
+                
+                <ComboBox fx:id="cmbUser"
+          				promptText="Select User"
+         				 styleClass="input-field"
+          				prefWidth="370"/>
+
+
+                <Button text="Submit"
+                        onAction="#login"
+                        styleClass="submit-btn"/>
+
+            </VBox>
+
+        </VBox>
+
+    </center>
+
+</BorderPane>

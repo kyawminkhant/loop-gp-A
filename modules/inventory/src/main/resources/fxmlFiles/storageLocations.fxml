@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      stylesheets="@../styles/storageLocations.css"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.StorageLocationsController">
+      
+      <top>
+      <HBox alignment="CENTER_LEFT">
+         <padding>
+            <Insets top="20" right="30" bottom="10" left="30"/>
+         </padding>
+         <children>
+            <VBox styleClass="greenBorder">
+               <children>
+                  <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
+               </children>
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS" />
+            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+         </children>
+      </HBox>
+   </top>
+      
+      <center>
+      <VBox fillWidth="true" spacing="20" styleClass="page-container">
+      	<VBox>
+      		<ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
+      		<HBox>
+      			<Label text="Storage Locations"/>
+      		</HBox>
+      		<TableView fx:id="storageLocationsTable"  styleClass="table-border">
+      			<columns>
+      				<TableColumn fx:id="name" text="Name"/>
+      				<TableColumn fx:id="locations" text="Location"/>
+      				<TableColumn fx:id="locationID" text="Location ID"/>
+      				<TableColumn fx:id="capacity" text="Capacity"/>
+      				<TableColumn fx:id="currentStock" text="Current Stock"/>
+      				<TableColumn fx:id="usage" text="Usage %"/>
+      				<TableColumn fx:id="manager" text="Manager"/>
+      			</columns>
+      		</TableView>
+      			<Button text="Click for more Locations" onAction="#moreStorage" styleClass="moreStorage"/>
+                 <Button text="Back" onAction="#back" styleClass="action_btn"/>
+      	  </VBox>
+      	</VBox>
+      </center>
+</BorderPane>

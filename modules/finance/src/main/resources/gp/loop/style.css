@@ -1,0 +1,1199 @@
+/* ================= ROOT ================= */
+.root {
+    -fx-background-color: #FFF8E1;
+    -fx-padding: 0;
+}
+
+/* ================= BASE GLASS BUTTON ================= */
+.button {
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+
+    -fx-padding: 14 28;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+
+    -fx-cursor: hand;
+
+    /* Glass base */
+    -fx-background-color: rgba(255,255,255,0.18);
+    -fx-border-color: rgba(255,255,255,0.45);
+    -fx-border-width: 1.2;
+
+    /* Depth */
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.18), 18, 0.2, 0, 6);
+}
+
+/* ================= COLOR VARIANTS ================= */
+
+/* ORANGE GLASS */
+.button-orange {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(255,136,0,0.35),
+            rgba(255,136,0,0.15)
+        );
+    -fx-text-fill: #1B5E20;
+}
+
+/* GREEN GLASS */
+.button-green {
+    -fx-background-color: #1b5e20;
+    -fx-background-radius: 1000;
+    -fx-border-radius: 1000;
+    -fx-padding: 6 20;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+/* ACCENT — stronger orange (CSV / summary actions) */
+.button-accent {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(230,126,60,0.55),
+            rgba(255,160,90,0.35)
+        );
+    -fx-text-fill: #1B3D16;
+}
+
+/* Finance page pill buttons (MenuButton is not .button by default) */
+.finance-page .button,
+.finance-page .menu-button {
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.menu-button.button-orange,
+.menu-button.button-green {
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-padding: 14 28;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-border-color: rgba(255, 255, 255, 0.45);
+    -fx-border-width: 1.2;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 18, 0.2, 0, 6);
+}
+
+.menu-button.button-orange {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(255, 136, 0, 0.35),
+            rgba(255, 136, 0, 0.15)
+        );
+    -fx-text-fill: #1B5E20;
+}
+
+.menu-button.button-green {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(27, 94, 32, 0.35),
+            rgba(27, 94, 32, 0.15)
+        );
+    -fx-text-fill: white;
+}
+
+.menu-button.button-orange:hover,
+.menu-button.button-green:hover {
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.22), 22, 0.3, 0, 8);
+}
+
+.menu-button.button-orange:hover {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(255, 136, 0, 0.48),
+            rgba(255, 136, 0, 0.22)
+        );
+}
+
+.menu-button.button-green:hover {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(27, 94, 32, 0.48),
+            rgba(27, 94, 32, 0.22)
+        );
+}
+
+.menu-button.button-orange:pressed,
+.menu-button.button-green:pressed {
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
+}
+
+.menu-button.button-green:showing {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(27, 94, 32, 0.42),
+            rgba(27, 94, 32, 0.2)
+        );
+}
+
+.menu-button.button-orange:showing {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(255, 136, 0, 0.42),
+            rgba(255, 136, 0, 0.2)
+        );
+}
+
+.finance-root .stat-label {
+    -fx-wrap-text: true;
+    -fx-max-width: 720;
+}
+
+/* ================= INTERACTION ================= */
+
+/* HOVER = glass becomes brighter */
+.button:hover {
+    -fx-background-color: rgba(255,255,255,0.28);
+
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.22), 22, 0.3, 0, 8);
+}
+
+/* PRESSED = like iOS tap */
+.button:pressed {
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
+
+    -fx-background-color: rgba(255,255,255,0.22);
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.2, 0, 3);
+}
+
+/* ================= FOCUS FIX ================= */
+.button:focused {
+    -fx-border-color: rgba(255,255,255,0.6);
+}
+.image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0.2, 0, 5);
+}
+
+/* Finance table — sage capsule grid */
+.finance-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 4;
+    -fx-table-cell-border-color: transparent;
+}
+.finance-table .placeholder .label {
+    -fx-text-fill: #5a6b56;
+}
+.finance-table .column-header-background,
+.finance-table .column-header-background .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+}
+.finance-table .column-header,
+.finance-table .filler {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-size: 52px;
+}
+.column-header-background,
+.column-header-background .filler,
+.column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+}
+.finance-table .column-header .label {
+    -fx-alignment: center;
+    -fx-background-color: rgba(27, 94, 32, 0.35);
+    -fx-background-radius: 100;
+    -fx-padding: 14 20;
+    -fx-text-fill: #1a3a1a;
+    -fx-font-weight: 700;
+    -fx-font-size: 14px;
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1;
+    -fx-border-radius: 100;
+}
+.finance-table .table-column {
+    -fx-alignment: CENTER;
+}
+.finance-table .table-cell {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-padding: 5 6;
+    -fx-alignment: center;
+    -fx-font-size: 13px;
+    -fx-text-fill: #1a1a1a;
+}
+.finance-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 3 0;
+}
+.finance-table .table-row-cell:filled .table-cell {
+    -fx-background-color: #B8CFAE;
+    -fx-background-radius: 18;
+    -fx-background-insets: 2 4;
+}
+.finance-table .table-row-cell:filled:hover .table-cell {
+    -fx-background-color: #C5D9BA;
+}
+.finance-table .table-row-cell:filled:selected .table-cell {
+    -fx-background-color: #9EBC93;
+}
+
+/* Financial overview cards */
+.overview-chip {
+    -fx-background-color: #A3BFA0;
+    -fx-background-radius: 42;
+    -fx-padding: 14 28;
+    -fx-text-fill: #1a1a1a;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-alignment: center;
+    -fx-min-width: 140;
+}
+
+.overview-value-chip {
+    -fx-background-color:
+        linear-gradient(
+            to bottom right,
+            rgba(255,136,0,0.35),
+            rgba(255,136,0,0.15)
+        );
+    -fx-background-radius: 42;
+    -fx-padding: 10 26;
+    -fx-text-fill: #1a1a1a;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-alignment: center;
+    -fx-min-width: 140;
+}
+
+/* Revenue vs costs chart card */
+.chart-card {
+    -fx-background-color: rgba(255, 255, 255, 0.30);
+    -fx-background-radius: 30;
+    -fx-padding: 16;
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1.4;
+    -fx-border-radius: 30;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.08), 16, 0.25, 0, 5),
+        innershadow(gaussian, rgba(255, 255, 255, 0.4), 12, 0.2, 0, -2);
+}
+
+.chart {
+    -fx-background-color: transparent;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-content {
+    -fx-background-color: transparent;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.chart-alternative-column-fill,
+.chart-alternative-row-fill {
+    -fx-fill: transparent;
+    -fx-stroke: transparent;
+}
+
+.revenue-costs-chart {
+    -fx-padding: 0;
+}
+
+.revenue-costs-chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.revenue-costs-chart .chart-content {
+    -fx-background-color: transparent;
+}
+
+.revenue-costs-chart .chart-vertical-grid-lines,
+.revenue-costs-chart .chart-alternative-column-fill,
+.revenue-costs-chart .chart-alternative-row-fill {
+    -fx-stroke: transparent;
+    -fx-fill: transparent;
+}
+
+.revenue-costs-chart .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(60, 60, 60, 0.14);
+}
+
+.revenue-costs-chart .axis {
+    -fx-tick-label-fill: #444444;
+}
+
+.revenue-costs-chart .axis-label {
+    -fx-text-fill: #444444;
+}
+
+.revenue-costs-chart .chart-series-line.series0,
+.revenue-costs-chart .default-color0.chart-series-line {
+    -fx-stroke: #7C4DFF;
+    -fx-stroke-width: 3px;
+}
+
+.revenue-costs-chart .chart-series-line.series1,
+.revenue-costs-chart .default-color1.chart-series-line {
+    -fx-stroke: #F08A1A;
+    -fx-stroke-width: 3px;
+}
+
+.pie-card {
+    -fx-max-width: 640;
+    -fx-max-height: 300;
+    -fx-padding: 12;
+}
+
+.cost-breakdown-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+.cost-breakdown-chart .chart-content {
+    -fx-background-color: transparent;
+}
+
+.cost-breakdown-chart .chart-pie {
+    -fx-border-color: transparent;
+}
+
+.customer-growth-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 8;
+}
+
+.customer-growth-chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.customer-growth-chart .chart-content {
+    -fx-background-color: transparent;
+}
+
+.customer-growth-chart .chart-vertical-grid-lines {
+    -fx-stroke: transparent;
+}
+
+.customer-growth-chart .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(60, 60, 60, 0.12);
+}
+
+.customer-growth-chart .axis {
+    -fx-tick-label-fill: #444444;
+}
+
+.customer-growth-chart .default-color0.chart-bar {
+    -fx-background-color: linear-gradient(to bottom, #F08A1A, #fbc490);
+    -fx-background-insets: 0;
+    -fx-background-radius: 6 6 0 0;
+}
+
+/*
+ * Finance dashboard — cream canvas (opaque: transparent VBox shows Modena white).
+ */
+
+.dashboard-app-root.root {
+    -fx-background-color: #FFF8E1;
+    -fx-padding: 16 22 28 22;
+}
+
+/* ScrollPane skin: fill every chrome region (viewport + corners), not transparent */
+.scroll-pane.dashboard-app-root,
+.scroll-pane.dashboard-scroll {
+    -fx-background-color: #FFF8E1;
+    -fx-base: #ddd5cc;
+    -fx-background: #FFF8E1;
+    -fx-control-inner-background: #FFF8E1;
+}
+
+.dashboard-scroll > .viewport {
+    -fx-background-color: #FFF8E1;
+}
+
+.scroll-pane.dashboard-app-root > .corner,
+.scroll-pane.dashboard-scroll > .corner {
+    -fx-background-color: #FFF8E1;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10;
+    -fx-pref-height: 10;
+    -fx-padding: 2;
+}
+
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: rgba(27, 94, 32, 0.08);
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(27, 94, 32, 0.25);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-effect: innershadow(gaussian, rgba(255, 255, 255, 0.35), 4, 0.15, 0, -1);
+}
+
+.scroll-bar:vertical .thumb:hover,
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: rgba(27, 94, 32, 0.40);
+}
+
+.scroll-bar:vertical .thumb:pressed,
+.scroll-bar:horizontal .thumb:pressed {
+    -fx-background-color: rgba(27, 94, 32, 0.50);
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+.finance-dashboard-root {
+    -fx-max-width: 1000;
+    -fx-min-width: 400;
+    -fx-background-color: #FFF8E1;
+    -fx-background-radius: 0;
+    -fx-font-smoothing-type: gray;
+}
+
+.finance-dashboard-root .dashboard-filter-row,
+.finance-dashboard-root .dashboard-kpi-row,
+.finance-dashboard-root .dashboard-charts-row,
+.finance-dashboard-root .dashboard-bottom-row {
+    -fx-background-color: transparent;
+}
+
+.dashboard-filter-row {
+    -fx-padding: 0 0 2 0;
+}
+
+.dashboard-kpi-row,
+.dashboard-charts-row,
+.dashboard-bottom-row {
+    -fx-alignment: center;
+}
+
+.dashboard-loop-logo {
+    -fx-effect:
+        dropshadow(gaussian, rgba(27, 67, 50, 0.14), 32, 0.28, 0, 7),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.95), 12, 0.45, 0, -2);
+}
+
+/* Orange liquid glass header banner panel */
+.dashboard-header-panel {
+    -fx-background-color: rgba(255, 136, 0, 0.32);
+    -fx-background-radius: 100;
+    -fx-border-color: rgba(255, 255, 255, 0.75);
+    -fx-border-width: 1.6;
+    -fx-border-radius: 100;
+    -fx-padding: 16 40 16 40;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.14), 36, 0.4, 0, 10),
+        dropshadow(gaussian, rgba(255, 200, 100, 0.25), 20, 0.5, 0, -4),
+        innershadow(gaussian, rgba(255, 255, 255, 0.7), 28, 0.45, 0, -4),
+        innershadow(gaussian, rgba(255, 180, 50, 0.12), 30, 0.25, 0, 6);
+}
+
+/* Hero title — plain centered text inside the green banner */
+.dashboard-hero-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 900;
+    -fx-font-style: italic;
+    -fx-text-fill: #1B5E20;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-alignment: CENTER;
+}
+
+/* Sign out button inside header */
+.dashboard-signout-btn {
+    -fx-background-color: linear-gradient(to bottom, #b4ccb2 0%, #97ad90 100%);
+    -fx-text-fill: #1B5E20;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-padding: 10 22;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(255, 255, 255, 0.7);
+    -fx-border-width: 1.2;
+    -fx-cursor: hand;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.12), 14, 0.3, 0, 5),
+        innershadow(gaussian, rgba(255,255,255,0.5), 8, 0.3, 0, -2);
+}
+.dashboard-signout-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #c1d8bf 0%, #a4ba9d 100%);
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.16), 20, 0.35, 0, 7),
+        innershadow(gaussian, rgba(255,255,255,0.65), 12, 0.35, 0, -3);
+}
+
+/* KPI cards — liquid glass */
+.dashboard-kpi-card {
+    -fx-alignment: center;
+    -fx-spacing: 12;
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-background-radius: 100;
+    -fx-padding: 18 22 20 22;
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1.4;
+    -fx-border-radius: 100;
+    -fx-min-width: 196;
+    -fx-cursor: default;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.08), 28, 0.35, 0, 8),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.7), 8, 0.5, 0, -2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.55), 20, 0.35, 0, -3),
+        innershadow(gaussian, rgba(0, 0, 0, 0.04), 24, 0.2, 0, 5);
+}
+
+.dashboard-kpi-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.55);
+    -fx-border-color: rgba(255, 255, 255, 0.85);
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.10), 34, 0.4, 0, 10),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.55, 0, -3),
+        innershadow(gaussian, rgba(255, 255, 255, 0.65), 24, 0.4, 0, -3);
+}
+
+.dashboard-kpi-delta-bubble {
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 100;
+    -fx-border-radius: 100;
+    -fx-border-width: 1;
+}
+
+.dashboard-kpi-delta-bubble.dashboard-kpi-delta-pos {
+    -fx-text-fill: #000000;
+    -fx-background-color: linear-gradient(to bottom, #d8ffc8 0%, #c3f5b4 50%, #a8ea99 100%);
+    -fx-border-color: rgba(255, 255, 255, 0.55);
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.11), 12, 0.28, 0, 3),
+        innershadow(gaussian, rgba(255, 255, 255, 0.5), 7, 0.18, 0, -1);
+}
+
+.dashboard-kpi-delta-bubble.dashboard-kpi-delta-neg {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(220, 40, 40, 0.75);
+    -fx-border-color: rgba(255, 255, 255, 0.55);
+    -fx-effect:
+        dropshadow(gaussian, rgba(160, 40, 40, 0.15), 10, 0.25, 0, 2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.3), 8, 0.2, 0, -1);
+}
+
+/* Chart / outer shells */
+.finance-dashboard-root .chart-card-interactive {
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-radius: 30;
+    -fx-padding: 16;
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1.4;
+    -fx-border-radius: 30;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.08), 16, 0.25, 0, 5),
+        innershadow(gaussian, rgba(255, 255, 255, 0.4), 12, 0.2, 0, -2);
+}
+.finance-dashboard-root .chart-card-interactive:hover {
+    -fx-border-color: rgba(167, 196, 160, 0.55);
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.1), 44, 0.48, 0, 12),
+        innershadow(gaussian, rgba(255, 252, 246, 0.5), 30, 0.32, 0, -3);
+}
+
+.finance-dashboard-root .table-glass-wrap {
+    -fx-padding: 14 16 16 16;
+}
+
+/* Charts — match mock accents */
+.dashboard-line-chart .chart-series-line.series0,
+.dashboard-line-chart .default-color0.chart-series-line {
+    -fx-stroke: #7C4DFF;
+    -fx-stroke-width: 3px;
+}
+.dashboard-line-chart .chart-series-line.series1,
+.dashboard-line-chart .default-color1.chart-series-line {
+    -fx-stroke: #F08A1A;
+    -fx-stroke-width: 3px;
+}
+.dashboard-line-chart .chart-legend {
+    -fx-background-color: rgba(248, 240, 228, 0.88);
+    -fx-background-radius: 18;
+    -fx-padding: 6 14 8 14;
+    -fx-border-color: rgba(255, 248, 236, 0.7);
+    -fx-border-width: 1.1;
+    -fx-border-radius: 18;
+}
+.dashboard-line-chart .chart-legend-item {
+    -fx-text-fill: #1B5E20;
+    -fx-font-weight: 600;
+}
+.dashboard-line-chart .default-color0.chart-line-symbol,
+.revenue-costs-chart .default-color0.chart-line-symbol {
+    -fx-background-color: #7C4DFF, white;
+}
+.dashboard-line-chart .default-color1.chart-line-symbol,
+.revenue-costs-chart .default-color1.chart-line-symbol {
+    -fx-background-color: #F08A1A, white;
+}
+.default-color0.chart-legend-symbol {
+    -fx-background-color: #7C4DFF;
+}
+.default-color1.chart-legend-symbol {
+    -fx-background-color: #F08A1A;
+}
+
+.finance-dashboard-root .dashboard-line-chart .axis {
+    -fx-tick-label-font-size: 11px;
+    -fx-tick-label-fill: #5a6b56;
+}
+.finance-dashboard-root .dashboard-line-chart .axis-label {
+    -fx-text-fill: #5a6b56;
+    -fx-font-size: 11px;
+}
+
+.finance-dashboard-root .dashboard-bar-chart .axis {
+    -fx-tick-label-font-size: 11px;
+    -fx-tick-label-fill: #5a6b56;
+}
+
+.finance-dashboard-root .dashboard-pie-chart .chart-legend-item {
+    -fx-text-fill: #1B5E20;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+.dashboard-bar-chart .default-color0.chart-bar {
+    -fx-background-color: linear-gradient(to bottom, #ff9f1c, #fbc490);
+    -fx-background-insets: 0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.dashboard-pie-chart .data0.chart-pie,
+.cost-breakdown-chart .data0.chart-pie {
+    -fx-pie-color: #4A90D9;
+}
+.dashboard-pie-chart .data1.chart-pie,
+.cost-breakdown-chart .data1.chart-pie {
+    -fx-pie-color: #F08A1A;
+}
+.dashboard-pie-chart .data2.chart-pie,
+.cost-breakdown-chart .data2.chart-pie {
+    -fx-pie-color: #D4B896;
+}
+.default-color0.chart-pie {
+    -fx-pie-color: #4A90D9;
+}
+.default-color1.chart-pie {
+    -fx-pie-color: #F08A1A;
+}
+.default-color2.chart-pie {
+    -fx-pie-color: #D4B896;
+}
+.dashboard-pie-chart .chart-legend {
+    -fx-background-color: rgba(244, 236, 224, 0.9);
+    -fx-background-radius: 14;
+    -fx-padding: 6 10;
+}
+
+/* ========= Dashboard table — self-contained liquid glass (no .finance-table) ========= */
+
+.dashboard-table {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 4;
+    -fx-table-cell-border-color: transparent;
+}
+
+.dashboard-table:focused {
+    -fx-border-color: rgba(255, 255, 255, 0.80);
+}
+
+.dashboard-table .placeholder .label {
+    -fx-text-fill: #5a6b56;
+}
+
+.dashboard-table-placeholder {
+    -fx-text-fill: #5a6b56;
+    -fx-font-size: 13px;
+    -fx-padding: 28 20;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-max-width: 360;
+}
+
+.dashboard-table .column-header-background {
+    -fx-background-color: transparent;
+    -fx-padding: 2 2 6 2;
+    -fx-border-color: transparent;
+}
+
+.dashboard-table .column-header,
+.dashboard-table .filler {
+    -fx-size: 56px;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.dashboard-table .column-header {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 2 6;
+}
+
+.dashboard-table .column-header .label {
+    -fx-alignment: center;
+    -fx-background-color: rgba(27, 94, 32, 0.35);
+    -fx-background-radius: 100;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-width: 1;
+    -fx-border-radius: 100;
+    -fx-text-fill: #1a3a1a;
+    -fx-font-weight: 700;
+    -fx-font-size: 15px;
+    -fx-padding: 12 22;
+}
+
+.dashboard-table .table-column {
+    -fx-alignment: CENTER;
+}
+
+.dashboard-table .table-cell {
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-alignment: center;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2d6a4f;
+    -fx-padding: 3 6;
+}
+
+.finance-table .virtual-flow,
+.finance-table .clipped-container,
+.finance-table .virtual-flow .clipped-container .sheet,
+.finance-table .virtual-flow .corner,
+.dashboard-table .virtual-flow,
+.dashboard-table .clipped-container,
+.dashboard-table .virtual-flow .clipped-container .sheet,
+.dashboard-table .virtual-flow .corner {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+}
+
+.table-view:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+}
+
+.dashboard-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 3 0;
+}
+
+.dashboard-table .table-row-cell:filled .table-cell {
+    -fx-background-radius: 100;
+    -fx-background-insets: 2 4;
+    -fx-padding: 10 16;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-width: 1;
+    -fx-border-radius: 100;
+    -fx-background-color: rgba(27, 94, 32, 0.30);
+}
+
+.dashboard-table .table-row-cell:filled:hover .table-cell {
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+}
+
+.dashboard-table .table-row-cell:filled:selected .table-cell {
+    -fx-background-color: rgba(27, 94, 32, 0.45);
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+}
+
+.dashboard-table .scroll-bar:vertical,
+.dashboard-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.dashboard-table .scroll-bar .thumb {
+    -fx-background-color: rgba(167, 196, 160, 0.55);
+    -fx-background-radius: 10;
+}
+.dashboard-table .scroll-bar .track {
+    -fx-background-color: rgba(236, 228, 216, 0.55);
+    -fx-background-radius: 10;
+}
+
+/* ========= High-specificity glass controls (override global .button / modena menu-button) ========= */
+
+/* Filter MenuButtons — same liquid-glass language as dashboard table */
+.root.dashboard-app-root .finance-dashboard-root .menu-button.dashboard-sage-menu {
+    -fx-background-insets: 0;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 18 36 18 36;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+    -fx-background-color: rgba(27, 94, 32, 0.35);
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1.4;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.08), 28, 0.35, 0, 8),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.7), 8, 0.5, 0, -2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.55), 20, 0.35, 0, -3),
+        innershadow(gaussian, rgba(27, 94, 32, 0.10), 24, 0.2, 0, 5);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .menu-button.dashboard-sage-menu .label {
+    -fx-text-fill: #1a3a1a;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .menu-button.dashboard-sage-menu > .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0 8 0 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .menu-button.dashboard-sage-menu > .arrow-button:hover {
+    -fx-background-color: rgba(255, 250, 242, 0.92);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .menu-button.dashboard-sage-menu:hover {
+    -fx-background-color:
+        linear-gradient(
+            to bottom,
+            rgba(235, 248, 232, 0.65) 0%,
+            rgba(200, 224, 196, 0.55) 40%,
+            rgba(175, 200, 170, 0.60) 100%
+        );
+    -fx-border-color: rgba(255, 255, 255, 0.85);
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.10), 34, 0.4, 0, 10),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.55, 0, -3),
+        innershadow(gaussian, rgba(255, 255, 255, 0.65), 24, 0.4, 0, -3);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .menu-button.dashboard-sage-menu:showing {
+    -fx-background-color:
+        linear-gradient(
+            to bottom,
+            rgba(200, 218, 196, 0.6) 0%,
+            rgba(169, 192, 163, 0.55) 100%
+        );
+}
+
+.root.dashboard-app-root .finance-dashboard-root .menu-button.dashboard-sage-menu .arrow-button .arrow {
+    -fx-background-color: #1B5E20;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-filter-row .menu-button.dashboard-date-range-pill {
+    -fx-background-insets: 0;
+    -fx-background-color: rgba(27, 94, 32, 0.35);
+    -fx-text-fill: #1a3a1a;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-padding: 18 36 18 36;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1.4;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.08), 28, 0.35, 0, 8),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.7), 8, 0.5, 0, -2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.55), 20, 0.35, 0, -3),
+        innershadow(gaussian, rgba(100, 140, 95, 0.12), 24, 0.2, 0, 5);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-filter-row .menu-button.dashboard-date-range-pill .label {
+    -fx-text-fill: #000000;
+    -fx-padding: 0;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-filter-row .menu-button.dashboard-date-range-pill > .arrow-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+    -fx-opacity: 0;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-filter-row .menu-button.dashboard-date-range-pill .arrow-button .arrow {
+    -fx-background-color: transparent;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-filter-row .menu-button.dashboard-date-range-pill:hover,
+.root.dashboard-app-root .finance-dashboard-root .dashboard-filter-row .menu-button.dashboard-date-range-pill:showing {
+    -fx-background-color:
+        linear-gradient(
+            to bottom,
+            rgba(235, 248, 232, 0.65) 0%,
+            rgba(200, 224, 196, 0.55) 40%,
+            rgba(175, 200, 170, 0.60) 100%
+        );
+    -fx-border-color: rgba(255, 255, 255, 0.85);
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .button.dashboard-export-csv {
+    -fx-background-insets: 0;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 18 36;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+    -fx-text-fill: #1a3a1a;
+    -fx-background-color: rgba(255, 136, 0, 0.35);
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1.4;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.08), 28, 0.35, 0, 8),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.7), 8, 0.5, 0, -2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.55), 20, 0.35, 0, -3),
+        innershadow(gaussian, rgba(255, 136, 0, 0.10), 24, 0.2, 0, 5);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .button.dashboard-export-csv:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 250, 242, 0.98) 0%, rgba(250, 232, 208, 0.95) 40%, rgba(244, 190, 120, 1) 100%);
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.09), 38, 0.45, 0, 10),
+        dropshadow(gaussian, rgba(255, 252, 246, 0.5), 14, 0.55, 0, -3),
+        innershadow(gaussian, rgba(255, 252, 246, 0.45), 22, 0.35, 0, -2);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .button.dashboard-export-csv:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(232, 220, 204, 0.95) 0%, rgba(228, 175, 120, 0.95) 100%);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .button.dashboard-export-csv:focused {
+    -fx-border-color: rgba(27, 94, 32, 0.45);
+}
+
+/* Tooltips — match dashboard typography */
+.tooltip {
+    -fx-background-color: linear-gradient(to bottom, rgba(252, 244, 232, 0.98), rgba(236, 226, 212, 0.96));
+    -fx-text-fill: #1B5E20;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10;
+    -fx-padding: 8 12;
+    -fx-border-color: rgba(167, 196, 160, 0.5);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 16, 0.28, 0, 4);
+}
+
+/* ===== KPI FINAL OVERRIDE — liquid glass ===== */
+.root.dashboard-app-root .finance-dashboard-root .dashboard-kpi-card {
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-background-radius: 100;
+    -fx-border-color: rgba(255, 255, 255, 0.65);
+    -fx-border-width: 1.4;
+    -fx-border-radius: 100;
+    -fx-padding: 18 22 20 22;
+    -fx-spacing: 12;
+    -fx-min-width: 196;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.08), 28, 0.35, 0, 8),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.7), 8, 0.5, 0, -2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.55), 20, 0.35, 0, -3),
+        innershadow(gaussian, rgba(0, 0, 0, 0.04), 24, 0.2, 0, 5);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-kpi-delta-bubble {
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 100;
+    -fx-border-radius: 100;
+    -fx-border-width: 1;
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-kpi-delta-bubble.dashboard-kpi-delta-pos {
+    -fx-text-fill: #000000;
+    -fx-background-color: linear-gradient(to bottom, #d8ffc8 0%, #c3f5b4 50%, #a8ea99 100%);
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+}
+
+.root.dashboard-app-root .finance-dashboard-root .dashboard-kpi-delta-bubble.dashboard-kpi-delta-neg {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(220, 40, 40, 0.75);
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+}
+/* ── MenuButton dropdown (Date Range, Category, Customer) ── */
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 100;
+    -fx-padding: 10 28;
+}
+.menu-item:hover,
+.menu-item:focused {
+    -fx-background-color: rgba(27, 94, 32, 0.30);
+    -fx-background-radius: 100;
+}
+.menu-item .label {
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1a3a1a;
+}
+.context-menu {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 24;
+    -fx-border-color: rgba(255, 255, 255, 0.75);
+    -fx-border-radius: 24;
+    -fx-border-width: 1.4;
+    -fx-padding: 8 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 20, 0.3, 0, 6);
+}
+
+/* ================= SIGN-UP PAGE (dashboard liquid glass) ================= */
+
+.signup-root {
+    -fx-background-color: #FFF8E1;
+}
+
+.signup-card {
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-background-radius: 44;
+    -fx-border-color: rgba(255, 255, 255, 0.85);
+    -fx-border-radius: 44;
+    -fx-border-width: 1.6;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.10), 24, 0.2, 0, 8),
+        innershadow(gaussian, rgba(255, 255, 255, 0.55), 10, 0.15, 0, -1);
+}
+
+.signup-field-label {
+    -fx-text-fill: #1a3a1a;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 0 0 2 10;
+}
+
+.signup-field {
+    -fx-background-color: rgba(255, 255, 255, 0.70);
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(27, 94, 32, 0.22);
+    -fx-border-radius: 999;
+    -fx-border-width: 1.2;
+    -fx-padding: 12 20;
+    -fx-text-fill: #1a3a1a;
+    -fx-font-size: 15px;
+    -fx-prompt-text-fill: rgba(26, 58, 26, 0.40);
+}
+
+.signup-field:focused {
+    -fx-border-color: rgba(27, 94, 32, 0.60);
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+}
+
+.signup-btn-primary {
+    -fx-background-color:
+        linear-gradient(to bottom right, rgba(255, 136, 0, 0.45), rgba(255, 136, 0, 0.22));
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(255, 255, 255, 0.80);
+    -fx-border-radius: 999;
+    -fx-border-width: 1.6;
+    -fx-padding: 14 32;
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #1a3a1a;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 16, 0.3, 0, 5);
+}
+
+.signup-btn-primary:hover {
+    -fx-background-color:
+        linear-gradient(to bottom right, rgba(255, 136, 0, 0.60), rgba(255, 136, 0, 0.32));
+}
+
+.signup-btn-secondary {
+    -fx-background-color: rgba(27, 94, 32, 0.35);
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(255, 255, 255, 0.75);
+    -fx-border-radius: 999;
+    -fx-border-width: 1.6;
+    -fx-padding: 12 28;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1a3a1a;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.10), 12, 0.25, 0, 4);
+}
+
+.signup-btn-secondary:hover {
+    -fx-background-color: rgba(27, 94, 32, 0.48);
+}
+

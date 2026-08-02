@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      stylesheets="@../styles/analytics.css"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.AnalyticsController"
+      styleClass="border-pane">
+      <center>
+      	<VBox spacing="18">
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <VBox styleClass="greenBorder">
+                     <children>
+                        <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
+                     </children>
+                  </VBox>
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+               </children>
+            </HBox>
+      		<HBox styleClass="title-holder">
+      			<Label text="Analytics" styleClass="title"/>
+      			<Pane HBox.hgrow="ALWAYS"/>
+      			<Button text="More Locations" onAction="#moreLocations" styleClass="moreLocations"/>
+      		</HBox>
+      		<TableView fx:id="analytics" styleClass="table_text">
+      			<columns>
+      				<TableColumn fx:id="product" text="Product"/>
+      				<TableColumn fx:id="locationColumn" text="Location"/>
+      				<TableColumn fx:id="currentQuantity" text="Current Quantity"/>
+      				<TableColumn fx:id="minThreshold" text="Minimum Threshold"/>
+      				<TableColumn fx:id="status" text="Status"/>
+      				<TableColumn fx:id="lastRestock" text="Last Restock"/>
+      				<TableColumn fx:id="daysUntilReorder" text="Days Until Reorder"/>
+      			</columns>
+      		</TableView>
+      		<VBox alignment="CENTER">
+      			<Button text="Replenish Now" styleClass="replenishNow"/>
+      		</VBox>
+      	</VBox>
+      </center>
+</BorderPane>

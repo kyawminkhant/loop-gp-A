@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="LoopProject.loopproject.controllers.AssigningDrivers"
+            stylesheets="@../styles/assigningDrivers.css"
+            styleClass="assigningdrivers">
+    <center>
+    	<HBox>
+    		<ImageView fx:id="logo" fitWidth="150" preserveRatio="true">
+    			<image >
+    				<Image url = "@../images/logo.png"/>
+    			</image>
+    		</ImageView>
+    		
+    		<VBox styleClass="main-container" alignment = "TOP_CENTER" maxHeight="650">
+    			<Label text="Assign Drivers" styleClass="section-title"/>
+    		
+    <ScrollPane fitToWidth="true"  fitToHeight="true" prefHeight="620" styleClass="driver-scroll" VBox.vgrow="ALWAYS">
+    			<VBox spacing ="16" styleClass = "driver-list">
+    		
+    				<VBox styleClass="Driver">
+    					<Label text="ORD-204" styleClass="order-id"/>
+    					<Label text="P. James" styleClass="customername "/>
+    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
+    				</VBox>
+    				
+    				<VBox styleClass="Driver">
+    					<Label text="ORD-205" styleClass="order-id"/>
+    					<Label text="C.Zoe" styleClass="customername "/>
+    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
+    				</VBox>
+    				
+    				<VBox styleClass="Driver">
+    					<Label text="ORD-203" styleClass="order-id"/>
+    					<Label text="S.Ali" styleClass="customername "/>
+    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
+    				</VBox>
+    				
+    				<VBox styleClass="Driver">
+    					<Label text="ORD-206" styleClass="order-id"/>
+    					<Label text="K.Charlie" styleClass="customername "/>
+    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
+    				</VBox>
+    				
+    				<VBox styleClass="Driver">
+    					<Label text="ORD-207" styleClass="order-id"/>
+    					<Label text="J.Peter" styleClass="customername "/>
+    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
+    				</VBox>
+    				
+    				<VBox styleClass="Driver">
+    					<Label text="ORD-207" styleClass="order-id"/>
+    					<Label text="T.bROWN" styleClass="customername "/>
+    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
+    				</VBox>
+    			</VBox>
+    	    </ScrollPane>
+    	    
+    	    <Button text="← Back"
+                onAction="#goBack"
+                styleClass="back-button"/>
+                
+    		</VBox>
+    	</HBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.TransferItemsController"
+      styleClass="main-container"
+      spacing="10"
+      stylesheets="@../styles/manageStock.css">
+
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+
+    <HBox alignment="CENTER">
+
+        <Label text="🔄 Transfer Product"
+               styleClass="label"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+      
+    </HBox>
+
+
+
+    <Label text="From Location"
+           styleClass="label"/>
+
+    <HBox styleClass="locationSetter"
+          alignment="CENTER_LEFT">
+
+        <Label text="Choose the FROM ADDRESS using the dropdown list"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <ComboBox fx:id="fromAddress"
+                  promptText="🔻 CHOOSE FROM ADDRESS"
+                  styleClass="dropDown"/>
+
+    </HBox>
+
+
+
+
+    <Label text="To Location"
+           styleClass="label"/>
+
+    <HBox styleClass="locationSetter"
+          alignment="CENTER_LEFT">
+
+        <Label text="Choose the TO ADDRESS using the dropdown list"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <ComboBox fx:id="toAddress"
+                  promptText="🔻 CHOOSE TO ADDRESS"
+                  styleClass="dropDown"/>
+
+    </HBox>
+
+
+
+
+    <Label text="Product"
+           styleClass="label"/>
+
+
+    <HBox styleClass="productSetter"
+          alignment="CENTER">
+
+        <Label text="Choose the PRODUCT using the dropdown list"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <ComboBox fx:id="product"
+                  promptText="🔻 CHOOSE PRODUCT"
+                  styleClass="dropDown"/>
+
+    </HBox>
+
+
+
+
+    <Label text="Quantity"/>
+
+
+    <HBox styleClass="quantitySetter"
+          alignment="CENTER">
+
+
+        <Label text="Stock Quantity Selected:"/>
+
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+
+        <Label fx:id="stockCount"
+               text="0"/>
+
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+
+        <HBox spacing="10">
+
+            <Button text="+"
+                    styleClass="action-btn"
+                    onAction="#handleIncrement"/>
+
+
+            <Button text="🗑"
+                    styleClass="trash-btn"
+                    onAction="#handleDelete"/>
+
+
+            <Button text="—"
+                    styleClass="action-btn"
+                    onAction="#handleDecrement"/>
+
+        </HBox>
+
+
+    </HBox>
+
+
+    <Label fx:id="warningMessage"/>
+
+
+
+
+    <Label text="Reason"
+           styleClass="label"/>
+
+
+    <HBox styleClass="reasonBox"
+          alignment="CENTER"
+          fillHeight="true">
+
+        <TextField fx:id="reason"
+                   promptText="Type the reason for stock transfer"
+                   styleClass="textField"
+                   HBox.hgrow="ALWAYS"/>
+
+    </HBox>
+
+
+</VBox>
