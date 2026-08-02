@@ -9,16 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 public class CustomerDAO {
-
-    private static final String[] DUMMY_STATUSES = { "Processing", "Shipped", "Delivered" };
-    private final Random random = new Random();
 
     public boolean emailExists(String email) {
         String sql = "SELECT personID FROM customer_People WHERE email = ?";
@@ -117,35 +112,12 @@ public class CustomerDAO {
                 ps3.executeUpdate();
             }
 
-            seedDummyOrders(conn, customerID);
             conn.commit();
             return true;
 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    private void seedDummyOrders(Connection conn, String customerID) throws SQLException {
-        String insertOrder = "INSERT INTO customer_OrderHistoryDummy (orderID, customerID, orderDate, status, totalAmount) VALUES (?, ?, ?, ?, ?)";
-
-        try (PreparedStatement ps = conn.prepareStatement(insertOrder)) {
-            int numberOfOrders = 2 + random.nextInt(3);
-
-            for (int i = 0; i < numberOfOrders; i++) {
-                LocalDate date = LocalDate.now().minusDays(random.nextInt(60));
-                String status = DUMMY_STATUSES[random.nextInt(DUMMY_STATUSES.length)];
-                double total = 10 + (random.nextDouble() * 90);
-
-                ps.setString(1, UUID.randomUUID().toString());
-                ps.setString(2, customerID);
-                ps.setString(3, date.toString());
-                ps.setString(4, status);
-                ps.setDouble(5, Math.round(total * 100.0) / 100.0);
-                ps.addBatch();
-            }
-            ps.executeBatch();
         }
     }
 
@@ -391,7 +363,8 @@ public class CustomerDAO {
 
     public List<OrderHistoryItem> getOrderHistory(String customerID) {
         List<OrderHistoryItem> orders = new ArrayList<>();
-        String sql = "SELECT * FROM customer_OrderHistoryDummy WHERE customerID = ? ORDER BY orderDate DESC";
+        String sql = "SELECT orderID, customerID, orderDate, status, totalAmount "
+                + "FROM orders_Orders WHERE customerID = ? ORDER BY orderDate DESC";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

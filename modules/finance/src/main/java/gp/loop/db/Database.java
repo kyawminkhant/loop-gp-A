@@ -8,12 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/** Shared SQLite access for Finance reporting and its administrator account. */
 public final class Database {
 
-    /**
-     * Default: {@code ~/Desktop/DATA.db} (same idea as DB Browser: .../Desktop/DATA.db).
-     * Override: {@code -Dloop.db.path=/absolute/path/to/file.db}
-     */
     private static final Path DB_FILE = resolvePath();
 
     private Database() {
@@ -32,7 +29,11 @@ public final class Database {
     }
 
     public static Connection getConnection() throws Exception {
-        return DriverManager.getConnection("jdbc:sqlite:" + DB_FILE.toAbsolutePath());
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:" + DB_FILE.toAbsolutePath());
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("PRAGMA foreign_keys = ON");
+        }
+        return connection;
     }
 
     public static void initialize() throws Exception {
@@ -40,113 +41,204 @@ public final class Database {
         if (parent != null) {
             Files.createDirectories(parent);
         }
-        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS finance_Orders ("
-                            + "OrderID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                            + "Date TEXT, "
-                            + "TotalCost REAL)");
-            stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS finance_Product ("
-                            + "ProductID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                            + "Name TEXT, "
-                            + "Price REAL, "
-                            + "cost REAL)");
-            stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS finance_OrderItem ("
-                            + "OrderItemID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                            + "OrderID INTEGER, "
-                            + "ProductID INTEGER, "
-                            + "Quantity INTEGER, "
-                            + "UnitPrice REAL)");
-            stmt.executeUpdate(
+
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+            createSharedTables(statement);
+            createFinanceViews(statement);
+            statement.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS finance_Users ("
                             + "UserID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                            + "Email TEXT UNIQUE, "
-                            + "PasswordHash TEXT)");
+                            + "Email TEXT UNIQUE, PasswordHash TEXT)");
         }
+
+        seedDefaultChefIfNeeded();
         seedIfEmpty();
         seedAdminIfNeeded();
         System.out.println("Database initialized at " + filePath());
     }
 
+    private static void createSharedTables(Statement statement) throws Exception {
+        statement.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS product_Chef ("
+                        + "chefID INTEGER PRIMARY KEY AUTOINCREMENT, chefName TEXT NOT NULL, "
+                        + "\"chefRating&ReviewID\" INTEGER NOT NULL DEFAULT 0, "
+                        + "chefDescription TEXT NOT NULL DEFAULT '', chefTag1 TEXT NOT NULL DEFAULT '', "
+                        + "chefTag2 TEXT NOT NULL DEFAULT '', chefTag3 TEXT NOT NULL DEFAULT '', "
+                        + "chefImage TEXT NOT NULL DEFAULT '', chefEmail TEXT NOT NULL DEFAULT '', "
+                        + "chefTel TEXT NOT NULL DEFAULT '')");
+        statement.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS product_Products ("
+                        + "productID INTEGER PRIMARY KEY AUTOINCREMENT, productName TEXT NOT NULL, "
+                        + "shortDescription TEXT NOT NULL, extendedDescription TEXT NOT NULL, "
+                        + "cost REAL NOT NULL, price REAL NOT NULL, status INTEGER NOT NULL DEFAULT 1, "
+                        + "spiceLevel INTEGER NOT NULL DEFAULT 0, country TEXT NOT NULL, "
+                        + "createdDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+                        + "updatedDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, chefID INTEGER NOT NULL, "
+                        + "sourceModule TEXT NOT NULL DEFAULT 'product', "
+                        + "stockQuantity INTEGER NOT NULL DEFAULT 100, "
+                        + "FOREIGN KEY (chefID) REFERENCES product_Chef(chefID))");
+        statement.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS orders_Orders ("
+                        + "orderID INTEGER PRIMARY KEY AUTOINCREMENT, customerID TEXT, "
+                        + "customerName TEXT NOT NULL DEFAULT 'Guest', "
+                        + "orderDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+                        + "status TEXT NOT NULL DEFAULT 'Pending', totalAmount REAL NOT NULL DEFAULT 0)");
+        statement.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS orders_OrderItems ("
+                        + "orderItemID INTEGER PRIMARY KEY AUTOINCREMENT, orderID INTEGER NOT NULL, "
+                        + "productID INTEGER NOT NULL, itemName TEXT NOT NULL, "
+                        + "quantity INTEGER NOT NULL DEFAULT 1, priceAtOrder REAL NOT NULL DEFAULT 0, "
+                        + "FOREIGN KEY (orderID) REFERENCES orders_Orders(orderID) ON DELETE CASCADE, "
+                        + "FOREIGN KEY (productID) REFERENCES product_Products(productID))");
+    }
+
+    private static void createFinanceViews(Statement statement) throws Exception {
+        statement.executeUpdate(
+                "CREATE VIEW IF NOT EXISTS finance_Orders AS "
+                        + "SELECT orderID AS OrderID, orderDate AS Date, totalAmount AS TotalCost "
+                        + "FROM orders_Orders");
+        statement.executeUpdate(
+                "CREATE VIEW IF NOT EXISTS finance_OrderItem AS "
+                        + "SELECT orderItemID AS OrderItemID, orderID AS OrderID, productID AS ProductID, "
+                        + "quantity AS Quantity, priceAtOrder AS UnitPrice FROM orders_OrderItems");
+        statement.executeUpdate(
+                "CREATE VIEW IF NOT EXISTS finance_Product AS "
+                        + "SELECT productID AS ProductID, productName AS Name, price AS Price, cost "
+                        + "FROM product_Products");
+    }
+
     private static void seedIfEmpty() throws Exception {
-        try (Connection c = getConnection()) {
-            if (tableCount(c, "finance_Orders") == 0 && tableCount(c, "finance_Product") == 0 && tableCount(c, "finance_OrderItem") == 0) {
-                seedDemoOrder(c, "Weekly box", 45.99, 27.25, "2026-03-03T10:00:00");
-                seedDemoOrder(c, "Weekly box", 45.99, 27.25, "2026-03-10T10:00:00");
-                seedDemoOrder(c, "Add-on snacks", 12.99, 6.00, "2026-03-11T18:22:00");
+        try (Connection connection = getConnection()) {
+            if (tableCount(connection, "orders_Orders") == 0) {
+                seedDemoOrder(connection, "Weekly box", 45.99, 27.25, "2026-03-03T10:00:00");
+                seedDemoOrder(connection, "Weekly box", 45.99, 27.25, "2026-03-10T10:00:00");
+                seedDemoOrder(connection, "Add-on snacks", 12.99, 6.00, "2026-03-11T18:22:00");
             }
         }
     }
 
-    private static int tableCount(Connection c, String table) throws Exception {
-        try (Statement st = c.createStatement();
-                ResultSet rs = st.executeQuery("SELECT COUNT(*) AS n FROM " + table)) {
-            return rs.next() ? rs.getInt("n") : 0;
+    private static int tableCount(Connection connection, String table) throws Exception {
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT COUNT(*) AS n FROM " + table)) {
+            return result.next() ? result.getInt("n") : 0;
         }
     }
 
-    private static void seedDemoOrder(Connection c, String productName, double unitPrice, double unitCost, String when)
+    private static void seedDemoOrder(
+            Connection connection, String productName, double unitPrice, double unitCost, String when)
             throws Exception {
-        c.setAutoCommit(false);
+        connection.setAutoCommit(false);
         try {
-            long productId;
-            try (PreparedStatement ps = c.prepareStatement(
-                    "INSERT INTO finance_Product(Name, Price, cost) VALUES (?,?,?)",
-                    Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, productName);
-                ps.setDouble(2, unitPrice);
-                ps.setDouble(3, unitCost);
-                ps.executeUpdate();
-                try (ResultSet keys = ps.getGeneratedKeys()) {
-                    keys.next();
-                    productId = keys.getLong(1);
-                }
-            }
+            long productId = findOrCreateFinanceProduct(connection, productName, unitPrice, unitCost);
 
             long orderId;
-            try (PreparedStatement ps = c.prepareStatement(
-                    "INSERT INTO finance_Orders(Date, TotalCost) VALUES (?,?)",
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO orders_Orders(customerName, orderDate, status, totalAmount) VALUES (?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, when);
-                ps.setDouble(2, unitPrice);
-                ps.executeUpdate();
-                try (ResultSet keys = ps.getGeneratedKeys()) {
+                statement.setString(1, "Finance demo");
+                statement.setString(2, when);
+                statement.setString(3, "Delivered");
+                statement.setDouble(4, unitPrice);
+                statement.executeUpdate();
+                try (ResultSet keys = statement.getGeneratedKeys()) {
                     keys.next();
                     orderId = keys.getLong(1);
                 }
             }
 
-            try (PreparedStatement ps = c.prepareStatement(
-                    "INSERT INTO finance_OrderItem(OrderID, ProductID, Quantity, UnitPrice) VALUES (?,?,?,?)")) {
-                ps.setLong(1, orderId);
-                ps.setLong(2, productId);
-                ps.setInt(3, 1);
-                ps.setDouble(4, unitPrice);
-                ps.executeUpdate();
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO orders_OrderItems(orderID, productID, itemName, quantity, priceAtOrder) "
+                            + "VALUES (?,?,?,?,?)")) {
+                statement.setLong(1, orderId);
+                statement.setLong(2, productId);
+                statement.setString(3, productName);
+                statement.setInt(4, 1);
+                statement.setDouble(5, unitPrice);
+                statement.executeUpdate();
             }
 
-            c.commit();
-        } catch (Exception e) {
-            c.rollback();
-            throw e;
+            connection.commit();
+        } catch (Exception exception) {
+            connection.rollback();
+            throw exception;
         } finally {
-            c.setAutoCommit(true);
+            connection.setAutoCommit(true);
+        }
+    }
+
+    public static void addDemoOrder() throws Exception {
+        try (Connection connection = getConnection()) {
+            seedDemoOrder(connection, "Weekly box", 45.99, 27.25,
+                    java.time.LocalDateTime.now().toString());
+        }
+    }
+
+    private static long findOrCreateFinanceProduct(
+            Connection connection, String name, double price, double cost) throws Exception {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT productID FROM product_Products "
+                        + "WHERE productName = ? AND sourceModule = 'finance' LIMIT 1")) {
+            statement.setString(1, name);
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return result.getLong(1);
+                }
+            }
+        }
+
+        long chefId;
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT MIN(chefID) FROM product_Chef")) {
+            result.next();
+            chefId = result.getLong(1);
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO product_Products "
+                        + "(productName, shortDescription, extendedDescription, cost, price, status, "
+                        + "spiceLevel, country, chefID, sourceModule, stockQuantity) "
+                        + "VALUES (?, 'Finance catalogue item', 'Finance reporting demo item', ?, ?, "
+                        + "0, 0, 'United Kingdom', ?, 'finance', 0)",
+                Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, name);
+            statement.setDouble(2, cost);
+            statement.setDouble(3, price);
+            statement.setLong(4, chefId);
+            statement.executeUpdate();
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                keys.next();
+                return keys.getLong(1);
+            }
+        }
+    }
+
+    private static void seedDefaultChefIfNeeded() throws Exception {
+        try (Connection connection = getConnection()) {
+            if (tableCount(connection, "product_Chef") > 0) {
+                return;
+            }
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO product_Chef "
+                            + "(chefName, \"chefRating&ReviewID\", chefDescription, chefTag1, chefTag2, "
+                            + "chefTag3, chefImage, chefEmail, chefTel) VALUES "
+                            + "('LOOP Finance', 0, 'Finance demo chef', '', '', '', '', 'finance@loop.com', '')")) {
+                statement.executeUpdate();
+            }
         }
     }
 
     /** Seeds the demo admin account so the finance screens are reachable on first launch. */
     private static void seedAdminIfNeeded() throws Exception {
-        try (Connection c = getConnection()) {
-            if (tableCount(c, "finance_Users") > 0) return;
-            try (PreparedStatement ps = c.prepareStatement(
+        try (Connection connection = getConnection()) {
+            if (tableCount(connection, "finance_Users") > 0) {
+                return;
+            }
+            try (PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO finance_Users(Email, PasswordHash) VALUES (?,?)")) {
-                ps.setString(1, "admin@loop.co.uk");
-                ps.setString(2, gp.loop.service.AuthService.sha256("admin123"));
-                ps.executeUpdate();
+                statement.setString(1, "admin@loop.co.uk");
+                statement.setString(2, gp.loop.service.AuthService.sha256("admin123"));
+                statement.executeUpdate();
             }
         }
     }
-
 }

@@ -1,77 +1,86 @@
-# Merged database schema
+# Simplified shared database schema
 
-All tables live in `database/loop.db` and are separated by domain prefix.
+All components use `database/loop.db`. The database contains 28 real tables,
+down from 53, plus four compatibility views.
 
-## customer
+## Shared Product catalogue
 
-- `customer_ChefReviews`
-- `customer_Chefs`
-- `customer_CustomerPreference`
-- `customer_Customers`
-- `customer_OrderHistoryDummy`
+These tables are the single source of truth for Products, Orders, Inventory,
+Finance reporting, and Reviews:
+
+- `product_Products`
+- `product_Chef`
+- `product_ChefReview`
+- `product_Category`
+- `product_Ingredient`
+- `product_DefaultIngredient`
+- `product_ProductImage`
+- `product_ProductIngredientOption`
+- `product_Ratings`
+
+`product_Products.sourceModule` distinguishes normal catalogue products from
+Finance or Reviews demonstration records. `product_Ingredient.imagePath` now
+stores the image used by Inventory.
+
+## Shared Orders
+
+- `orders_Orders`
+- `orders_OrderItems`
+
+`orders_OrderItems.productID` references `product_Products.productID`.
+`orders_Orders.customerID` can reference `customer_Customers.customerID`.
+The former `orders_MenuItems` and `customer_OrderHistoryDummy` copies are no
+longer needed.
+
+## Customer
+
 - `customer_People`
+- `customer_Customers`
+- `customer_CustomerPreference`
+- `customer_Chefs`
+- `customer_ChefReviews`
 
-## delivery
+Customer order history is read from the shared `orders_Orders` table.
+
+## Inventory
+
+- `inventory_Stock`
+- `inventory_stock_analytics`
+- `inventory_stock_moreStorageLocations`
+- `inventory_stock_TransactionLog`
+
+`inventory_Stock.stockYear` replaces the five separate yearly ingredient
+tables. Its `ingredientID` references the shared `product_Ingredient` table.
+
+## Delivery
 
 - `delivery_AllDeliveries`
 - `delivery_DeliveryDetails`
 
-## finance
+## Finance
 
-- `finance_OrderItem`
-- `finance_Orders`
-- `finance_Product`
 - `finance_Users`
 
-## inventory
+Finance reads the shared Product and Order data through these compatibility
+views, so its reporting code remains independent without copying rows:
 
-- `inventory_product_Category`
-- `inventory_product_Chef`
-- `inventory_product_ChefReview`
-- `inventory_product_DefaultIngredient`
-- `inventory_product_Ingredient`
-- `inventory_product_Ingredient2022`
-- `inventory_product_Ingredient2023`
-- `inventory_product_Ingredient2024`
-- `inventory_product_Ingredient2025`
-- `inventory_product_Ingredient2026`
-- `inventory_product_ProductImage`
-- `inventory_product_ProductIngredientOption`
-- `inventory_product_Products`
-- `inventory_product_Ratings`
-- `inventory_stock_analytics`
-- `inventory_stock_Ingredient2022`
-- `inventory_stock_Ingredient2023`
-- `inventory_stock_Ingredient2024`
-- `inventory_stock_Ingredient2025`
-- `inventory_stock_Ingredient2026`
-- `inventory_stock_moreStorageLocations`
-- `inventory_stock_TransactionLog`
-- `inventory_stock_UserAccounts`
+- `finance_Product`
+- `finance_Orders`
+- `finance_OrderItem`
 
-## orders
+## Reviews
 
-- `orders_MenuItems`
-- `orders_OrderItems`
-- `orders_Orders`
-
-## product
-
-- `product_Category`
-- `product_Chef`
-- `product_ChefReview`
-- `product_DefaultIngredient`
-- `product_Ingredient`
-- `product_ProductImage`
-- `product_ProductIngredientOption`
-- `product_Products`
-- `product_Ratings`
-
-## reviews
-
-- `reviews_admin_moderation_log`
-- `reviews_helpful_votes`
-- `reviews_orders`
-- `reviews_products`
-- `reviews_reviews`
 - `reviews_users`
+- `reviews_orders`
+- `reviews_reviews`
+- `reviews_helpful_votes`
+- `reviews_admin_moderation_log`
+
+`reviews_orders.product_id` and `reviews_reviews.product_id` reference the
+shared `product_Products` table. `reviews_products` is now a view of the shared
+catalogue rather than another Product table.
+
+## Migration
+
+The one-time migration used to preserve and consolidate the original data is
+stored in `database/migrations/001_simplify_shared_schema.sql`.

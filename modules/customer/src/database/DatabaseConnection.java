@@ -58,12 +58,13 @@ public class DatabaseConnection {
                 );""");
 
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS customer_OrderHistoryDummy (
-                    orderID TEXT PRIMARY KEY,
-                    customerID TEXT NOT NULL,
-                    orderDate TEXT NOT NULL,
-                    status TEXT NOT NULL,
-                    totalAmount REAL NOT NULL,
+                CREATE TABLE IF NOT EXISTS orders_Orders (
+                    orderID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    customerID TEXT,
+                    customerName TEXT NOT NULL DEFAULT 'Guest',
+                    orderDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    status TEXT NOT NULL DEFAULT 'Pending',
+                    totalAmount REAL NOT NULL DEFAULT 0,
                     FOREIGN KEY (customerID) REFERENCES customer_Customers(customerID)
                 );""");
 

@@ -22,24 +22,18 @@ public final class OrderRepository {
     public static void ensureSchema() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
 
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+        try (Connection connection = openConnection();
              Statement statement = connection.createStatement()) {
-
-            statement.execute(
-                "CREATE TABLE IF NOT EXISTS orders_MenuItems (" +
-                "  menuItemID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "  itemName TEXT NOT NULL," +
-                "  price REAL NOT NULL" +
-                ")"
-            );
 
             statement.execute(
                 "CREATE TABLE IF NOT EXISTS orders_Orders (" +
                 "  orderID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "  customerID TEXT," +
                 "  customerName TEXT NOT NULL DEFAULT 'Guest'," +
                 "  orderDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 "  status TEXT NOT NULL DEFAULT 'Pending'," +
-                "  totalAmount REAL NOT NULL DEFAULT 0" +
+                "  totalAmount REAL NOT NULL DEFAULT 0," +
+                "  FOREIGN KEY (customerID) REFERENCES customer_Customers(customerID)" +
                 ")"
             );
 
@@ -47,51 +41,25 @@ public final class OrderRepository {
                 "CREATE TABLE IF NOT EXISTS orders_OrderItems (" +
                 "  orderItemID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "  orderID INTEGER NOT NULL," +
-                "  menuItemID INTEGER NOT NULL," +
+                "  productID INTEGER NOT NULL," +
                 "  itemName TEXT NOT NULL," +
                 "  quantity INTEGER NOT NULL DEFAULT 1," +
                 "  priceAtOrder REAL NOT NULL DEFAULT 0," +
                 "  FOREIGN KEY (orderID) REFERENCES orders_Orders(orderID)," +
-                "  FOREIGN KEY (menuItemID) REFERENCES orders_MenuItems(menuItemID)" +
+                "  FOREIGN KEY (productID) REFERENCES product_Products(productID)" +
                 ")"
             );
-
-            try (ResultSet count = statement.executeQuery("SELECT COUNT(*) FROM orders_MenuItems")) {
-                if (count.next() && count.getInt(1) == 0) {
-                    seedMenu(connection);
-                }
-            }
-        }
-    }
-
-    private static void seedMenu(Connection connection) throws SQLException {
-        String sql = "INSERT INTO orders_MenuItems (itemName, price) VALUES (?, ?)";
-        Object[][] sampleMenu = {
-            {"Kimchi Fried Rice", 9.99},
-            {"Salmon & Quinoa Bowl", 11.99},
-            {"Thai Green Curry", 10.49},
-            {"Margherita Flatbread", 8.49},
-            {"Miso Tofu Ramen", 9.49},
-            {"Chicken Shawarma Bowl", 10.99}
-        };
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            for (Object[] row : sampleMenu) {
-                statement.setString(1, (String) row[0]);
-                statement.setDouble(2, (Double) row[1]);
-                statement.addBatch();
-            }
-            statement.executeBatch();
         }
     }
 
     public static List<MenuItem> getMenuItems() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
 
-        String sql = "SELECT menuItemID, itemName, price FROM orders_MenuItems ORDER BY itemName";
+        String sql = "SELECT productID AS menuItemID, productName AS itemName, price "
+                + "FROM product_Products WHERE status = 1 ORDER BY productName";
         List<MenuItem> items = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+        try (Connection connection = openConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet result = statement.executeQuery()) {
 
@@ -118,7 +86,7 @@ public final class OrderRepository {
         String resolvedName = (customerName == null || customerName.isBlank()) ? "Guest" : customerName.trim();
         double total = CartStore.getTotal();
 
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
+        try (Connection connection = openConnection()) {
             connection.setAutoCommit(false);
 
             try {
@@ -153,7 +121,7 @@ public final class OrderRepository {
         Class.forName("org.sqlite.JDBC");
 
         String sql = "UPDATE orders_Orders SET status = ? WHERE orderID = ?";
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+        try (Connection connection = openConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, newStatus.label());
@@ -181,11 +149,12 @@ public final class OrderRepository {
     // ---------------------------------------------------------------
 
     private static int insertOrder(Connection connection, String customerName, double total) throws SQLException {
-        String sql = "INSERT INTO orders_Orders (customerName, status, totalAmount) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO orders_Orders (customerID, customerName, status, totalAmount) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, customerName);
-            statement.setString(2, OrderStatus.PENDING.label());
-            statement.setDouble(3, total);
+            statement.setString(1, findCustomerId(connection, customerName));
+            statement.setString(2, customerName);
+            statement.setString(3, OrderStatus.PENDING.label());
+            statement.setDouble(4, total);
             statement.executeUpdate();
         }
 
@@ -201,7 +170,7 @@ public final class OrderRepository {
     }
 
     private static void insertOrderItem(Connection connection, int orderId, CartLine line) throws SQLException {
-        String sql = "INSERT INTO orders_OrderItems (orderID, menuItemID, itemName, quantity, priceAtOrder) "
+        String sql = "INSERT INTO orders_OrderItems (orderID, productID, itemName, quantity, priceAtOrder) "
             + "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, orderId);
@@ -222,7 +191,7 @@ public final class OrderRepository {
 
         List<Order> orders = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+        try (Connection connection = openConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             if (orderId > 0) {
@@ -247,7 +216,7 @@ public final class OrderRepository {
     }
 
     private static List<OrderLineItem> loadItems(Connection connection, int orderId) throws SQLException {
-        String sql = "SELECT menuItemID, itemName, quantity, priceAtOrder FROM orders_OrderItems "
+        String sql = "SELECT productID AS menuItemID, itemName, quantity, priceAtOrder FROM orders_OrderItems "
             + "WHERE orderID = ? ORDER BY orderItemID";
 
         List<OrderLineItem> items = new ArrayList<>();
@@ -265,5 +234,25 @@ public final class OrderRepository {
             }
         }
         return items;
+    }
+
+    private static String findCustomerId(Connection connection, String customerName) throws SQLException {
+        String sql = "SELECT customer.customerID FROM customer_Customers customer "
+                + "JOIN customer_People person ON person.personID = customer.personID "
+                + "WHERE lower(trim(person.name)) = lower(trim(?)) LIMIT 1";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, customerName);
+            try (ResultSet result = statement.executeQuery()) {
+                return result.next() ? result.getString(1) : null;
+            }
+        }
+    }
+
+    private static Connection openConnection() throws SQLException {
+        Connection connection = DriverManager.getConnection(DATABASE_URL);
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("PRAGMA foreign_keys = ON");
+        }
+        return connection;
     }
 }

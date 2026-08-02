@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,53 +37,7 @@ public class FinanceService {
     }
 
     public void addDemoOrder() throws Exception {
-        try (Connection conn = Database.getConnection()) {
-            conn.setAutoCommit(false);
-            try {
-                long productId;
-                try (PreparedStatement ps = conn.prepareStatement(
-                        "INSERT INTO finance_Product(Name, Price, cost) VALUES (?,?,?)",
-                        Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, "Weekly box (demo)");
-                    ps.setDouble(2, 45.99);
-                    ps.setDouble(3, 27.25);
-                    ps.executeUpdate();
-                    try (ResultSet keys = ps.getGeneratedKeys()) {
-                        keys.next();
-                        productId = keys.getLong(1);
-                    }
-                }
-
-                long orderId;
-                try (PreparedStatement ps = conn.prepareStatement(
-                        "INSERT INTO finance_Orders(Date, TotalCost) VALUES (?,?)",
-                        Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, LocalDateTime.now().toString());
-                    ps.setDouble(2, 45.99);
-                    ps.executeUpdate();
-                    try (ResultSet keys = ps.getGeneratedKeys()) {
-                        keys.next();
-                        orderId = keys.getLong(1);
-                    }
-                }
-
-                try (PreparedStatement ps = conn.prepareStatement(
-                        "INSERT INTO finance_OrderItem(OrderID, ProductID, Quantity, UnitPrice) VALUES (?,?,?,?)")) {
-                    ps.setLong(1, orderId);
-                    ps.setLong(2, productId);
-                    ps.setInt(3, 1);
-                    ps.setDouble(4, 45.99);
-                    ps.executeUpdate();
-                }
-
-                conn.commit();
-            } catch (Exception e) {
-                conn.rollback();
-                throw e;
-            } finally {
-                conn.setAutoCommit(true);
-            }
-        }
+        Database.addDemoOrder();
     }
 
     public double getTotalRevenue() throws Exception {

@@ -11,12 +11,17 @@ public class IngredientDAO {
 
 	public static ObservableList<Ingredient> getAllIngredients(String tableName){
 		ObservableList<Ingredient> list = FXCollections.observableArrayList();
-		
-		String sql = "SELECT * FROM " + tableName;
+		int stockYear = parseStockYear(tableName);
+		String sql = "SELECT stock.stockCode AS ingredientID, ingredient.ingredientName, "
+				+ "stock.stockQuantity, stock.warehouseID, stock.capacity "
+				+ "FROM inventory_Stock stock "
+				+ "JOIN product_Ingredient ingredient ON ingredient.ingredientID = stock.ingredientID "
+				+ "WHERE stock.stockYear = ? ORDER BY ingredient.ingredientName";
 		
 		try(Connection conn = DBConnection.getConnectionURLlocation();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql)) {
+			PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, stockYear);
+			try (ResultSet rs = stmt.executeQuery()) {
 			 while (rs.next()) {
 				 
 				 list.add(new Ingredient(
@@ -25,7 +30,8 @@ public class IngredientDAO {
 						 rs.getInt("stockQuantity"),
 						 rs.getString("warehouseID"),
 						 rs.getInt("capacity")
-				));
+					 ));
+			}
 			}
 		
 		} catch (Exception e) {
@@ -41,7 +47,7 @@ public class IngredientDAO {
 
 	    ObservableList<String> list = FXCollections.observableArrayList();
 
-	    String sql = "SELECT ingredientName FROM " + tableName;
+	    String sql = "SELECT ingredientName FROM product_Ingredient ORDER BY ingredientName";
 
 	    try (Connection conn = DBConnection.getConnectionURLProduct();
 	         Statement stmt = conn.createStatement();
@@ -67,56 +73,69 @@ public class IngredientDAO {
 	        String imagePath
 	){
 
-	    String sql1 =
-	        "INSERT INTO inventory_stock_Ingredient2026 " +
-	        "(ingredientID, ingredientName, stockQuantity, warehouseID, capacity, imagePath) " +
-	        "VALUES (?,?,?,?,?,?)";
+	    String insertIngredient = "INSERT INTO product_Ingredient "
+	            + "(ingredientName, calories, protein, carbohydrates, sugars, fat, saturatedFat, fiber, sodium, imagePath) "
+	            + "SELECT ?, 0, 0, 0, 0, 0, 0, 0, 0, ? "
+	            + "WHERE NOT EXISTS (SELECT 1 FROM product_Ingredient WHERE lower(trim(ingredientName)) = lower(trim(?)))";
+	    String findIngredient = "SELECT ingredientID FROM product_Ingredient "
+	            + "WHERE lower(trim(ingredientName)) = lower(trim(?)) LIMIT 1";
+	    String insertStock = "INSERT INTO inventory_Stock "
+	            + "(stockYear, stockCode, ingredientID, stockQuantity, warehouseID, capacity) "
+	            + "VALUES (2026, ?, ?, ?, ?, ?)";
 
+	    try(Connection con = DBConnection.getConnectionURLlocation()){
+	        con.setAutoCommit(false);
+	        try {
+	            try (PreparedStatement ps = con.prepareStatement(insertIngredient)) {
+	                ps.setString(1, name);
+	                ps.setString(2, imagePath);
+	                ps.setString(3, name);
+	                ps.executeUpdate();
+	            }
 
-	    String sql2 =
-	        "INSERT INTO inventory_product_Ingredient " +
-	        "(ingredientID, ingredientName, imagePath) " +
-	        "VALUES (?,?,?)";
+	            int ingredientId;
+	            try (PreparedStatement ps = con.prepareStatement(findIngredient)) {
+	                ps.setString(1, name);
+	                try (ResultSet rs = ps.executeQuery()) {
+	                    if (!rs.next()) {
+	                        throw new SQLException("Could not create the shared ingredient.");
+	                    }
+	                    ingredientId = rs.getInt("ingredientID");
+	                }
+	            }
 
-
-	    try(Connection con =
-	        DBConnection.getConnectionURLlocation()){
-
-
-	        PreparedStatement ps1 =
-	                con.prepareStatement(sql1);
-
-
-	        ps1.setString(1,id);
-	        ps1.setString(2,name);
-	        ps1.setInt(3,quantity);
-	        ps1.setString(4,warehouse);
-	        ps1.setInt(5,capacity);
-	        ps1.setString(6,imagePath);
-
-
-	        ps1.executeUpdate();
-
-
-
-	        PreparedStatement ps2 =
-	                con.prepareStatement(sql2);
-
-
-	        ps2.setString(1,id);
-	        ps2.setString(2,name);
-	        ps2.setString(3,imagePath);
-
-
-	        ps2.executeUpdate();
-
-
-
+	            try (PreparedStatement ps = con.prepareStatement(insertStock)) {
+	                ps.setString(1, id);
+	                ps.setInt(2, ingredientId);
+	                ps.setInt(3, quantity);
+	                ps.setString(4, warehouse);
+	                ps.setInt(5, capacity);
+	                ps.executeUpdate();
+	            }
+	            con.commit();
+	        } catch (Exception exception) {
+	            con.rollback();
+	            throw exception;
+	        } finally {
+	            con.setAutoCommit(true);
+	        }
 	    }catch(Exception e){
-
 	        e.printStackTrace();
-
 	    }
 
+	}
+
+	private static int parseStockYear(String value) {
+		if (value != null) {
+			String digits = value.replaceAll("\\D", "");
+			if (!digits.isBlank()) {
+				try {
+					return Integer.parseInt(digits);
+				} catch (NumberFormatException ignored) {
+					// Use the current project dataset below.
+				}
+			}
+		}
+		return 2026;
 	}
 }

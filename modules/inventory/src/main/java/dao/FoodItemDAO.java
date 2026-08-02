@@ -19,7 +19,7 @@ public class FoodItemDAO {
 	public ObservableList<FoodItem> getAllFoodItems() {
         ObservableList<FoodItem> foodItemList = FXCollections.observableArrayList();
          
-        String query = "SELECT ingredientID, ingredientName, imagePath FROM inventory_product_Ingredient";
+        String query = "SELECT ingredientID, ingredientName, imagePath FROM product_Ingredient";
 
         try (Connection connection = DBConnection.getConnectionURLProduct(); 
              Statement statement = connection.createStatement();
@@ -47,7 +47,7 @@ public class FoodItemDAO {
     public static ObservableList<FoodItem> getAllFoodIngredients() {
         ObservableList<FoodItem> ingredientItemList = FXCollections.observableArrayList();
          
-        String ingredientQuery = "SELECT ingredientName, imagePath FROM inventory_product_Ingredient";
+        String ingredientQuery = "SELECT ingredientName, imagePath FROM product_Ingredient";
 
         try (Connection connection = DBConnection.getConnectionURLProduct(); 
              Statement statement = connection.createStatement();
@@ -73,7 +73,7 @@ public class FoodItemDAO {
     public static ObservableList<String> getAllFoodIngredientNames() {
         ObservableList<String> ingredientNames = FXCollections.observableArrayList();
          
-        String query = "SELECT ingredientName FROM inventory_product_Ingredient";
+        String query = "SELECT ingredientName FROM product_Ingredient";
 
         try (Connection connection = DBConnection.getConnectionURLProduct(); 
              Statement statement = connection.createStatement();
@@ -92,7 +92,7 @@ public class FoodItemDAO {
     
     
     public static FoodItem getProductByIdOrName(String queryValue) {
-        String query = "SELECT ingredientID, ingredientName, imagePath FROM inventory_product_Ingredient WHERE ingredientID = ? OR ingredientName = ?";
+        String query = "SELECT ingredientID, ingredientName, imagePath FROM product_Ingredient WHERE ingredientID = ? OR ingredientName = ?";
         
         try (Connection connection = DBConnection.getConnectionURLProduct();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {

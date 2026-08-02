@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Data-access object for the "reviews_products" table. */
+/** Reviews access to the shared Product catalogue through the reviews_products view. */
 public class ProductDao {
 
     private Connection conn() { return Database.get().getConnection(); }
@@ -48,40 +48,80 @@ public class ProductDao {
     }
 
     public int insert(Product p) {
-        String sql = "INSERT INTO reviews_products(name,price,stock,category,average_rating) VALUES(?,?,?,?,?)";
-        try (PreparedStatement ps = conn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, p.getName());
-            ps.setDouble(2, p.getPrice());
-            ps.setInt(3, p.getStock());
-            ps.setString(4, p.getCategory());
-            ps.setDouble(5, p.getAverageRating());
-            ps.executeUpdate();
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) p.setId(keys.getInt(1));
+        Connection connection = conn();
+        try {
+            connection.setAutoCommit(false);
+            int chefId;
+            try (Statement st = connection.createStatement();
+                 ResultSet result = st.executeQuery("SELECT MIN(chefID) FROM product_Chef")) {
+                result.next();
+                chefId = result.getInt(1);
             }
+
+            String sql = "INSERT INTO product_Products "
+                    + "(productName,shortDescription,extendedDescription,cost,price,status,spiceLevel,country,"
+                    + "chefID,sourceModule,stockQuantity) VALUES(?,?,?,?,?,0,0,'United Kingdom',?,'reviews',?)";
+            try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, p.getName());
+                ps.setString(2, "Reviews catalogue item");
+                ps.setString(3, "Product maintained through the shared LOOP catalogue.");
+                ps.setDouble(4, Math.max(0, p.getPrice() * 0.5));
+                ps.setDouble(5, p.getPrice());
+                ps.setInt(6, chefId);
+                ps.setInt(7, p.getStock());
+                ps.executeUpdate();
+                try (ResultSet keys = ps.getGeneratedKeys()) {
+                    if (keys.next()) p.setId(keys.getInt(1));
+                }
+            }
+
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO product_Category "
+                            + "(chosenSortBy,chosenDietary,chosenHealthGoal,chosenCuisines,productID) "
+                            + "VALUES('','Not specified','Balanced Meals',?,?)")) {
+                ps.setString(1, p.getCategory());
+                ps.setInt(2, p.getId());
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO product_Ratings(rating,noPeople,productID) VALUES(?,?,?)")) {
+                ps.setDouble(1, p.getAverageRating());
+                ps.setInt(2, 0);
+                ps.setInt(3, p.getId());
+                ps.executeUpdate();
+            }
+            connection.commit();
             return p.getId();
         } catch (SQLException e) {
+            try { connection.rollback(); } catch (SQLException ignored) { }
             throw new RuntimeException("insert product failed", e);
+        } finally {
+            try { connection.setAutoCommit(true); } catch (SQLException ignored) { }
         }
     }
 
     public void update(Product p) {
-        String sql = "UPDATE reviews_products SET name=?, price=?, stock=?, category=?, average_rating=? WHERE id=?";
+        String sql = "UPDATE product_Products SET productName=?, price=?, stockQuantity=?, "
+                + "updatedDate=CURRENT_TIMESTAMP WHERE productID=?";
         try (PreparedStatement ps = conn().prepareStatement(sql)) {
             ps.setString(1, p.getName());
             ps.setDouble(2, p.getPrice());
             ps.setInt(3, p.getStock());
-            ps.setString(4, p.getCategory());
-            ps.setDouble(5, p.getAverageRating());
-            ps.setInt(6, p.getId());
+            ps.setInt(4, p.getId());
             ps.executeUpdate();
+            try (PreparedStatement category = conn().prepareStatement(
+                    "UPDATE product_Category SET chosenCuisines=? WHERE productID=?")) {
+                category.setString(1, p.getCategory());
+                category.setInt(2, p.getId());
+                category.executeUpdate();
+            }
         } catch (SQLException e) {
             throw new RuntimeException("update product failed", e);
         }
     }
 
     public void delete(int id) {
-        try (PreparedStatement ps = conn().prepareStatement("DELETE FROM reviews_products WHERE id=?")) {
+        try (PreparedStatement ps = conn().prepareStatement("DELETE FROM product_Products WHERE productID=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -96,6 +136,7 @@ public class ProductDao {
     public double recalculateAverage(int productId) {
         String sql = "SELECT AVG(rating) AS avg FROM reviews_reviews WHERE product_id=? AND status='Active'";
         double avg = 0;
+        int reviewCount = 0;
         try (PreparedStatement ps = conn().prepareStatement(sql)) {
             ps.setInt(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -107,12 +148,36 @@ public class ProductDao {
             throw new RuntimeException("recalculateAverage failed", e);
         }
         avg = Math.round(avg * 10.0) / 10.0; // nearest 0.1
-        try (PreparedStatement ps = conn().prepareStatement("UPDATE reviews_products SET average_rating=? WHERE id=?")) {
+        try (PreparedStatement ps = conn().prepareStatement(
+                "SELECT COUNT(*) FROM reviews_reviews WHERE product_id=? AND status='Active'")) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                reviewCount = rs.next() ? rs.getInt(1) : 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("count product reviews failed", e);
+        }
+
+        int updated;
+        try (PreparedStatement ps = conn().prepareStatement(
+                "UPDATE product_Ratings SET rating=?, noPeople=? WHERE productID=?")) {
             ps.setDouble(1, avg);
-            ps.setInt(2, productId);
-            ps.executeUpdate();
+            ps.setInt(2, reviewCount);
+            ps.setInt(3, productId);
+            updated = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("persist average failed", e);
+        }
+        if (updated == 0) {
+            try (PreparedStatement ps = conn().prepareStatement(
+                    "INSERT INTO product_Ratings(rating,noPeople,productID) VALUES(?,?,?)")) {
+                ps.setDouble(1, avg);
+                ps.setInt(2, reviewCount);
+                ps.setInt(3, productId);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException("insert product average failed", e);
+            }
         }
         return avg;
     }
