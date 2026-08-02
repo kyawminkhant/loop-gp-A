@@ -8,6 +8,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <loop.start>orders</loop.start>
+        <loop.db.path>${project.basedir}/../../database/loop.db</loop.db.path>
     </properties>
     <dependencies>
         <dependency>
@@ -51,6 +53,10 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>orders.App</mainClass>
+                            <options>
+                                <option>-Dloop.start=${loop.start}</option>
+                                <option>-Dloop.db.path=${loop.db.path}</option>
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorCompletionService;
 
 public class DatabaseController {
 	public static ArrayList<ArrayList<String>> getData(String tb) throws ClassNotFoundException, SQLException {
-		String path = "database/loop.db";
+		String path = System.getProperty("loop.db.path", "database/loop.db");
 
 		Class.forName("org.sqlite.JDBC");
 		Connection connection=DriverManager.getConnection("jdbc:sqlite:"+path);
@@ -178,7 +178,7 @@ public class DatabaseController {
 	}
 	
 	public static void addData(String tb, String[] columns, String[] dataTypes, ArrayList<String> values) throws ClassNotFoundException, SQLException {
-		String path = "database/loop.db";
+		String path = System.getProperty("loop.db.path", "database/loop.db");
 		
 		Class.forName("org.sqlite.JDBC");		
 		Connection connection=DriverManager.getConnection("jdbc:sqlite:"+path);
@@ -236,7 +236,7 @@ public class DatabaseController {
 	}
 	
 	public static void deleteRow(String tb, String columnName, Object value) throws ClassNotFoundException, SQLException {
-		String path = "database/loop.db";	
+		String path = System.getProperty("loop.db.path", "database/loop.db");	
 		
 		Class.forName("org.sqlite.JDBC");
 		Connection connection=DriverManager.getConnection("jdbc:sqlite:"+path);

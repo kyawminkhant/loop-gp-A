@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import loop.reviews.db.Database;
+import loop.reviews.db.UserDao;
+import loop.reviews.model.User;
 
 /**
  * Application entry point for the LOOP Reviews and Ratings Component.
@@ -43,7 +45,16 @@ public class App extends Application {
             } catch (Exception ignore) { /* icon is cosmetic - never fail startup */ }
             primaryStage.setMinWidth(1000);
             primaryStage.setMinHeight(680);
-            SceneManager.switchTo("login");
+            String startView = System.getProperty("loop.start", "customer");
+            UserDao users = new UserDao();
+            User selected = users.findAll().stream()
+                    .filter(user -> "admin".equalsIgnoreCase(startView)
+                            ? "ADMIN".equalsIgnoreCase(user.getRole())
+                            : "CUSTOMER".equalsIgnoreCase(user.getRole()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("No seeded " + startView + " review user found"));
+            Session.setCurrentUser(selected);
+            SceneManager.switchTo("admin".equalsIgnoreCase(startView) ? "admin_moderation" : "home");
             primaryStage.show();
         } catch (Exception e) {
             System.err.println("[FATAL] Failed to start application:");

@@ -12,7 +12,8 @@ import java.util.List;
 
 public final class OrderRepository {
 
-    private static final String DATABASE_URL = "jdbc:sqlite:database/loop.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:" +
+            System.getProperty("loop.db.path", "database/loop.db");
 
     private OrderRepository() {
     }

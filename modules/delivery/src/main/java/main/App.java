@@ -12,8 +12,11 @@ public class App extends Application {
     private static Scene scene;
 
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("login"), 900,650);
+        String requested = System.getProperty("loop.start", "admin");
+        String startView = "driver".equalsIgnoreCase(requested) ? "deliveryaccept" : "delivery";
+        scene = new Scene(loadFXML(startView), 900,650);
         stage.setScene(scene);
+        stage.setTitle("LOOP - Delivery & Logistics");
         stage.show();
     }
 

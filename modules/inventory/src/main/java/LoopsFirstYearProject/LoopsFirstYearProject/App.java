@@ -24,7 +24,8 @@ public class App extends Application {
             e.printStackTrace();
         }
          
-        scene = new Scene(loadFXML("signup"), 840, 700);
+        String startView = System.getProperty("loop.start", "dashboard");
+        scene = new Scene(loadFXML(startView), 840, 700);
          
         stage.setScene(scene);
         stage.setTitle("Inventory Management System");

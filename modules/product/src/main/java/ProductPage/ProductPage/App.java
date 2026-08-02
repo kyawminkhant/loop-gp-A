@@ -24,7 +24,8 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     private static Scene scene;
-    private static final String DATABASE_URL = "jdbc:sqlite:database/loop.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:" +
+            System.getProperty("loop.db.path", "database/loop.db");
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -56,7 +57,7 @@ public class App extends Application {
         scene.setRoot(root);
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }

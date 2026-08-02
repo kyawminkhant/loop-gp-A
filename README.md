@@ -12,7 +12,11 @@ This repository collects the seven Java/JavaFX components in separate, intention
 - `modules/inventory` - inventory and warehousing
 - `modules/product` - product pages and seller product management
 
-The modules have not been wired together and retain their original build layouts. Only database paths and SQL table references were changed. Domain prefixes prevent incompatible same-named tables from colliding.
+The modules retain their original build layouts and run as separate JavaFX processes, launched from the shared Team Hub. Domain prefixes prevent incompatible same-named tables from colliding.
+
+## Run the integrated Team Hub
+
+On Windows, double-click `run-hub.cmd` from the repository root. The Java launcher opens the Product Team Hub, whose buttons start each connected module. Delivery and Reviews provide separate role views; Customer retains its login page.
 
 ## Database
 

@@ -34,31 +34,57 @@ public class TeamHubController {
     }
 
     public void openCustomers(ActionEvent event) {
-        showPlaceholder("Customers");
+        launch("customer", "login", "Customers");
     }
 
     public void openOrders(ActionEvent event) {
-        showPlaceholder("Orders");
+        launch("orders", "orders", "Orders");
     }
 
     public void openDelivery(ActionEvent event) {
-        showPlaceholder("Delivery & Logistics");
+        openModuleMenu(event, "Delivery & Logistics", "Choose an operational role", "delivery",
+                "Admin Workspace", "Manage deliveries and assign drivers", "admin",
+                "Driver Workspace", "Accept deliveries and view routes", "driver");
     }
 
     public void openInventory(ActionEvent event) {
-        showPlaceholder("Inventory / Warehousing");
+        launch("inventory", "dashboard", "Inventory / Warehousing");
     }
 
     public void openReviews(ActionEvent event) {
-        showPlaceholder("Reviews & Ratings");
+        openModuleMenu(event, "Reviews & Ratings", "Choose a customer or admin view", "reviews",
+                "Customer View", "Browse products and submit reviews", "customer",
+                "Admin Moderation", "Moderate reviews and view analytics", "admin");
     }
 
     public void openFinance(ActionEvent event) {
-        showPlaceholder("Finance & Reporting");
+        launch("finance", "finance-dashboard", "Finance & Reporting");
     }
 
-    private void showPlaceholder(String componentName) {
-        statusLabel.setText(componentName + " is not connected yet. Add your teammate's FXML name in TeamHubController.");
+    private void launch(String module, String view, String componentName) {
+        try {
+            ModuleLauncher.launch(module, view);
+            statusLabel.setText("Opening " + componentName + "...");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            statusLabel.setText("Could not launch " + componentName + ": " + ex.getMessage());
+        }
+    }
+
+    private void openModuleMenu(ActionEvent event, String title, String subtitle, String module,
+            String firstTitle, String firstCaption, String firstView,
+            String secondTitle, String secondCaption, String secondView) {
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("Module Menu.fxml"));
+            Parent root = loader.load();
+            ModuleMenuController controller = loader.getController();
+            controller.configure(title, subtitle, module, firstTitle, firstCaption, firstView,
+                    secondTitle, secondCaption, secondView);
+            ((Node) event.getSource()).getScene().setRoot(root);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            statusLabel.setText("Could not open the " + title + " menu.");
+        }
     }
 
     private void openFxml(ActionEvent event, String fxmlName) {

@@ -59,7 +59,7 @@ public final class ProductImageService {
 
         try (
             Connection connection = DriverManager.getConnection(
-                "jdbc:sqlite:database/loop.db"
+                "jdbc:sqlite:" + System.getProperty("loop.db.path", "database/loop.db")
             );
             PreparedStatement statement = connection.prepareStatement(sql)
         ) {

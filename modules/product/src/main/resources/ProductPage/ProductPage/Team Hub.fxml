@@ -211,7 +211,7 @@
             </GridPane>
 
             <Label fx:id="statusLabel"
-                   text="Products is connected. Other modules are ready to link."
+                   text="All seven components are connected to the shared database."
                    styleClass="team-hub-status" />
         </VBox>
     </VBox>

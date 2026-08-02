@@ -6,8 +6,10 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String URLProduct = "jdbc:sqlite:database/loop.db";
-    private static final String URLlocation = "jdbc:sqlite:database/loop.db";
+    private static final String SHARED_URL = "jdbc:sqlite:" +
+            System.getProperty("loop.db.path", "database/loop.db");
+    private static final String URLProduct = SHARED_URL;
+    private static final String URLlocation = SHARED_URL;
  
     
     public static Connection getConnectionURLProduct() throws SQLException {

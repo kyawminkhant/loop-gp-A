@@ -6,6 +6,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <loop.start>hub</loop.start>
+        <loop.db.path>${project.basedir}/../../database/loop.db</loop.db.path>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
@@ -53,7 +55,11 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>ProductPage.ProductPage.App</mainClass>
+                            <mainClass>ProductPage.ProductPage.Launcher</mainClass>
+                            <options>
+                                <option>-Dloop.start=${loop.start}</option>
+                                <option>-Dloop.db.path=${loop.db.path}</option>
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

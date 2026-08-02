@@ -22,7 +22,7 @@ import java.time.Instant;
 public final class Database {
 
     /** The database file is created in the current working directory. */
-    private static final String DB_FILE = "database/loop.db";
+    private static final String DB_FILE = System.getProperty("loop.db.path", "database/loop.db");
 
     private static Database instance;
     private Connection connection;

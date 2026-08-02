@@ -5,7 +5,9 @@ import java.util.UUID;
 
 public class DatabaseConnection {
 
-    private static String dbUrl = "jdbc:sqlite:database/loop.db";
+    private static final String MAIN_DB_URL = "jdbc:sqlite:" +
+            System.getProperty("loop.db.path", "database/loop.db");
+    private static String dbUrl = MAIN_DB_URL;
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(dbUrl);
@@ -17,7 +19,7 @@ public class DatabaseConnection {
     }
 
     public static void useMainDatabase() {
-        dbUrl = "jdbc:sqlite:database/loop.db";
+        dbUrl = MAIN_DB_URL;
     }
 
     public static void initializeDatabase() {

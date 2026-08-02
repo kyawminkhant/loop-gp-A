@@ -19,7 +19,8 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Parent root = loadFXML("signup");
+        String startView = System.getProperty("loop.start", "finance-dashboard");
+        Parent root = loadFXML(startView);
         scene = new Scene(root, 1400, 900);
         /* Matches dashboard edge so no bright ring if the root is translucent. */
         scene.setFill(Color.web("#FFF8E1"));

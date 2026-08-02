@@ -12,7 +12,8 @@ import java.util.Locale;
 
 public final class SellerProductRepository {
 
-    private static final String DATABASE_URL = "jdbc:sqlite:database/loop.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:" +
+            System.getProperty("loop.db.path", "database/loop.db");
 
     private SellerProductRepository() {
     }
