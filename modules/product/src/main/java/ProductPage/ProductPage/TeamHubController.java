@@ -94,11 +94,6 @@ public class TeamHubController {
             FXMLLoader loader = new FXMLLoader(App.class.getResource(fxmlName + ".fxml"));
             Parent root = loader.load();
 
-            if ("Main Page".equals(fxmlName)) {
-                PrimaryController controller = loader.getController();
-                controller.setFirstName(shortName("Jasper"));
-            }
-
             Scene currentScene = ((Node) event.getSource()).getScene();
             currentScene.setRoot(root);
             HubNavigation.install((Stage) currentScene.getWindow());
@@ -106,18 +101,6 @@ public class TeamHubController {
             ex.printStackTrace();
             statusLabel.setText("Could not open " + fxmlName + ".fxml. Check the file name and controller.");
         }
-    }
-
-    private String shortName(String name) {
-        if (name == null || name.isBlank()) {
-            return "Guest";
-        }
-
-        String firstName = name.contains(" ") ? name.split(" ")[0] : name;
-        if (firstName.length() > 8) {
-            return firstName.substring(0, 8) + "...";
-        }
-        return firstName;
     }
 
     private void animateComponentCard(Node card) {

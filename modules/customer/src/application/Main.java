@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import utils.AnimationUtil;
+import utils.SessionManager;
 
 public class Main extends Application {
 
@@ -18,7 +19,11 @@ public class Main extends Application {
         try {
             DatabaseConnection.initializeDatabase();
 
-            Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+            String requestedView = System.getProperty("loop.start", "login");
+            boolean openDashboard = "dashboard".equalsIgnoreCase(requestedView)
+                    && SessionManager.getCurrentCustomer() != null;
+            String startFxml = openDashboard ? "/view/Dashboard.fxml" : "/view/Login.fxml";
+            Parent root = FXMLLoader.load(getClass().getResource(startFxml));
             Scene scene = primaryStage.getScene();
             if (scene == null) {
                 scene = new Scene(root, 1000, 650);

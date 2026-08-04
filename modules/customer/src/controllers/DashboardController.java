@@ -47,6 +47,9 @@ public class DashboardController {
     @FXML private CheckBox prefGlutenFree;
     @FXML private CheckBox prefHalal;
     @FXML private CheckBox prefLowCalorie;
+    @FXML private CheckBox prefPescatarian;
+    @FXML private CheckBox prefHighProtein;
+    @FXML private CheckBox prefWeightLoss;
     @FXML private CheckBox notificationsCheckBox;
     @FXML private TextArea deliveryInstructionsArea;
     @FXML private Label prefMessageLabel;
@@ -264,6 +267,9 @@ public class DashboardController {
         prefGlutenFree.setSelected(categories.contains("Gluten-Free"));
         prefHalal.setSelected(categories.contains("Halal"));
         prefLowCalorie.setSelected(categories.contains("Low-Calorie"));
+        prefPescatarian.setSelected(categories.contains("Pescatarian"));
+        prefHighProtein.setSelected(categories.contains("High-Protein"));
+        prefWeightLoss.setSelected(categories.contains("Weight-Loss"));
 
         notificationsCheckBox.setSelected("Enabled".equalsIgnoreCase(pref.getNotificationSettings()));
         deliveryInstructionsArea.setText(
@@ -281,6 +287,9 @@ public class DashboardController {
         if (prefGlutenFree.isSelected()) categories.append("Gluten-Free,");
         if (prefHalal.isSelected()) categories.append("Halal,");
         if (prefLowCalorie.isSelected()) categories.append("Low-Calorie,");
+        if (prefPescatarian.isSelected()) categories.append("Pescatarian,");
+        if (prefHighProtein.isSelected()) categories.append("High-Protein,");
+        if (prefWeightLoss.isSelected()) categories.append("Weight-Loss,");
 
         String favoriteCategories = categories.length() > 0
                 ? categories.substring(0, categories.length() - 1)

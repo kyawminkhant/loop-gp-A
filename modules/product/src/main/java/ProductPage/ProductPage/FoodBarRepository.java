@@ -19,15 +19,15 @@ public final class FoodBarRepository {
             throws ClassNotFoundException, SQLException {
 
         ArrayList<ArrayList<String>> products =
-            DatabaseController.getData("product_Products");
+            DatabaseController.getData("Products");
         ArrayList<ArrayList<String>> images =
-            DatabaseController.getData("product_ProductImage");
+            DatabaseController.getData("ProductImage");
         ArrayList<ArrayList<String>> categories =
-            DatabaseController.getData("product_Category");
+            DatabaseController.getData("Category");
         ArrayList<ArrayList<String>> ratings =
-            DatabaseController.getData("product_Ratings");
+            DatabaseController.getData("Ratings");
         ArrayList<ArrayList<String>> defaultIngredients =
-            DatabaseController.getData("product_DefaultIngredient");
+            DatabaseController.getData("DefaultIngredient");
 
         Map<Integer, String> firstImageByProduct = mapFirstImages(images);
         Map<Integer, ArrayList<String>> imagesByProduct =

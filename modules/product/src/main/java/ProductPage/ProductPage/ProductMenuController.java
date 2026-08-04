@@ -31,9 +31,6 @@ public class ProductMenuController {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("Main Page.fxml"));
             Parent root = loader.load();
 
-            PrimaryController controller = loader.getController();
-            controller.setFirstName(shortName("Jasper"));
-
             App.setRoot(root);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -52,18 +49,6 @@ public class ProductMenuController {
             ex.printStackTrace();
             statusLabel.setText("Could not open " + fxmlName + ".fxml.");
         }
-    }
-
-    private String shortName(String name) {
-        if (name == null || name.isBlank()) {
-            return "Guest";
-        }
-
-        String firstName = name.contains(" ") ? name.split(" ")[0] : name;
-        if (firstName.length() > 8) {
-            return firstName.substring(0, 8) + "...";
-        }
-        return firstName;
     }
 
     private void animateMenuCard(Node card) {

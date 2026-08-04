@@ -23,7 +23,7 @@
            fx:controller="ProductPage.ProductPage.ProductManagerController"
            maxWidth="Infinity"
            maxHeight="Infinity"
-           styleClass="team-hub-page">
+           styleClass="team-hub-page, no-hub-logo">
 
     <fx:define>
         <ToggleGroup fx:id="managerSortGroup" />
@@ -49,6 +49,15 @@
                   minWidth="760"
                   maxWidth="Infinity"
                   styleClass="manager-frame">
+
+                <HBox alignment="CENTER_LEFT"
+                      spacing="18"
+                      styleClass="manager-topbar">
+                    <Button text="&lt;  Back To Hub"
+                            mnemonicParsing="false"
+                            onAction="#backToHub"
+                            styleClass="manager-back-link" />
+                </HBox>
 
                 <VBox spacing="22"
                       styleClass="manager-body">

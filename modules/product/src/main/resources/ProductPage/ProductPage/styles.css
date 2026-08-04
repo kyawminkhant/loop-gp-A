@@ -119,6 +119,18 @@
     -fx-effect: dropshadow(gaussian, rgba(38, 10, 8, 0.24), 12, 0.10, 0, 4);
 }
 
+.preference-summary {
+    -fx-padding: 8px 20px;
+    -fx-background-color: rgba(255, 240, 211, 0.92);
+    -fx-background-radius: 999px;
+    -fx-border-color: #c48738;
+    -fx-border-radius: 999px;
+    -fx-text-fill: #68151f;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
 .filter-button {
     -fx-min-width: 160px;
     -fx-min-height: 36px;

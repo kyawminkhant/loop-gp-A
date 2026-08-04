@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class ProductManagerController {
 
@@ -82,6 +83,17 @@ public class ProductManagerController {
     @FXML
     private void initialize() {
         loadProducts();
+    }
+
+    @FXML
+    private void backToHub() {
+        try {
+            Stage stage = (Stage) productRows.getScene().getWindow();
+            App.showHub(stage);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            statusLabel.setText("Could not return to the Team Hub.");
+        }
     }
 
     @FXML

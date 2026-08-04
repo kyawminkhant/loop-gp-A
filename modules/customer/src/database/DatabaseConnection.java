@@ -58,6 +58,10 @@ public class DatabaseConnection {
                 );""");
 
             stmt.execute("""
+                CREATE UNIQUE INDEX IF NOT EXISTS customer_UQ_CustomerPreference_Customer
+                ON customer_CustomerPreference(customerID);""");
+
+            stmt.execute("""
                 CREATE TABLE IF NOT EXISTS orders_Orders (
                     orderID INTEGER PRIMARY KEY AUTOINCREMENT,
                     customerID TEXT,

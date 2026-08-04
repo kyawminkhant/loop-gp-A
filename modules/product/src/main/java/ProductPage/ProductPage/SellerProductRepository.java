@@ -284,6 +284,7 @@ public final class SellerProductRepository {
             + "COALESCE(c.chosenCuisines, '') AS cuisine "
             + "FROM product_Products p "
             + "LEFT JOIN product_Category c ON c.productID = p.productID "
+            + "WHERE p.sourceModule = 'product' "
             + "ORDER BY p.updatedDate DESC, p.productID DESC";
         List<ProductSummary> products = new ArrayList<>();
 

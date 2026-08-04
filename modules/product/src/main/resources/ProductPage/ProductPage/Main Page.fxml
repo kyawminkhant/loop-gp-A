@@ -90,6 +90,7 @@
 
             <Button fx:id="accountButton"
 			        mnemonicParsing="false"
+			        onAction="#openCustomerAccount"
 			        styleClass="header-action-button, account-button">
                 <graphic>
                     <HBox alignment="CENTER_LEFT" spacing="18">
@@ -104,7 +105,7 @@
                         </ImageView>
 
                         <Label fx:id="accountNameLabel"
-                               text="Hungry, Jasper?"
+                               text="Hungry, Guest?"
                                styleClass="header-action-text" />
                     </HBox>
                 </graphic>
@@ -229,6 +230,13 @@
                     </graphic>
                 </Button>
             </HBox>
+        </HBox>
+
+        <HBox alignment="CENTER" maxWidth="Infinity">
+            <Label fx:id="preferenceSummaryLabel"
+                   text="Sign in through Customers to personalise your recommendations."
+                   wrapText="true"
+                   styleClass="preference-summary" />
         </HBox>
     
     <ScrollPane fitToWidth="true"

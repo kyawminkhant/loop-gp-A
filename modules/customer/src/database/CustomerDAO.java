@@ -314,18 +314,24 @@ public class CustomerDAO {
 
     public boolean savePreference(CustomerPreference pref) {
         String sql = """
-            UPDATE customer_CustomerPreference
-            SET favoriteCategories = ?, notificationSettings = ?, deliveryInstructions = ?
-            WHERE customerID = ?
+            INSERT INTO customer_CustomerPreference (
+                preferenceID, customerID, favoriteCategories,
+                notificationSettings, deliveryInstructions
+            ) VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT(customerID) DO UPDATE SET
+                favoriteCategories = excluded.favoriteCategories,
+                notificationSettings = excluded.notificationSettings,
+                deliveryInstructions = excluded.deliveryInstructions
         """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, pref.getFavoriteCategories());
-            ps.setString(2, pref.getNotificationSettings());
-            ps.setString(3, pref.getDeliveryInstructions());
-            ps.setString(4, pref.getCustomerID());
+            ps.setString(1, UUID.randomUUID().toString());
+            ps.setString(2, pref.getCustomerID());
+            ps.setString(3, pref.getFavoriteCategories());
+            ps.setString(4, pref.getNotificationSettings());
+            ps.setString(5, pref.getDeliveryInstructions());
             ps.executeUpdate();
             return true;
 

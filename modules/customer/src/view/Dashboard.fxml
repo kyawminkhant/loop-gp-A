@@ -110,7 +110,7 @@
                     <VBox spacing="18" styleClass="tab-body">
                         <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
 
-                        <Label text="Set dietary preferences, notifications and delivery instructions. These are saved to your preference profile."
+                        <Label text="Set food preferences, notifications and delivery instructions. Matching products are recommended first in the Product catalogue."
                                styleClass="section-intro"/>
 
                         <VBox styleClass="info-card" spacing="14">
@@ -123,6 +123,9 @@
                                 <CheckBox fx:id="prefGlutenFree" text="Gluten-Free" styleClass="pref-check"/>
                                 <CheckBox fx:id="prefHalal" text="Halal" styleClass="pref-check"/>
                                 <CheckBox fx:id="prefLowCalorie" text="Low-Calorie" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefPescatarian" text="Pescatarian" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefHighProtein" text="High-Protein" styleClass="pref-check"/>
+                                <CheckBox fx:id="prefWeightLoss" text="Weight-Loss" styleClass="pref-check"/>
                             </FlowPane>
                         </VBox>
 

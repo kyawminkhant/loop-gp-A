@@ -4,8 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
@@ -22,6 +28,9 @@ class SellerProductRepositoryReadTest {
         assertFalse(products.isEmpty());
         assertTrue(products.stream().allMatch(product -> product.id > 0));
         assertTrue(products.stream().allMatch(product -> product.price > 0));
+        assertEquals(productOwnedIds(), products.stream()
+            .map(product -> product.id)
+            .collect(java.util.stream.Collectors.toSet()));
     }
 
     @Test
@@ -64,9 +73,28 @@ class SellerProductRepositoryReadTest {
     }
 
     private void requireDatabase() {
+        Path databasePath = databasePath();
         Assumptions.assumeTrue(
-            Files.exists(Path.of("database", "loop.db")),
-            "database/loop.db is required for read-only repository tests"
+            Files.exists(databasePath),
+            databasePath + " is required for read-only repository tests"
         );
+    }
+
+    private Set<Integer> productOwnedIds() throws SQLException {
+        Set<Integer> ids = new HashSet<>();
+        String url = "jdbc:sqlite:" + databasePath();
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement statement = connection.prepareStatement(
+                 "SELECT productID FROM product_Products WHERE sourceModule = 'product'");
+             ResultSet result = statement.executeQuery()) {
+            while (result.next()) {
+                ids.add(result.getInt("productID"));
+            }
+        }
+        return ids;
+    }
+
+    private Path databasePath() {
+        return Path.of(System.getProperty("loop.db.path", "database/loop.db"));
     }
 }

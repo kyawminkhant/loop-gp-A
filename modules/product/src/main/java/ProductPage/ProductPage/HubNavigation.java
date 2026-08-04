@@ -63,6 +63,9 @@ final class HubNavigation {
         if (root == null) {
             return;
         }
+        if (root.getStyleClass().contains("no-hub-logo")) {
+            return;
+        }
 
         ImageView logo = findLoopLogo(root);
         if (logo == null && root instanceof Pane) {

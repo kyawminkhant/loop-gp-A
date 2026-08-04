@@ -17,6 +17,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -51,6 +52,9 @@ public class PrimaryController {
 
     @FXML
     private Label orderCountLabel;
+
+    @FXML
+    private Label preferenceSummaryLabel;
 
     @FXML
     private VBox sortPopup;
@@ -242,13 +246,25 @@ public class PrimaryController {
     private Button selectedHealthGoalButton;
     private final ArrayList<String> detailImages = new ArrayList<>();
     private int detailImageIndex;
-    
-    public void setFirstName(String f_name) {
-        accountNameLabel.setText("Hungry, " + f_name + "?");
-    }
+    private CustomerPreferenceProfile customerProfile = CustomerPreferenceProfile.guest();
 
     public void setOrderCount(int count) {
         orderCountLabel.setText(String.valueOf(count));
+    }
+
+    @FXML
+    private void openCustomerAccount(ActionEvent event) {
+        try {
+            String startView = customerProfile.isSignedIn() ? "dashboard" : "login";
+            ModuleLauncher.showInCurrentWindow(
+                ((Node) event.getSource()).getScene(),
+                "customer",
+                startView
+            );
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            preferenceSummaryLabel.setText("Could not open the Customer account page.");
+        }
     }
 
     @FXML
@@ -552,7 +568,10 @@ public class PrimaryController {
     private void loadFoodCards() {
         try {
             allFoodData.clear();
-            allFoodData.addAll(FoodBarRepository.loadActiveProducts());
+            allFoodData.addAll(ProductPersonalizer.rank(
+                FoodBarRepository.loadActiveProducts(),
+                customerProfile.getPreferences()
+            ));
             foodCardCache.clear();
             renderFoodCards(allFoodData);
         } catch (ClassNotFoundException | SQLException e) {
@@ -1500,10 +1519,9 @@ public class PrimaryController {
     
     @FXML
     private void initialize() {
-        if (accountNameLabel.getText() == null
-                || accountNameLabel.getText().trim().isEmpty()) {
-            accountNameLabel.setText("Hungry, Jasper?");
-        }
+        customerProfile = CustomerPreferenceProfile.current();
+        accountNameLabel.setText("Hungry, " + customerProfile.getFirstName() + "?");
+        preferenceSummaryLabel.setText(customerProfile.getRecommendationMessage());
         setOrderCount(CartStore.getTotalQuantity());
 
         Rectangle detailImageClip = new Rectangle(236, 236);
