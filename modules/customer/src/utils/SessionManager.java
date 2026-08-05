@@ -7,6 +7,7 @@ public class SessionManager {
     private static Customer currentCustomer;
     private static Runnable personalizedProductNavigator;
     private static Runnable reviewAdminNavigator;
+    private static Runnable productManagementNavigator;
 
     public static void setCurrentCustomer(Customer customer) {
         currentCustomer = customer;
@@ -41,6 +42,18 @@ public class SessionManager {
             return false;
         }
         reviewAdminNavigator.run();
+        return true;
+    }
+
+    public static void setProductManagementNavigator(Runnable navigator) {
+        productManagementNavigator = navigator;
+    }
+
+    public static boolean openProductManagement() {
+        if (productManagementNavigator == null) {
+            return false;
+        }
+        productManagementNavigator.run();
         return true;
     }
 

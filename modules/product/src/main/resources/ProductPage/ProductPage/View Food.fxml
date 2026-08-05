@@ -169,6 +169,12 @@
                                     mnemonicParsing="false"
                                     onAction="#addToCart"
                                     styleClass="add-cart-button" />
+                            <Label fx:id="inventoryAvailabilityLabel"
+                                   visible="false"
+                                   managed="false"
+                                   wrapText="true"
+                                   textAlignment="CENTER"
+                                   styleClass="inventory-unavailable-label" />
                             <HBox alignment="CENTER" spacing="8" styleClass="top-summary-row">
                                 <Label fx:id="topCaloriesLabel"
                                        text="0 kcal"

@@ -411,4 +411,22 @@ public class SuperAdminController {
         alert.showAndWait();
         startLiveRefresh();
     }
+
+    @FXML
+    private void handleOpenProductManagement(ActionEvent event) {
+        if (adminPanel.isDisable()) {
+            lockMessageLabel.setText("Unlock Super Admin access first.");
+            return;
+        }
+        stopLiveRefresh();
+        if (SessionManager.openProductManagement()) {
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Product Management");
+        alert.setHeaderText("The integrated Product module is unavailable");
+        alert.setContentText("Open Customers from the integrated Team Hub to use Product Management.");
+        alert.showAndWait();
+        startLiveRefresh();
+    }
 }

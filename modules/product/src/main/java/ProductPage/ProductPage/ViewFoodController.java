@@ -45,6 +45,7 @@ public class ViewFoodController {
     @FXML private Label quantityLabel;
     @FXML private Button subscriptionButton;
     @FXML private Button addToCartButton;
+    @FXML private Label inventoryAvailabilityLabel;
     @FXML private Label topCaloriesLabel;
     @FXML private HBox topSpiceBox;
     @FXML private GridPane nutritionTable;
@@ -82,6 +83,7 @@ public class ViewFoodController {
     private int imageIndex;
     private int quantity = 1;
     private boolean subscriptionSelected;
+    private boolean currentFoodAvailable = true;
     private FoodBarData currentFood;
     private final ToggleGroup spiceToggleGroup = new ToggleGroup();
     private final ToggleGroup portionToggleGroup = new ToggleGroup();
@@ -196,6 +198,7 @@ public class ViewFoodController {
         showCurrentImage();
         showSuggestions(food);
 
+        updateInventoryAvailability(food);
         updateCartControls();
     }
 
@@ -222,6 +225,11 @@ public class ViewFoodController {
     @FXML
     private void addToCart() throws IOException {
         if (currentFood == null) {
+            return;
+        }
+        updateInventoryAvailability(currentFood);
+        if (!currentFoodAvailable) {
+            updateCartControls();
             return;
         }
 
@@ -300,7 +308,32 @@ public class ViewFoodController {
         }
         double itemPrice = currentItemPrice();
         priceLabel.setText(String.format("\u00A3%,.2f", itemPrice));
-        addToCartButton.setText("Add to Cart");
+        subscriptionButton.setDisable(!currentFoodAvailable);
+        addToCartButton.setDisable(!currentFoodAvailable);
+        addToCartButton.setText(currentFoodAvailable ? "Add to Cart" : "Unavailable");
+    }
+
+    private void updateInventoryAvailability(FoodBarData food) {
+        try {
+            ProductAvailabilityService.Availability availability =
+                    ProductAvailabilityService.loadForProduct(food.getProductId());
+            currentFoodAvailable = availability.isAvailable();
+            if (inventoryAvailabilityLabel != null) {
+                inventoryAvailabilityLabel.setVisible(!currentFoodAvailable);
+                inventoryAvailabilityLabel.setManaged(!currentFoodAvailable);
+                inventoryAvailabilityLabel.setText(currentFoodAvailable
+                        ? ""
+                        : "Unavailable: missing "
+                                + String.join(", ", availability.getMissingIngredients()));
+            }
+        } catch (ClassNotFoundException | SQLException exception) {
+            currentFoodAvailable = false;
+            if (inventoryAvailabilityLabel != null) {
+                inventoryAvailabilityLabel.setVisible(true);
+                inventoryAvailabilityLabel.setManaged(true);
+                inventoryAvailabilityLabel.setText("Availability could not be checked.");
+            }
+        }
     }
 
     private void showOverviewContent() {

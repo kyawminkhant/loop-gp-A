@@ -45,6 +45,10 @@ exist to make the seeded food and chef review histories realistic.
 
 Use **Super Admin** on the Customer login page for administrator access. New customers can also select **Register** and create their own account.
 
+After unlocking the Customer Super Admin panel, **Product Management** opens
+the seller catalogue manager in the same window. **Back To Admin** returns to
+the Customer administrator page. Review Moderation is available beside it.
+
 Products, Orders, Delivery, Inventory, Reviews, and Finance do not contain
 separate login pages. Reviews opens as the active Customer account, or as
 **Guest** when no Customer session exists. The **Reviews** breadcrumb on a
@@ -74,6 +78,12 @@ The Ingredient Inventory page can search and sort by ingredient name or ID.
 optional uploaded image to the shared `database` folder, then refreshes the
 grid. Inventory reports are exported as PDF files; the save dialog starts in
 `database/reports` and the page displays the final saved path.
+
+Product availability is calculated from each food's required default
+ingredient IDs and the live Inventory totals. A manually active food is hidden
+from the customer menu and shown as inactive in Product Manager when any
+required ingredient reaches zero. Restocking every missing ingredient makes
+the food available again automatically.
 
 The original source archives are not included or modified. Generated `target`, `bin`, class, crash-log, macOS metadata, and duplicate database files are excluded.
 

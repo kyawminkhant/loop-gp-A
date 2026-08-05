@@ -53,7 +53,8 @@
                 <HBox alignment="CENTER_LEFT"
                       spacing="18"
                       styleClass="manager-topbar">
-                    <Button text="&lt;  Back To Hub"
+                    <Button fx:id="managerBackButton"
+                            text="&lt;  Back To Hub"
                             mnemonicParsing="false"
                             onAction="#backToHub"
                             styleClass="manager-back-link" />

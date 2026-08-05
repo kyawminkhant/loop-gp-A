@@ -37,6 +37,8 @@ public final class FoodBarRepository {
         Map<Integer, RatingSummary> ratingByProduct = mapRatings(ratings);
         Map<Integer, ArrayList<String>> nutritionByProduct =
             mapRowsByProductId(defaultIngredients, 10);
+        Map<Integer, ProductAvailabilityService.Availability> availabilityByProduct =
+            ProductAvailabilityService.loadAll();
 
         List<FoodBarData> cards = new ArrayList<>();
 
@@ -46,6 +48,11 @@ public final class FoodBarRepository {
             String status = value(product, 6, "Inactive");
 
             if (!"Active".equalsIgnoreCase(status)) {
+                continue;
+            }
+            if (!availabilityByProduct
+                    .getOrDefault(productId, ProductAvailabilityService.Availability.available())
+                    .isAvailable()) {
                 continue;
             }
 

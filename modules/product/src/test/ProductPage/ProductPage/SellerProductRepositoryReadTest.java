@@ -28,6 +28,8 @@ class SellerProductRepositoryReadTest {
         assertFalse(products.isEmpty());
         assertTrue(products.stream().allMatch(product -> product.id > 0));
         assertTrue(products.stream().allMatch(product -> product.price > 0));
+        assertTrue(products.stream().allMatch(product ->
+                product.active == (product.manuallyActive && product.inventoryAvailable)));
         assertEquals(productOwnedIds(), products.stream()
             .map(product -> product.id)
             .collect(java.util.stream.Collectors.toSet()));

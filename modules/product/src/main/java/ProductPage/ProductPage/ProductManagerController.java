@@ -62,6 +62,7 @@ public class ProductManagerController {
     @FXML private TextField managerMinPriceField;
     @FXML private TextField managerMaxPriceField;
     @FXML private Label managerPriceErrorLabel;
+    @FXML private Button managerBackButton;
 
     private final NumberFormat moneyFormat = NumberFormat.getCurrencyInstance(Locale.UK);
     private final DateTimeFormatter databaseDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -82,11 +83,17 @@ public class ProductManagerController {
 
     @FXML
     private void initialize() {
+        managerBackButton.setText(ProductManagementContext.hasAdminReturn()
+                ? "<  Back To Admin"
+                : "<  Back To Hub");
         loadProducts();
     }
 
     @FXML
     private void backToHub() {
+        if (ProductManagementContext.returnToAdmin()) {
+            return;
+        }
         try {
             Stage stage = (Stage) productRows.getScene().getWindow();
             App.showHub(stage);
@@ -198,7 +205,12 @@ public class ProductManagerController {
         try {
             allProducts = SellerProductRepository.loadProductSummaries();
             renderProducts();
-            statusLabel.setText("");
+            long inventoryUnavailable = allProducts.stream()
+                    .filter(product -> product.manuallyActive && !product.inventoryAvailable)
+                    .count();
+            statusLabel.setText(inventoryUnavailable == 0
+                    ? ""
+                    : inventoryUnavailable + " product(s) automatically inactive due to missing stock.");
         } catch (ClassNotFoundException | SQLException exception) {
             exception.printStackTrace();
             statusLabel.setText("Could not load product_Products from the database.");
@@ -245,8 +257,15 @@ public class ProductManagerController {
         row.getStyleClass().add(product.active ? "manager-product-row-active" : "manager-product-row-inactive");
         row.setMaxWidth(Double.MAX_VALUE);
 
-        Label name = new Label(product.productName);
+        String displayName = product.productName;
+        if (!product.inventoryAvailable) {
+            displayName += "\nMissing stock: " + String.join(", ", product.missingIngredients);
+        }
+        Label name = new Label(displayName);
         name.getStyleClass().add("manager-col-product");
+        if (!product.inventoryAvailable) {
+            name.getStyleClass().add("manager-missing-stock");
+        }
         name.setWrapText(true);
         name.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(name, javafx.scene.layout.Priority.ALWAYS);

@@ -39,6 +39,7 @@ public class ProductMenuController {
     }
 
     public void openSellerPage() {
+        ProductManagementContext.clearReturnToAdmin();
         setRoot("Product Manager");
     }
 

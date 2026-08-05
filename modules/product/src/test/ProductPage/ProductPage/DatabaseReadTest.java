@@ -49,10 +49,17 @@ class DatabaseReadTest {
         requireDatabase();
 
         List<FoodBarData> products = FoodBarRepository.loadActiveProducts();
+        java.util.Map<Integer, ProductAvailabilityService.Availability> availability =
+                ProductAvailabilityService.loadAll();
 
         assertFalse(products.isEmpty());
         assertTrue(products.stream().allMatch(product -> product.getProductId() > 0));
         assertTrue(products.stream().allMatch(product -> !product.getProductName().isBlank()));
+        assertTrue(products.stream().allMatch(product -> availability
+                .getOrDefault(
+                        product.getProductId(),
+                        ProductAvailabilityService.Availability.available())
+                .isAvailable()));
     }
 
     private void requireDatabase() {

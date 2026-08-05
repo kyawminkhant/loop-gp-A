@@ -99,6 +99,23 @@ public final class ModuleLauncher {
                         "Could not open Review Moderation.", exception);
             }
         });
+
+        SessionManager.setProductManagementNavigator(() -> {
+            try {
+                ProductManagementContext.setReturnToAdmin(
+                        () -> returnToCustomerAdmin(scene, stage));
+                scene.setRoot(App.loadFXML("Product Manager"));
+                scene.getStylesheets().setAll(
+                        App.class.getResource("styles.css").toExternalForm());
+                stage.setTitle("LOOP Product Management");
+                HubNavigation.install(stage);
+            } catch (Exception exception) {
+                ProductManagementContext.clearReturnToAdmin();
+                exception.printStackTrace();
+                throw new IllegalStateException(
+                        "Could not open Product Management.", exception);
+            }
+        });
     }
 
     private static void configureReviewCustomer() {

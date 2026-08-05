@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public final class SellerProductRepository {
 
@@ -292,22 +293,43 @@ public final class SellerProductRepository {
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet result = statement.executeQuery()) {
 
+            Map<Integer, ProductAvailabilityService.Availability> availabilityByProduct =
+                    ProductAvailabilityService.loadAll(
+                            connection, currentInventoryYear(connection));
+
             while (result.next()) {
+                int productId = result.getInt("productID");
+                boolean manuallyActive = result.getInt("status") == 1;
+                ProductAvailabilityService.Availability inventoryAvailability =
+                        availabilityByProduct.getOrDefault(
+                                productId,
+                                ProductAvailabilityService.Availability.available());
                 products.add(new ProductSummary(
-                        result.getInt("productID"),
+                        productId,
                         result.getString("productName"),
                         result.getString("dietary"),
                         result.getString("healthGoal"),
                         result.getString("cuisine"),
                         result.getDouble("price"),
                         result.getDouble("cost"),
-                        result.getInt("status") == 1,
-                    result.getString("updatedDate")
+                        manuallyActive,
+                        inventoryAvailability,
+                        result.getString("updatedDate")
                 ));
             }
         }
 
         return products;
+    }
+
+    private static int currentInventoryYear(Connection connection) throws SQLException {
+        String sql = "SELECT COALESCE(MAX(CASE WHEN stockYear = CAST(strftime('%Y', 'now') AS INTEGER) "
+                + "THEN stockYear END), MAX(stockYear), CAST(strftime('%Y', 'now') AS INTEGER)) "
+                + "FROM inventory_Stock";
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+            return result.next() ? result.getInt(1) : java.time.Year.now().getValue();
+        }
     }
 
     public static ProductEditRecord loadProductForEdit(int productId) throws ClassNotFoundException, SQLException {
@@ -819,9 +841,22 @@ public final class SellerProductRepository {
         public final double price;
         public final double cost;
         public final boolean active;
+        public final boolean manuallyActive;
+        public final boolean inventoryAvailable;
+        public final List<String> missingIngredients;
         public final String updatedDate;
 
-        public ProductSummary(int id, String productName, String dietary, String healthGoal, String cuisine, double price, double cost, boolean active, String updatedDate) {
+        public ProductSummary(
+                int id,
+                String productName,
+                String dietary,
+                String healthGoal,
+                String cuisine,
+                double price,
+                double cost,
+                boolean manuallyActive,
+                ProductAvailabilityService.Availability inventoryAvailability,
+                String updatedDate) {
             this.id = id;
             this.productName = productName == null ? "" : productName;
             this.dietary = dietary == null ? "" : dietary;
@@ -830,7 +865,10 @@ public final class SellerProductRepository {
             this.category = this.cuisine.isBlank() ? "Uncategorised" : this.cuisine;
             this.price = price;
             this.cost = cost;
-            this.active = active;
+            this.manuallyActive = manuallyActive;
+            this.inventoryAvailable = inventoryAvailability.isAvailable();
+            this.missingIngredients = inventoryAvailability.getMissingIngredients();
+            this.active = manuallyActive && inventoryAvailable;
             this.updatedDate = updatedDate == null ? "" : updatedDate;
         }
     }

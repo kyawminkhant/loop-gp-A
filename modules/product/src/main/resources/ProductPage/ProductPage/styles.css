@@ -1944,6 +1944,18 @@
     -fx-pref-width: 180px;
 }
 
+.manager-product-row .manager-missing-stock {
+    -fx-font-size: 15px;
+    -fx-font-style: italic;
+}
+
+.inventory-unavailable-label {
+    -fx-text-fill: #8a2b2b;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-max-width: 280px;
+}
+
 .manager-col-category {
     -fx-min-width: 180px;
     -fx-pref-width: 180px;

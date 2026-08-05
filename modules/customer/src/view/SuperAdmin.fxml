@@ -70,6 +70,8 @@
                     <HBox alignment="CENTER_LEFT" spacing="12">
                         <Label text="2. Live Customer Directory" styleClass="card-title"/>
                         <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Product Management" onAction="#handleOpenProductManagement"
+                                styleClass="secondary-button"/>
                         <Button text="Review Moderation" onAction="#handleOpenReviewModeration"
                                 styleClass="secondary-button"/>
                     </HBox>

@@ -974,6 +974,7 @@ INSERT INTO "inventory_Stock" VALUES(2026,'ING083',84,986,'WH-03',1000);
 INSERT INTO "inventory_Stock" VALUES(2026,'ING084',85,1449,'WH-06',2300);
 INSERT INTO "inventory_Stock" VALUES(2026,'ING085',86,1173,'WH-06',4300);
 INSERT INTO "inventory_Stock" VALUES(2026,'ING086',89,4559,'WH-08',4900);
+INSERT INTO "inventory_Stock" VALUES(2026,'ING026-WH01',26,250,'WH-01',500);
 CREATE TABLE "inventory_stock_TransactionLog" (
 	"logID"	INTEGER,
 	"username"	TEXT,
@@ -982,6 +983,7 @@ CREATE TABLE "inventory_stock_TransactionLog" (
 	"dateTime"	TEXT,
 	PRIMARY KEY("logID" AUTOINCREMENT)
 );
+INSERT INTO "inventory_stock_TransactionLog" VALUES(1,'Super Admin','ADD_STOCK','250 x Fermented tea leaves added to WH-01','2026-08-05 21:54:12');
 CREATE TABLE "inventory_stock_analytics" (
 	"product"	TEXT NOT NULL,
 	"locations"	TEXT NOT NULL,
@@ -5088,4 +5090,5 @@ INSERT INTO "sqlite_sequence" VALUES('reviews_reviews',3023);
 INSERT INTO "sqlite_sequence" VALUES('reviews_helpful_votes',0);
 INSERT INTO "sqlite_sequence" VALUES('reviews_admin_moderation_log',0);
 INSERT INTO "sqlite_sequence" VALUES('reviews_review_flags',144);
+INSERT INTO "sqlite_sequence" VALUES('inventory_stock_TransactionLog',1);
 COMMIT;
