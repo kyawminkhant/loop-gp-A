@@ -15,7 +15,7 @@ public class Delivery {
     @FXML private TableColumn<model.Delivery, String> deliveryId;
     @FXML private TableColumn<model.Delivery, Integer> orderId;
     @FXML private TableColumn<model.Delivery, String> customer;
-    @FXML private TableColumn<model.Delivery, Integer> customerId;
+    @FXML private TableColumn<model.Delivery, String> customerId;
     @FXML private TableColumn<model.Delivery, Double> total;
     @FXML private TableColumn<model.Delivery, String> status;
     @FXML private TableColumn<model.Delivery, String> driver;
@@ -26,7 +26,7 @@ public class Delivery {
         deliveryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         deliveryId.setCellValueFactory(new PropertyValueFactory<>("deliveryId"));
-        orderId.setCellValueFactory(new PropertyValueFactory<>("oderId"));
+        orderId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         customer.setCellValueFactory(new PropertyValueFactory<>("customer"));
         customerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         total.setCellValueFactory(new PropertyValueFactory<>("total"));
@@ -38,7 +38,7 @@ public class Delivery {
         deliveryTable.setItems(DeliveryDAO.getDelivery());
     deliveryTable.setOnMouseClicked(event -> {
         model.Delivery selected = deliveryTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
+        if (selected != null && event.getClickCount() == 2) {
             try {
                 App.setRoot("deliverydetails");
             } catch (IOException e) {
@@ -47,10 +47,15 @@ public class Delivery {
         }
     });
 }
+
+    @FXML
+    private void refreshDeliveries() {
+        deliveryTable.setItems(DeliveryDAO.getDelivery());
+    }
     
     @FXML
     private void handleAssignDrivers() throws IOException {
-        App.setRoot("assigningdrivers");
+        App.setRoot("assigningDrivers");
     }
     
     @FXML

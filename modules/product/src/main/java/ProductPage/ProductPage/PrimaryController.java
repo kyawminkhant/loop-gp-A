@@ -54,9 +54,6 @@ public class PrimaryController {
     private Label orderCountLabel;
 
     @FXML
-    private Label preferenceSummaryLabel;
-
-    @FXML
     private VBox sortPopup;
 
     @FXML
@@ -247,6 +244,7 @@ public class PrimaryController {
     private final ArrayList<String> detailImages = new ArrayList<>();
     private int detailImageIndex;
     private CustomerPreferenceProfile customerProfile = CustomerPreferenceProfile.guest();
+    private boolean personalizedCatalogue;
 
     public void setOrderCount(int count) {
         orderCountLabel.setText(String.valueOf(count));
@@ -263,7 +261,6 @@ public class PrimaryController {
             );
         } catch (Exception exception) {
             exception.printStackTrace();
-            preferenceSummaryLabel.setText("Could not open the Customer account page.");
         }
     }
 
@@ -570,7 +567,9 @@ public class PrimaryController {
             allFoodData.clear();
             allFoodData.addAll(ProductPersonalizer.rank(
                 FoodBarRepository.loadActiveProducts(),
-                customerProfile.getPreferences()
+                personalizedCatalogue
+                    ? customerProfile.getPreferences()
+                    : java.util.Set.of()
             ));
             foodCardCache.clear();
             renderFoodCards(allFoodData);
@@ -1519,9 +1518,11 @@ public class PrimaryController {
     
     @FXML
     private void initialize() {
-        customerProfile = CustomerPreferenceProfile.current();
+        personalizedCatalogue = ProductBrowseContext.isPersonalized();
+        customerProfile = personalizedCatalogue
+            ? CustomerPreferenceProfile.current()
+            : CustomerPreferenceProfile.guest();
         accountNameLabel.setText("Hungry, " + customerProfile.getFirstName() + "?");
-        preferenceSummaryLabel.setText(customerProfile.getRecommendationMessage());
         setOrderCount(CartStore.getTotalQuantity());
 
         Rectangle detailImageClip = new Rectangle(236, 236);

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.Image?>
@@ -12,62 +11,29 @@
             stylesheets="@../styles/assigningDrivers.css"
             styleClass="assigningdrivers">
     <center>
-    	<HBox>
-    		<ImageView fx:id="logo" fitWidth="150" preserveRatio="true">
-    			<image >
-    				<Image url = "@../images/logo.png"/>
-    			</image>
-    		</ImageView>
-    		
-    		<VBox styleClass="main-container" alignment = "TOP_CENTER" maxHeight="650">
-    			<Label text="Assign Drivers" styleClass="section-title"/>
-    		
-    <ScrollPane fitToWidth="true"  fitToHeight="true" prefHeight="620" styleClass="driver-scroll" VBox.vgrow="ALWAYS">
-    			<VBox spacing ="16" styleClass = "driver-list">
-    		
-    				<VBox styleClass="Driver">
-    					<Label text="ORD-204" styleClass="order-id"/>
-    					<Label text="P. James" styleClass="customername "/>
-    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
-    				</VBox>
-    				
-    				<VBox styleClass="Driver">
-    					<Label text="ORD-205" styleClass="order-id"/>
-    					<Label text="C.Zoe" styleClass="customername "/>
-    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
-    				</VBox>
-    				
-    				<VBox styleClass="Driver">
-    					<Label text="ORD-203" styleClass="order-id"/>
-    					<Label text="S.Ali" styleClass="customername "/>
-    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
-    				</VBox>
-    				
-    				<VBox styleClass="Driver">
-    					<Label text="ORD-206" styleClass="order-id"/>
-    					<Label text="K.Charlie" styleClass="customername "/>
-    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
-    				</VBox>
-    				
-    				<VBox styleClass="Driver">
-    					<Label text="ORD-207" styleClass="order-id"/>
-    					<Label text="J.Peter" styleClass="customername "/>
-    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
-    				</VBox>
-    				
-    				<VBox styleClass="Driver">
-    					<Label text="ORD-207" styleClass="order-id"/>
-    					<Label text="T.bROWN" styleClass="customername "/>
-    					<Button text="Assign" onAction="#Assign" styleClass="action-button"/>
-    				</VBox>
-    			</VBox>
-    	    </ScrollPane>
-    	    
-    	    <Button text="← Back"
-                onAction="#goBack"
-                styleClass="back-button"/>
-                
-    		</VBox>
-    	</HBox>
+        <HBox>
+            <ImageView fx:id="logo" fitWidth="150" preserveRatio="true">
+                <image><Image url="@../images/logo.png"/></image>
+            </ImageView>
+
+            <VBox styleClass="main-container" alignment="TOP_CENTER" maxHeight="650" spacing="12">
+                <Label text="Assign Drivers" styleClass="section-title"/>
+                <Label text="Orders and statuses are shared with the Orders component."
+                       styleClass="customername" wrapText="true"/>
+
+                <ScrollPane fitToWidth="true" prefHeight="500"
+                            styleClass="driver-scroll" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="assignmentList" spacing="16" styleClass="driver-list"/>
+                </ScrollPane>
+
+                <Label fx:id="statusLabel" text="Select a driver for an order."
+                       styleClass="customername" wrapText="true"/>
+                <HBox spacing="12">
+                    <Button text="← Back" onAction="#goBack" styleClass="back-button"/>
+                    <Button text="Active Deliveries" onAction="#showActiveDeliveries"
+                            styleClass="action-button"/>
+                </HBox>
+            </VBox>
+        </HBox>
     </center>
 </BorderPane>

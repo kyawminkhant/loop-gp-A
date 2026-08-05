@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import LoopsFirstYearProject.LoopsFirstYearProject.App;
 
 import model.FoodItem;
 
@@ -28,6 +29,9 @@ public class ProductQueryController {
 
     @FXML
     private ImageView cameraView;
+
+    @FXML
+    private ImageView logo;
 
 
     @FXML
@@ -60,6 +64,8 @@ public class ProductQueryController {
     @FXML
     public void initialize() {
 
+        logo.setImage(new Image(getClass().getResourceAsStream("/images/logo.png")));
+
 
         warningMessage.setText(
                 "Ready to query products."
@@ -73,6 +79,12 @@ public class ProductQueryController {
         saveService = new ImageSaveService();
 
         searchService = new ProductSearchService();
+
+        cameraView.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (oldScene != null && newScene == null) {
+                stopWebcam();
+            }
+        });
 
     }
 
@@ -413,6 +425,16 @@ public class ProductQueryController {
         }
 
 
+    }
+
+    @FXML
+    private void backToDashboard() {
+        stopWebcam();
+        try {
+            App.setRoot("dashboard");
+        } catch (Exception exception) {
+            throw new IllegalStateException("Could not return to Inventory Dashboard.", exception);
+        }
     }
 
 

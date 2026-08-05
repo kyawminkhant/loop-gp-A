@@ -86,6 +86,10 @@ public class LoginController {
         lockUntilMs = 0;
         SessionManager.setCurrentCustomer(customer);
 
+        if (SessionManager.openPersonalizedProducts()) {
+            return;
+        }
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         NavigationUtil.switchScene(stage, "/view/Dashboard.fxml", "/styles/app.css");
     }

@@ -15,7 +15,7 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label text="Add Stock"/>
+    <Label text="Add Ingredient and Stock"/>
 
     <ImageView fx:id="foodImage"
                fitWidth="120"
@@ -27,7 +27,7 @@
 
 
     <TextField fx:id="ingredientID"
-               promptText="Ingredient ID"/>
+               promptText="Unique Stock Code"/>
 
     <TextField fx:id="ingredientName"
                promptText="Ingredient Name"/>

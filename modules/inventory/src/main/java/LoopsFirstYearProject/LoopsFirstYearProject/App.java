@@ -18,10 +18,11 @@ public class App extends Application {
         primaryStage = stage;
         
         try {
-            LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.testConnection1();
-            LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.testConnection2();
-        } catch (Exception e) {
-            e.printStackTrace();
+            LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.verifySharedSchema();
+            System.out.println("Inventory connected to shared database: "
+                    + LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.getDatabasePath());
+        } catch (Exception exception) {
+            throw new IOException("Inventory cannot open the shared LOOP database.", exception);
         }
          
         String startView = System.getProperty("loop.start", "dashboard");

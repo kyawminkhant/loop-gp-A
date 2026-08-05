@@ -22,19 +22,19 @@
 
                 <VBox styleClass="summary-card">
                     <Label fx:id="idleDriversNumber" styleClass="number" text="2"/>
-                    <Label styleClass="label" text="Idle Drivers"/>
+                    <Label styleClass="label" text="Unassigned Orders"/>
                     <Region styleClass="bar-yellow"/>
                 </VBox>
 
                 <VBox styleClass="summary-card">
                     <Label fx:id="failedAttemptsNumber" styleClass="number" text="1"/>
-                    <Label styleClass="label" text="Failed Attempts"/>
+                    <Label styleClass="label" text="Cancelled Orders"/>
                     <Region styleClass="bar-red"/>
                 </VBox>
 
                 <VBox styleClass="summary-card">
                     <Label fx:id="warehouseBacklogNumber" styleClass="number" text="6"/>
-                    <Label styleClass="label" text="Warehouse Backlog"/>
+                    <Label styleClass="label" text="Awaiting Dispatch"/>
                     <Region styleClass="bar-blue"/>
                 </VBox>
 

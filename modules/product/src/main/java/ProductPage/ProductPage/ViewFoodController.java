@@ -275,20 +275,18 @@ public class ViewFoodController {
 
     @FXML
     private void showReviewsTab() {
-        setActiveTab(reviewsTabButton);
-        showOverviewContent();
-        setSuggestionsVisible(false);
-        tabInfoLabel.setText(
-            currentFood == null
-                ? "Reviews will appear here."
-                : String.format(
-                    "%.1f rating from %s people.",
-                    currentFood.getAverageRating(),
-                    NumberFormat.getIntegerInstance().format(
-                        currentFood.getRatingCount()
-                    )
-                )
-        );
+        if (currentFood == null) {
+            return;
+        }
+        try {
+            ModuleLauncher.showProductReviews(reviewsTabButton.getScene(), currentFood);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            setActiveTab(reviewsTabButton);
+            showOverviewContent();
+            setSuggestionsVisible(false);
+            tabInfoLabel.setText("Reviews are temporarily unavailable.");
+        }
     }
 
     private void updateCartControls() {

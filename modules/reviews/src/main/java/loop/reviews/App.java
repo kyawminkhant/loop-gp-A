@@ -47,14 +47,29 @@ public class App extends Application {
             primaryStage.setMinHeight(680);
             String startView = System.getProperty("loop.start", "customer");
             UserDao users = new UserDao();
-            User selected = users.findAll().stream()
-                    .filter(user -> "admin".equalsIgnoreCase(startView)
-                            ? "ADMIN".equalsIgnoreCase(user.getRole())
-                            : "CUSTOMER".equalsIgnoreCase(user.getRole()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("No seeded " + startView + " review user found"));
+            boolean adminAccess = "admin".equalsIgnoreCase(startView) && Session.hasAdminGateway();
+            User selected;
+            if (adminAccess) {
+                selected = users.findAll().stream()
+                        .filter(user -> "ADMIN".equalsIgnoreCase(user.getRole()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No seeded review administrator found"));
+            } else {
+                String customerName = System.getProperty(
+                        "loop.review.customer.name", "Guest");
+                String customerEmail = System.getProperty(
+                        "loop.review.customer.email", "guest@loop.local");
+                selected = users.findOrCreateCustomer(customerName, customerEmail);
+                if (!"guest@loop.local".equalsIgnoreCase(customerEmail)) {
+                    Database.get().ensureCustomerReviewActivity(selected.getId());
+                }
+            }
             Session.setCurrentUser(selected);
-            SceneManager.switchTo("admin".equalsIgnoreCase(startView) ? "admin_moderation" : "home");
+            boolean selectedProduct = "product-review".equalsIgnoreCase(startView)
+                    && Session.getSelectedProductId() > 0;
+            SceneManager.switchTo(adminAccess
+                    ? "admin_moderation"
+                    : selectedProduct ? "product_reviews" : "home");
             primaryStage.show();
         } catch (Exception e) {
             System.err.println("[FATAL] Failed to start application:");
@@ -80,6 +95,9 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        if (System.getProperty("prism.order") == null) {
+            System.setProperty("prism.order", "sw");
+        }
         launch(args);
     }
 }

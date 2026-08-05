@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.geometry.Insets?>
 
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -25,7 +26,7 @@
                </children>
             </VBox>
             <Pane HBox.hgrow="ALWAYS" />
-            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+            <Button text="Back to Analytics" onAction="#back" styleClass="action_btn"/>
          </children>
       </HBox>
    </top>
@@ -33,7 +34,6 @@
       <center>
       <VBox fillWidth="true" spacing="20" styleClass="page-container">
       	<VBox>
-      		<ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
       		<HBox>
       			<Label text="Storage Locations"/>
       		</HBox>
@@ -48,8 +48,7 @@
       				<TableColumn fx:id="manager" text="Manager"/>
       			</columns>
       		</TableView>
-      			<Button text="Click for more Locations" onAction="#moreStorage" styleClass="moreStorage"/>
-                 <Button text="Back" onAction="#back" styleClass="action_btn"/>
+				 <Button text="Refresh Locations" onAction="#moreStorage" styleClass="moreStorage"/>
       	  </VBox>
       	</VBox>
       </center>

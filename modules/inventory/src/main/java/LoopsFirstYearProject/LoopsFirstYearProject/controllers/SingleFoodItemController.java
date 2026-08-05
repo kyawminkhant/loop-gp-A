@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.FoodItem;
+import services.InventoryImageService;
 
 public class SingleFoodItemController {
 
@@ -24,13 +25,9 @@ public class SingleFoodItemController {
 
         String path = item.getURLPath();
 
-        System.out.println("DB Path: " + path);
-        System.out.println("URL: " + getClass().getResource(path));
-
-        Image image = new Image(
-                getClass().getResourceAsStream(path)
-        );
-
-        foodImage.setImage(image);
+        InventoryImageService.loadImage(path).ifPresentOrElse(
+                foodImage::setImage,
+                () -> foodImage.setImage(new Image(
+                        getClass().getResourceAsStream("/images/logo.png"))));
     }
 }

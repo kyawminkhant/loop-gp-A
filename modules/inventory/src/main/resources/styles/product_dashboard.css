@@ -291,3 +291,15 @@
 .visible-scrollpane .viewport {
     -fx-background-color: transparent;
 }
+
+.sort-control {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #1B5E20;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-font-weight: bold;
+}
+
+.sort-control .list-cell {
+    -fx-text-fill: #1B5E20;
+}

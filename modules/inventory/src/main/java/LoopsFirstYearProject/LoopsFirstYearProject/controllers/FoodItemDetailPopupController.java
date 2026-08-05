@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import services.InventoryImageService;
 
 public class FoodItemDetailPopupController {
 
@@ -20,15 +21,8 @@ public class FoodItemDetailPopupController {
         categoryLabel.setText("Category: " + category);
         stockLabel.setText("Stock Status: " + stock + " remaining");
 
-        if (imagePath != null && !imagePath.isEmpty()) {
-            try {
-                foodImageView.setImage(new Image(imagePath));
-            } catch (Exception e) {
-                setDefaultImage();
-            }
-        } else {
-            setDefaultImage();
-        }
+        InventoryImageService.loadImage(imagePath)
+                .ifPresentOrElse(foodImageView::setImage, this::setDefaultImage);
     }
 
     private void setDefaultImage() {

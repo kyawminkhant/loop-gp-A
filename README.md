@@ -27,15 +27,53 @@ Only the **Customers** component has authentication. A ready-to-use customer and
 | Demo Customer | `customer@loop.com` | `customer123` |
 | Customer Super Admin | No email required | `admin123` |
 
+Additional preference demo accounts use the shared password `demo123`:
+`maya@loop.demo`, `noah@loop.demo`, `zara@loop.demo`, `liam@loop.demo`,
+`aisha@loop.demo`, and `oliver@loop.demo`. Each is seeded with a unique,
+randomized combination of food preferences. Logging in through **Customers**
+opens a personalized Product catalogue; the hub's **Products** button remains
+the normal, unpersonalized catalogue. Each demo account also includes two
+orders and two chef reviews so its dashboard is populated.
+The Demo Customer row is an optional sign-in account; it is not the default
+identity. Pages opened without a Customer login display **Guest**.
+
+The larger review dataset also includes review personas such as Naruto
+Uzumaki, Monkey D. Luffy, Satoru Gojo, Levi Ackerman, and other familiar anime
+characters. Customer-side reviewer profiles use `reviewer-001@loop.demo`
+through `reviewer-040@loop.demo`, all with password `review123`. They primarily
+exist to make the seeded food and chef review histories realistic.
+
 Use **Super Admin** on the Customer login page for administrator access. New customers can also select **Register** and create their own account.
 
-Products, Orders, Delivery, Inventory, Reviews, and Finance do not require login and contain no login pages. Click the **LOOP logo** on a component page to return to the Team Hub.
+Products, Orders, Delivery, Inventory, Reviews, and Finance do not contain
+separate login pages. Reviews opens as the active Customer account, or as
+**Guest** when no Customer session exists. The **Reviews** breadcrumb on a
+food-details page opens that food's reviews, and **Back to Food** returns to the
+same item. Customers can flag an
+inappropriate review once and select a reason. To access moderation, open
+**Customers > Super Admin**, unlock with `admin123`, then select
+**Review Moderation**; there is no Admin button in the customer Reviews pages.
+Click the **LOOP logo** on a component page to return to the Team Hub.
+
+Orders and Delivery share `orders_Orders`: Delivery creates one linked
+`delivery_Deliveries` record per order, and driver assignment or completion
+updates the same order status shown by the Orders component.
 
 For Eclipse development, follow [`ECLIPSE_SETUP.md`](ECLIPSE_SETUP.md) and import the root project using **Maven > Existing Maven Projects**.
 
 ## Database
 
-Run modules from the repository root so relative paths resolve to `database/loop.db`. The committed database contains 28 real tables instead of the original 53, plus four compatibility views. The five yearly Inventory tables are now one `inventory_Stock` table with a `stockYear` column. Orders, Finance, Reviews, and Inventory reuse the canonical `product_*` catalogue instead of storing copied Product tables. See `database/SCHEMA.md` for the current structure.
+Run modules from the repository root so relative paths resolve to `database/loop.db`. The committed database contains 30 real tables instead of the original 53, plus four compatibility views. The five yearly Inventory tables are now one `inventory_Stock` table with a `stockYear` column. Orders, Finance, Reviews, and Inventory reuse the canonical `product_*` catalogue instead of storing copied Product tables. See `database/SCHEMA.md` for the current structure.
+
+Inventory analytics, warehouse totals, ingredient queries, additions, and
+transfers are calculated from the live `inventory_Stock` and
+`product_Ingredient` records. A transfer updates both warehouse quantities in
+one transaction and records the action in `inventory_stock_TransactionLog`.
+The Ingredient Inventory page can search and sort by ingredient name or ID.
+**Add Ingredient** saves the new ingredient, its first stock record, and an
+optional uploaded image to the shared `database` folder, then refreshes the
+grid. Inventory reports are exported as PDF files; the save dialog starts in
+`database/reports` and the page displays the final saved path.
 
 The original source archives are not included or modified. Generated `target`, `bin`, class, crash-log, macOS metadata, and duplicate database files are excluded.
 

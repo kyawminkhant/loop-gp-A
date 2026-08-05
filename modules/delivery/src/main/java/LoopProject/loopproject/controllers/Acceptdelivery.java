@@ -1,65 +1,58 @@
 package LoopProject.loopproject.controllers;
 
-import java.io.IOException;
-
+import DAO.DeliveryDAO;
 import javafx.fxml.FXML;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import main.App;
+import model.Delivery;
+
+import java.io.IOException;
 
 public class Acceptdelivery {
-    @FXML private ImageView logoImage;
 
-    @FXML private VBox card204;
-    @FXML private VBox card205;
-    @FXML private VBox card203;
-    @FXML private VBox card207;
-    @FXML private VBox card208;
+    @FXML private VBox ordersContainer;
+    @FXML private Label statusLabel;
 
     @FXML
     public void initialize() {
-       
+        refreshAvailableOrders();
     }
 
-    @FXML
-    private void handleAccept204() {
-        acceptOrder("ORD-204", card204);
+    private void refreshAvailableOrders() {
+        ordersContainer.getChildren().clear();
+        if (DeliveryDAO.getUnassignedDeliveries().isEmpty()) {
+            ordersContainer.getChildren().add(new Label("No deliveries are waiting to be accepted."));
+            return;
+        }
+
+        for (Delivery delivery : DeliveryDAO.getUnassignedDeliveries()) {
+            VBox card = new VBox(7);
+            card.getStyleClass().add("order-card");
+            Label id = new Label(delivery.getDeliveryId()
+                    + "  |  Order #" + delivery.getOrderId());
+            id.getStyleClass().add("order-id-label");
+            Label name = new Label(delivery.getCustomer());
+            name.getStyleClass().add("order-name-label");
+            Button accept = new Button("ACCEPT");
+            accept.getStyleClass().add("accept-button");
+            accept.setOnAction(event -> acceptOrder(delivery));
+            card.getChildren().addAll(id, name, accept);
+            ordersContainer.getChildren().add(card);
+        }
     }
 
-    @FXML
-    private void handleAccept205() {
-        acceptOrder("ORD-205", card205);
-    }
-
-    @FXML
-    private void handleAccept203() {
-        acceptOrder("ORD-203", card203);
-    }
-
-    @FXML
-    private void handleAccept207() {
-        acceptOrder("ORD-207", card207);
-    }
-
-    @FXML
-    private void handleAccept208() {
-        acceptOrder("ORD-208", card208);
-    }
-
-
-    private void acceptOrder(String orderId, VBox card) {
-
-        card.setVisible(false);
-        card.setManaged(false); 
-
-        goToActiveRoute(); 
-    }
-
-    private void goToActiveRoute() {
+    private void acceptOrder(Delivery delivery) {
+        if (!DeliveryDAO.assignDriver(delivery.getOrderId(), "Current Driver")) {
+            statusLabel.setText("Could not accept order #" + delivery.getOrderId() + ".");
+            return;
+        }
         try {
             App.setRoot("driveractiveroutes");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            statusLabel.setText("Delivery accepted, but the active route page could not open.");
         }
     }
 }

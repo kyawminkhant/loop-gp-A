@@ -23,6 +23,14 @@ public final class FlowFieldAmbient {
 
     private FlowFieldAmbient() {}
 
+    /** Stops the shared animation timer when a data-heavy screen is shown. */
+    public static void stopActive() {
+        if (activeEngine != null) {
+            activeEngine.stop();
+            activeEngine = null;
+        }
+    }
+
     public static final class Handle {
         private final Pane layer;
         private final FlowFieldEngine engine;
@@ -37,10 +45,7 @@ public final class FlowFieldAmbient {
 
     public static Handle create(StackPane host) {
         // Stop any previous engine so we never run two timers (causes stutter)
-        if (activeEngine != null) {
-            activeEngine.stop();
-            activeEngine = null;
-        }
+        stopActive();
 
         Canvas canvas = new Canvas();
         canvas.widthProperty().bind(host.widthProperty());

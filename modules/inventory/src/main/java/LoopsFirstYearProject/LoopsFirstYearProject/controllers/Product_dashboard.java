@@ -53,7 +53,7 @@ public class Product_dashboard {
             FXMLLoader loader =
                     new FXMLLoader(
                         getClass()
-                        .getResource("/fxmlfiles/AddStock.fxml")
+                        .getResource("/fxmlFiles/add_stock.fxml")
                     );
 
 

@@ -37,8 +37,9 @@
                 <image><Image url="@/images/nobglooplogo.png"/></image>
             </ImageView>
 
-            <!-- Log Out overlays on the right without shifting the logo -->
-            <HBox alignment="CENTER_RIGHT" maxWidth="Infinity" mouseTransparent="false">
+            <!-- Navigation overlays on the right without shifting the logo -->
+            <HBox alignment="CENTER_RIGHT" maxWidth="Infinity" mouseTransparent="false" spacing="10">
+                <Button text="&#8592; Food Page" onAction="#handleBackToFood" styleClass="back-button"/>
                 <Button text="Log Out" onAction="#handleLogout" styleClass="back-button"/>
             </HBox>
         </StackPane>
@@ -105,7 +106,7 @@
                 </ScrollPane>
             </Tab>
 
-            <Tab text="Preferences">
+            <Tab fx:id="preferencesTab" text="Preferences">
                 <ScrollPane fitToWidth="true" styleClass="tab-scroll">
                     <VBox spacing="18" styleClass="tab-body">
                         <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
@@ -151,7 +152,7 @@
                 </ScrollPane>
             </Tab>
 
-            <Tab text="Order History">
+            <Tab fx:id="orderHistoryTab" text="Order History">
                 <VBox spacing="18" styleClass="tab-body">
                     <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
 
@@ -187,7 +188,7 @@
                 </VBox>
             </Tab>
 
-            <Tab text="Chef Reviews">
+            <Tab fx:id="chefReviewsTab" text="Chef Reviews">
                 <ScrollPane fitToWidth="true" styleClass="tab-scroll">
                     <VBox spacing="18" styleClass="tab-body">
                         <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>

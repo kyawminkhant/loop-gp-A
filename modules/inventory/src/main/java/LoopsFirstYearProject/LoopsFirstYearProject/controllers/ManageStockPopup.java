@@ -1,5 +1,6 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
+import dao.StockTransferDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -101,12 +102,23 @@ public class ManageStockPopup {
     @FXML
     private void confirmTransfer() {
 
+        try {
+            StockTransferDAO.transferAll(transferList);
+        } catch (Exception exception) {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Transfer Failed");
+            error.setHeaderText("Inventory was not changed");
+            error.setContentText(exception.getMessage());
+            error.showAndWait();
+            return;
+        }
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         alert.setTitle("Transfer Complete");
         alert.setHeaderText(null);
         alert.setContentText(
-                "Stock transfer confirmed!"
+                "Stock transfer completed and saved to the shared database."
         );
 
         alert.showAndWait();

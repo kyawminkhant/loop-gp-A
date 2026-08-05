@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -24,6 +25,7 @@ import model.FoodItem;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -44,13 +46,13 @@ public class FoodCardController implements Initializable {
     private Button openAddStock;
     
     @FXML
-    private Button profileBtn;
-     
-    @FXML
     private ScrollPane scrollPane;
 
     @FXML
     private TextField searchBar;
+
+    @FXML
+    private ComboBox<String> sortComboBox;
 
     private List<FoodItem> foodItems = new ArrayList<>();
     private final ContextMenu suggestionPopup = new ContextMenu();
@@ -62,10 +64,17 @@ public class FoodCardController implements Initializable {
         productGrid.prefWidthProperty().bind(scrollPane.widthProperty());
 
         loadDataFromDatabase();
-        displayFoodItems(foodItems);
+        sortComboBox.getItems().setAll(
+                "Name A-Z",
+                "Name Z-A",
+                "ID Low-High",
+                "ID High-Low");
+        sortComboBox.setValue("Name A-Z");
+        sortComboBox.setOnAction(event -> refreshDisplay());
+        refreshDisplay();
 
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-            filterFoodItems(newValue);
+            refreshDisplay();
             updateSuggestions(newValue);
         });
 
@@ -76,25 +85,42 @@ public class FoodCardController implements Initializable {
         });
     }
 
-    private void filterFoodItems(String searchText) {
+    private void refreshDisplay() {
+        String searchText = searchBar.getText();
+        List<FoodItem> result = new ArrayList<>();
         if (searchText == null || searchText.trim().isEmpty()) {
-            displayFoodItems(foodItems);
-            return;
-        }
-
-        String lowerCaseFilter = searchText.toLowerCase().trim();
-        List<FoodItem> filteredList = new ArrayList<>();
-
-        for (FoodItem item : foodItems) {
-            boolean matchesName = item.getName() != null && item.getName().toLowerCase().contains(lowerCaseFilter);
-            boolean matchesId = String.valueOf(item.getID()).contains(lowerCaseFilter);
-
-            if (matchesName || matchesId) {
-                filteredList.add(item);
+            result.addAll(foodItems);
+        } else {
+            String lowerCaseFilter = searchText.toLowerCase().trim();
+            for (FoodItem item : foodItems) {
+                boolean matchesName = item.getName() != null
+                        && item.getName().toLowerCase().contains(lowerCaseFilter);
+                boolean matchesId = String.valueOf(item.getID()).contains(lowerCaseFilter);
+                if (matchesName || matchesId) {
+                    result.add(item);
+                }
             }
         }
 
-        displayFoodItems(filteredList);
+        result.sort(selectedComparator());
+        displayFoodItems(result);
+    }
+
+    private Comparator<FoodItem> selectedComparator() {
+        String selection = sortComboBox.getValue();
+        Comparator<FoodItem> byName = Comparator.comparing(
+                item -> item.getName() == null ? "" : item.getName(),
+                String.CASE_INSENSITIVE_ORDER);
+        if ("Name Z-A".equals(selection)) {
+            return byName.reversed();
+        }
+        if ("ID High-Low".equals(selection)) {
+            return Comparator.comparingInt(FoodItem::getID).reversed();
+        }
+        if ("ID Low-High".equals(selection)) {
+            return Comparator.comparingInt(FoodItem::getID);
+        }
+        return byName;
     }
 
     private void updateSuggestions(String searchText) {
@@ -153,16 +179,17 @@ public class FoodCardController implements Initializable {
                 // 3. ATTACH CLICK LISTENER DIRECTLY ON THE CARD (VBox card)
                 card.setOnMouseClicked(event -> {
                     try {
-                        FXMLLoader popupLoader = new FXMLLoader(getClass().getResource("/LoopsFirstYearProject/LoopsFirstYearProject/views/FoodItemDetailPopup.fxml"));
+                        FXMLLoader popupLoader = new FXMLLoader(
+                                getClass().getResource("/fxmlFiles/foodItemDetailPopup.fxml"));
                         Parent root = popupLoader.load();
 
                         // Access the Detail Controller to populate data
                         FoodItemDetailPopupController popupController = popupLoader.getController();
                         
                         // Default Fallbacks - update if food item properties exist
-                        String category = "Menu Item"; 
-                        int stock = 1;                 
-                        String imagePath = "";         
+                        String category = "Ingredient";
+                        int stock = FoodItemDAO.getCurrentStockForIngredient(item.getID());
+                        String imagePath = item.getURLPath();
                         
                         popupController.setFoodData(
                             String.valueOf(item.getID()),
@@ -211,10 +238,10 @@ public class FoodCardController implements Initializable {
     }
     
     @FXML
-    private void profileBtn() throws IOException {
-        System.out.println("button clicked");
+    private void openQrScanner() throws IOException {
+        App.setRoot("product_query");
     }
-    
+
     @FXML
     public void openAddStock(){
 
@@ -240,7 +267,7 @@ public class FoodCardController implements Initializable {
             );
 
 
-            stage.setTitle("Add Stock");
+            stage.setTitle("Add Ingredient and Stock");
 
 
             stage.setScene(
@@ -249,6 +276,9 @@ public class FoodCardController implements Initializable {
 
 
             stage.showAndWait();
+
+            loadDataFromDatabase();
+            refreshDisplay();
 
 
         }catch(Exception e){
@@ -264,7 +294,7 @@ public class FoodCardController implements Initializable {
 
         loadDataFromDatabase();
 
-        displayFoodItems(foodItems);
+        refreshDisplay();
 
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -274,7 +304,7 @@ public class FoodCardController implements Initializable {
         alert.setHeaderText(null);
 
         alert.setContentText(
-            "Product list updated successfully"
+            "Ingredient list updated successfully"
         );
 
         alert.showAndWait();

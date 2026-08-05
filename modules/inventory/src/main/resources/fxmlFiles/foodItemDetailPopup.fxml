@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="14" prefWidth="430" prefHeight="440"
+      stylesheets="@../styles/product_dashboard.css"
+      styleClass="root-pane"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.FoodItemDetailPopupController">
+    <padding>
+        <Insets top="24" right="28" bottom="24" left="28"/>
+    </padding>
+    <ImageView fx:id="foodImageView" fitWidth="180" fitHeight="180" preserveRatio="true"/>
+    <Label fx:id="nameLabel" styleClass="label-one" wrapText="true"/>
+    <Label fx:id="idLabel" styleClass="card-id-text"/>
+    <Label fx:id="categoryLabel" styleClass="label-two"/>
+    <Label fx:id="stockLabel" styleClass="label-two"/>
+    <HBox alignment="CENTER">
+        <Button text="Close" onAction="#handleClose" styleClass="scan_button"/>
+    </HBox>
+</VBox>

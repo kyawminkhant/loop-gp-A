@@ -1,5 +1,6 @@
 package main;
 
+import DAO.DeliveryDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +13,11 @@ public class App extends Application {
     private static Scene scene;
 
     public void start(Stage stage) throws IOException {
+        try {
+            DeliveryDAO.ensureSchemaAndSync();
+        } catch (java.sql.SQLException exception) {
+            throw new IOException("Could not prepare shared delivery data.", exception);
+        }
         String requested = System.getProperty("loop.start", "admin");
         String startView = "driver".equalsIgnoreCase(requested) ? "deliveryaccept" : "delivery";
         Parent root = loadFXML(startView);

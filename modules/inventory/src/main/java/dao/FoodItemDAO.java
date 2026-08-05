@@ -120,4 +120,18 @@ public class FoodItemDAO {
         return null; 
     }
 
+    public static int getCurrentStockForIngredient(int ingredientId) {
+        String sql = "SELECT COALESCE(SUM(stockQuantity), 0) FROM inventory_Stock "
+                + "WHERE stockYear = 2026 AND ingredientID = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, ingredientId);
+            try (ResultSet result = statement.executeQuery()) {
+                return result.next() ? result.getInt(1) : 0;
+            }
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Could not load ingredient stock.", exception);
+        }
+    }
+
 }

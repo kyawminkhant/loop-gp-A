@@ -20,7 +20,7 @@
         <top>
             <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
                 <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
-                <Button text="&lt; Back" styleClass="btn-ghost" onAction="#goBack"/>
+                <Button fx:id="backButton" text="&lt; Back" styleClass="btn-ghost" onAction="#goBack"/>
                 <ImageView fitHeight="38" preserveRatio="true">
                     <image><Image url="@../images/loop-logo.png"/></image>
                 </ImageView>

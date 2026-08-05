@@ -28,6 +28,9 @@ public class ReviewDao {
         r.setHelpfulCount(rs.getInt("helpful_count"));
         r.setUnhelpfulCount(rs.getInt("unhelpful_count"));
         r.setEditDurationSeconds(rs.getInt("edit_duration_seconds"));
+        try {
+            r.setFlagCount(rs.getInt("flag_count"));
+        } catch (SQLException ignore) { /* aggregate not present */ }
         // customerName included when the query joins users (aliased as customer_name)
         try {
             String cn = rs.getString("customer_name");
@@ -37,7 +40,10 @@ public class ReviewDao {
     }
 
     private static final String SELECT_JOIN =
-        "SELECT r.*, u.name AS customer_name FROM reviews_reviews r JOIN reviews_users u ON u.id = r.customer_id ";
+        "SELECT r.*, u.name AS customer_name, " +
+        "(SELECT COUNT(*) FROM reviews_review_flags f " +
+        " WHERE f.review_id=r.id AND f.resolved_at IS NULL) AS flag_count " +
+        "FROM reviews_reviews r JOIN reviews_users u ON u.id = r.customer_id ";
 
     public List<Review> findAll() {
         List<Review> list = new ArrayList<>();
@@ -211,6 +217,13 @@ public class ReviewDao {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("delete votes failed", e);
+        }
+        try (PreparedStatement ps = conn().prepareStatement(
+                "DELETE FROM reviews_review_flags WHERE review_id=?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("delete review flags failed", e);
         }
         try (PreparedStatement ps = conn().prepareStatement("DELETE FROM reviews_reviews WHERE id=?")) {
             ps.setInt(1, id);

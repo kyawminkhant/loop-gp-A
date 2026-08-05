@@ -19,6 +19,7 @@ import models.Customer;
 import models.OrderHistoryItem;
 import utils.AnimationUtil;
 import utils.NavigationUtil;
+import utils.SessionManager;
 import utils.ValidationUtil;
 
 import java.time.LocalTime;
@@ -391,5 +392,23 @@ public class SuperAdminController {
         stopLiveRefresh();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         NavigationUtil.switchScene(stage, "/view/Login.fxml", "/styles/app.css");
+    }
+
+    @FXML
+    private void handleOpenReviewModeration(ActionEvent event) {
+        if (adminPanel.isDisable()) {
+            lockMessageLabel.setText("Unlock Super Admin access first.");
+            return;
+        }
+        stopLiveRefresh();
+        if (SessionManager.openReviewAdmin()) {
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Review Moderation");
+        alert.setHeaderText("The integrated Reviews module is unavailable");
+        alert.setContentText("Open Customers from the integrated Team Hub to use Review Moderation.");
+        alert.showAndWait();
+        startLiveRefresh();
     }
 }

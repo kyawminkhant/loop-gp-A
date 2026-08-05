@@ -1,70 +1,61 @@
 package LoopProject.loopproject.controllers;
 
-import java.io.IOException;
-
-import javafx.event.ActionEvent;
+import DAO.DeliveryDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import main.App;
+import model.Delivery;
+
+import java.io.IOException;
 
 public class ActiveDeliveries {
 
-    @FXML
-    private ImageView ss;
-    
- 
+    @FXML private VBox activeDeliveryList;
+    @FXML private Label statusLabel;
+
     @FXML
     public void initialize() {
-        
+        refreshActiveDeliveries();
     }
-    
+
+    private void refreshActiveDeliveries() {
+        activeDeliveryList.getChildren().clear();
+        if (DeliveryDAO.getActiveDeliveries().isEmpty()) {
+            activeDeliveryList.getChildren().add(new Label("No active deliveries."));
+            return;
+        }
+
+        for (Delivery delivery : DeliveryDAO.getActiveDeliveries()) {
+            VBox card = new VBox(7);
+            card.getStyleClass().add("deliverybox");
+            Label id = new Label(delivery.getDeliveryId()
+                    + "  |  Order #" + delivery.getOrderId());
+            id.getStyleClass().add("delivery-id");
+            Label route = new Label(delivery.getDriver() + "  |  "
+                    + delivery.getCustomer() + "  |  " + delivery.getStatus());
+            route.getStyleClass().add("delivery-route");
+            Button delivered = new Button("Mark Delivered");
+            delivered.getStyleClass().add("status-button");
+            delivered.setOnAction(event -> {
+                boolean updated = DeliveryDAO.markDelivered(delivery.getOrderId());
+                statusLabel.setText(updated
+                        ? "Order #" + delivery.getOrderId() + " marked Delivered in both components."
+                        : "Could not update order #" + delivery.getOrderId() + ".");
+                refreshActiveDeliveries();
+            });
+            card.getChildren().addAll(id, route, delivered);
+            activeDeliveryList.getChildren().add(card);
+        }
+    }
+
     @FXML
-    private void goBack(ActionEvent event) {
+    private void goBack() {
         try {
             App.setRoot("assigningDrivers");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
- 
-    @FXML
-    private void onRoute(ActionEvent event) {
- 
-        
-        Button clickedButton = (Button) event.getSource();
- 
-       
-        VBox card = (VBox) clickedButton.getParent();
- 
-        String driverId = "";
-        String route = "";
-        int labelCount = 0;
- 
-        for (int i = 0; i < card.getChildren().size(); i++) {
-            if (card.getChildren().get(i) instanceof Label) {
-                Label label = (Label) card.getChildren().get(i);
- 
-                if (labelCount == 0) {
-                    driverId = label.getText();
-                } else if (labelCount == 1) {
-                    route = label.getText();
-                }
-                labelCount++;
-            }
-        }
-        
-        
- 
-        System.out.println(driverId + " (" + route + ") marked as delivered");
- 
-        // when on route button clicked delivered button comes next 
-        if (clickedButton.getText().equals("On route")) {
-            clickedButton.setText("Delivered");
-        } else {
-            clickedButton.setText("On route");
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 }

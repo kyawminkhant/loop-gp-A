@@ -24,6 +24,7 @@ public class Review {
     private int helpfulCount;
     private int unhelpfulCount;
     private int editDurationSeconds; // default 300 (admin-adjustable)
+    private int flagCount;
 
     // Convenience field populated by joins for display (not a DB column).
     private String customerName;
@@ -52,6 +53,8 @@ public class Review {
     public void setUnhelpfulCount(int unhelpfulCount) { this.unhelpfulCount = unhelpfulCount; }
     public int getEditDurationSeconds() { return editDurationSeconds; }
     public void setEditDurationSeconds(int s) { this.editDurationSeconds = s; }
+    public int getFlagCount() { return flagCount; }
+    public void setFlagCount(int flagCount) { this.flagCount = flagCount; }
     public String getCustomerName() { return customerName; }
     public void setCustomerName(String customerName) { this.customerName = customerName; }
 

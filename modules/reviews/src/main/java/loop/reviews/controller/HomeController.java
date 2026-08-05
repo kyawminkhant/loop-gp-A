@@ -22,7 +22,6 @@ public class HomeController {
 
     @FXML private Label welcomeLabel;
     @FXML private Button myReviewsButton;
-    @FXML private Button adminButton;
     @FXML private VBox productList;
 
     private final ProductDao productDao = new ProductDao();
@@ -32,13 +31,6 @@ public class HomeController {
     private void initialize() {
         User u = Session.getCurrentUser();
         welcomeLabel.setText(u == null ? "" : "Signed in as " + u.getName());
-
-        boolean admin = Session.isAdmin();
-        // Admins moderate; customers browse and manage their own reviews.
-        myReviewsButton.setVisible(!admin);
-        myReviewsButton.setManaged(!admin);
-        adminButton.setVisible(admin);
-        adminButton.setManaged(admin);
 
         loadProducts();
     }
@@ -97,5 +89,4 @@ public class HomeController {
     }
 
     @FXML private void openMyReviews() { SceneManager.switchTo("my_reviews"); }
-    @FXML private void openAdmin() { SceneManager.switchTo("admin_moderation"); }
 }

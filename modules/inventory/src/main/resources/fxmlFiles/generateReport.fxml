@@ -20,7 +20,7 @@
                </children>
             </VBox>
             <Pane HBox.hgrow="ALWAYS" />
-            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+            <Button text="Back to Inventory" onAction="#backToDashboard" styleClass="action_btn"/>
          </children>
       </HBox>
    </top>
@@ -44,6 +44,8 @@
                         </HBox>
                      </children>
                   </HBox>
+                  <Label fx:id="reportStatus" text="Choose a year to prepare the report."
+                         styleClass="subtitle-text" wrapText="true"/>
                   <TableView fx:id="tableview" styleClass="table_text" VBox.vgrow="ALWAYS" prefHeight="400.0" minHeight="250.0">
                      <columns>
                         <TableColumn fx:id="ingredientID" text="Ingredient ID"/>

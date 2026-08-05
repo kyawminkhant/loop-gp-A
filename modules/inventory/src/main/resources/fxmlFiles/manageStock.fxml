@@ -19,7 +19,7 @@
 	               </children>
 	            </VBox>
 	            <Pane HBox.hgrow="ALWAYS" />
-	            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+	            <Button text="Back to Inventory" onAction="#backToDashboard" styleClass="transfer-btn"/>
 	         </children>
 	      </HBox>
 	   </top>
@@ -36,11 +36,6 @@
             <VBox fillWidth="true"
                   spacing="20"
                   styleClass="page-container">
-
-
-                <ImageView fx:id="logo"
-                           fitWidth="120"
-                           fitHeight="120"/>
 
 
                 <Label text="🔄 Manage Stock"

@@ -82,6 +82,11 @@ public class AnalyticsController {
 	public void back() throws IOException {
 		App.setRoot("dashboard");
 	}
+
+	@FXML
+	private void replenish() throws IOException {
+		App.setRoot("product_dashboard");
+	}
 	
 }
 

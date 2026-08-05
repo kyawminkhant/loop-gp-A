@@ -30,6 +30,7 @@ public class TeamHubController {
     }
 
     public void openProducts(ActionEvent event) {
+        ProductBrowseContext.useStandardCatalogue();
         openFxml(event, "Product Menu");
     }
 
@@ -52,9 +53,7 @@ public class TeamHubController {
     }
 
     public void openReviews(ActionEvent event) {
-        openModuleMenu(event, "Reviews & Ratings", "Choose a customer or admin view", "reviews",
-                "Customer View", "Browse products and submit reviews", "customer",
-                "Admin Moderation", "Moderate reviews and view analytics", "admin");
+        openModule(event, "reviews", "customer", "Reviews & Ratings");
     }
 
     public void openFinance(ActionEvent event) {

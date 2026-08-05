@@ -25,7 +25,6 @@
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="welcomeLabel" styleClass="topbar-user"/>
                 <Button fx:id="myReviewsButton" text="My Reviews" styleClass="btn-ghost" onAction="#openMyReviews"/>
-                <Button fx:id="adminButton" text="Admin Moderation" styleClass="btn-ghost" onAction="#openAdmin"/>
             </HBox>
         </top>
         <center>

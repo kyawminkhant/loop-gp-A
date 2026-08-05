@@ -18,7 +18,7 @@
         <top>
             <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
                 <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
-                <Button text="&lt; Home" styleClass="btn-ghost" onAction="#goHome"/>
+                <Button text="&lt; Customer Admin" styleClass="btn-ghost" onAction="#goHome"/>
                 <Label text="Admin Moderation" styleClass="topbar-brand"/>
                 <Region HBox.hgrow="ALWAYS"/>
             </HBox>
@@ -31,6 +31,8 @@
                     <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
                     <Label text="Status" styleClass="field-label"/>
                     <ComboBox fx:id="statusFilter"/>
+                    <Label text="Sort" styleClass="field-label"/>
+                    <ComboBox fx:id="sortOrder"/>
                     <TextField fx:id="searchField" promptText="Search comment or customer..." HBox.hgrow="ALWAYS"/>
                     <Button text="Search" styleClass="btn-primary" onAction="#applySearch"/>
                     <Button text="Clear" styleClass="btn-ghost" onAction="#clearSearch"/>

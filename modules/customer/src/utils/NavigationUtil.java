@@ -23,7 +23,11 @@ public class NavigationUtil {
             scene.getStylesheets().clear();
             scene.getStylesheets().add(NavigationUtil.class.getResource(cssPath).toExternalForm());
 
-            Platform.runLater(() -> AnimationUtil.attachBackgroundAmbient(root));
+            if (fxmlPath.endsWith("/Dashboard.fxml")) {
+                AnimationUtil.disableBackgroundAmbient();
+            } else {
+                Platform.runLater(() -> AnimationUtil.attachBackgroundAmbient(root));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

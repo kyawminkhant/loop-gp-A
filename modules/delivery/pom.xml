@@ -10,6 +10,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <loop.start>admin</loop.start>
         <loop.db.path>${project.basedir}/../../database/loop.db</loop.db.path>
+        <loop.test.db.path>${project.build.directory}/delivery-test.db</loop.test.db.path>
     </properties>
     <dependencies>
         <dependency>
@@ -26,6 +27,12 @@
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.46.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -54,6 +61,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <loop.db.path>${loop.test.db.path}</loop.db.path>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>

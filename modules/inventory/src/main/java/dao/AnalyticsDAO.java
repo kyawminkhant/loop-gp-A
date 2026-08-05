@@ -1,42 +1,70 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
 import LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Analytics;
 
-public class AnalyticsDAO {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-	public static ObservableList<Analytics> getLocations(){
-		ObservableList<Analytics> list = FXCollections.observableArrayList();
-		
-		String sql = "SELECT * FROM inventory_stock_analytics";
-		
-		try(Connection conn = DBConnection.getConnectionURLlocation();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql)) {
-			while(rs.next()) {
-				list.add(new Analytics(
-						rs.getString("product"),
-						rs.getString("locations"),
-						rs.getInt("currentQuantity"),
-						rs.getInt("minThreshold"),
-						rs.getString("status"),
-						rs.getString("lastRestock"),
-						rs.getInt("daysUntilReorder")
-						));
-			}
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-	
-	
+/** Builds analytics from the live normalized stock table. */
+public final class AnalyticsDAO {
+
+    private static final int CURRENT_STOCK_YEAR = 2026;
+
+    private AnalyticsDAO() { }
+
+    public static ObservableList<Analytics> getLocations() {
+        ObservableList<Analytics> list = FXCollections.observableArrayList();
+        String sql = """
+                SELECT ingredient.ingredientName AS product,
+                       stock.warehouseID AS location,
+                       stock.stockQuantity AS currentQuantity,
+                       MAX(1, CAST(stock.capacity * 0.20 AS INTEGER)) AS minThreshold,
+                       CASE
+                         WHEN stock.stockQuantity <= MAX(1, CAST(stock.capacity * 0.10 AS INTEGER))
+                           THEN 'CRITICAL'
+                         WHEN stock.stockQuantity <= MAX(1, CAST(stock.capacity * 0.20 AS INTEGER))
+                           THEN 'LOW'
+                         ELSE 'AVAILABLE'
+                       END AS status,
+                       COALESCE(legacy.lastRestock, 'Not recorded') AS lastRestock,
+                       CASE
+                         WHEN stock.stockQuantity <= MAX(1, CAST(stock.capacity * 0.20 AS INTEGER))
+                           THEN 0
+                         ELSE CAST((stock.stockQuantity - MAX(1, CAST(stock.capacity * 0.20 AS INTEGER)))
+                              / MAX(1, stock.capacity / 30) AS INTEGER)
+                       END AS daysUntilReorder
+                FROM inventory_Stock stock
+                JOIN product_Ingredient ingredient
+                  ON ingredient.ingredientID = stock.ingredientID
+                LEFT JOIN inventory_stock_analytics legacy
+                  ON legacy.product = ingredient.ingredientName
+                WHERE stock.stockYear = ?
+                ORDER BY CASE status WHEN 'CRITICAL' THEN 0 WHEN 'LOW' THEN 1 ELSE 2 END,
+                         ingredient.ingredientName, stock.warehouseID
+                """;
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, CURRENT_STOCK_YEAR);
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    list.add(new Analytics(
+                            result.getString("product"),
+                            result.getString("location"),
+                            result.getInt("currentQuantity"),
+                            result.getInt("minThreshold"),
+                            result.getString("status"),
+                            result.getString("lastRestock"),
+                            result.getInt("daysUntilReorder")));
+                }
+            }
+        } catch (Exception exception) {
+            throw new IllegalStateException("Could not load live inventory analytics.", exception);
+        }
+        return list;
+    }
 }

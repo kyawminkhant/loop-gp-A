@@ -1,374 +1,124 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
+import LoopsFirstYearProject.LoopsFirstYearProject.App;
+import LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection;
 import dao.IngredientDAO;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import model.Ingredient;
+import services.InventoryReportService;
 
 import java.io.File;
-import java.io.FileOutputStream;
-
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Generate_report {
 
-    @FXML
-    private ImageView logo;
+    @FXML private ImageView logo;
+    @FXML private TableView<Ingredient> tableview;
+    @FXML private TableColumn<Ingredient, String> ingredientID;
+    @FXML private TableColumn<Ingredient, String> ingredientName;
+    @FXML private TableColumn<Ingredient, Integer> stockQuantity;
+    @FXML private TableColumn<Ingredient, String> warehouseID;
+    @FXML private TableColumn<Ingredient, Integer> capacity;
+    @FXML private ComboBox<String> year;
+    @FXML private Label reportStatus;
 
     @FXML
-    private ImageView profileIcon;
-    
-    @FXML
-    private Button back;
+    public void initialize() {
+        logo.setImage(new Image(getClass().getResourceAsStream("/images/logo.png")));
+        tableview.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-    @FXML
-    private TableView<Ingredient> tableview;
+        ingredientID.setCellValueFactory(new PropertyValueFactory<>("ingredientID"));
+        ingredientName.setCellValueFactory(new PropertyValueFactory<>("ingredientName"));
+        stockQuantity.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+        warehouseID.setCellValueFactory(new PropertyValueFactory<>("warehouseID"));
+        capacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
 
-    @FXML
-    private TableColumn<Ingredient,String> ingredientID;
-
-    @FXML
-    private TableColumn<Ingredient,String> ingredientName;
-
-    @FXML
-    private TableColumn<Ingredient,Integer> stockQuantity;
-
-    @FXML
-    private TableColumn<Ingredient,String> warehouseID;
-
-    @FXML
-    private TableColumn<Ingredient,Integer> capacity;
-
-    @FXML
-    private ComboBox<String> year;
-
-
-
-    @SuppressWarnings("deprecation")
-	@FXML
-    public void initialize(){
-
-        logo.setImage(
-            new Image(
-                getClass()
-                .getResourceAsStream("/images/logo.png")
-            )
-        );
-
-        profileIcon.setImage(
-            new Image(
-                getClass()
-                .getResourceAsStream("/images/user.png")
-            )
-        );
-
-
-        tableview.setColumnResizePolicy(
-            TableView.CONSTRAINED_RESIZE_POLICY
-        );
-
-
-        ingredientID.setCellValueFactory(
-            new PropertyValueFactory<>("ingredientID")
-        );
-
-        ingredientName.setCellValueFactory(
-            new PropertyValueFactory<>("ingredientName")
-        );
-
-        stockQuantity.setCellValueFactory(
-            new PropertyValueFactory<>("stockQuantity")
-        );
-
-        warehouseID.setCellValueFactory(
-            new PropertyValueFactory<>("warehouseID")
-        );
-
-        capacity.setCellValueFactory(
-            new PropertyValueFactory<>("capacity")
-        );
-
-
-        year.getItems()
-            .addAll(
-                "2022",
-                "2023",
-                "2024",
-                "2025",
-                "2026"
-            );
-
-
+        year.getItems().setAll("2022", "2023", "2024", "2025", "2026");
         year.setValue("2026");
-
-
-        loadIngredients("Ingredient2026");
-
-
-        year.setOnAction(e -> {
-
-            String selected =
-                    year.getValue();
-
-            if(selected != null){
-
-                loadIngredients(
-                    "Ingredient" + selected
-                );
-
-            }
-
-        });
-
+        loadIngredients();
+        year.setOnAction(event -> loadIngredients());
     }
 
-
-
-    private void loadIngredients(String tableName){
-
-        tableview.setItems(
-            IngredientDAO
-            .getAllIngredients(tableName)
-        );
-
+    private void loadIngredients() {
+        String selectedYear = year.getValue();
+        if (selectedYear != null) {
+            tableview.setItems(IngredientDAO.getAllIngredients("Ingredient" + selectedYear));
+            reportStatus.setText(tableview.getItems().size() + " stock records loaded for "
+                    + selectedYear + ". Click a column heading to sort.");
+        }
     }
-
-
-
-    // Used after Add / Update / Delete
-
-    public void refresh(){
-
-        loadIngredients(
-            "Ingredient" + year.getValue()
-        );
-
-    }
-
-
 
     @FXML
-    private void addStock(){
-
-        // We will connect AddStock.fxml popup here
-
+    public void refresh() {
+        loadIngredients();
     }
 
-
-
     @FXML
-    private void updateStock(){
-
-        // Update popup here
-
-    }
-
-
-
-    @FXML
-    private void deleteStock(){
-
-        // Delete logic here
-
-    }
-
-
-
-    @FXML
-    private void report(){
-
-        String selectedYear =
-                year.getValue();
-
-
-        if(selectedYear == null){
-
-            showAlert(
-                Alert.AlertType.WARNING,
-                "Warning",
-                "Select year first"
-            );
-
+    private void report() {
+        String selectedYear = year.getValue();
+        if (selectedYear == null) {
+            showAlert(Alert.AlertType.WARNING, "Select Year", "Select a year first.");
+            return;
+        }
+        if (tableview.getItems().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "No Report Data",
+                    "There are no inventory records for " + selectedYear + ".");
             return;
         }
 
+        try {
+            Path reportsDirectory = DBConnection.getDatabasePath().getParent().resolve("reports");
+            Files.createDirectories(reportsDirectory);
 
-        FileChooser chooser =
-                new FileChooser();
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Save Inventory Report");
+            chooser.setInitialDirectory(reportsDirectory.toFile());
+            chooser.setInitialFileName("Inventory_Report_" + selectedYear + ".pdf");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("PDF documents", "*.pdf"));
 
-        chooser.setTitle(
-                "Save Inventory Report"
-        );
-
-
-        chooser.setInitialFileName(
-                "Inventory_Report_" 
-                + selectedYear 
-                + ".pdf"
-        );
-
-
-        File file =
-                chooser.showSaveDialog(
-                    tableview
-                    .getScene()
-                    .getWindow()
-                );
-
-
-        if(file != null){
-
-            generatePdf(
-                file,
-                selectedYear
-            );
-
-        }
-
-    }
-
-
-
-    private void generatePdf(
-            File file,
-            String year
-    ){
-
-        try{
-
-            Document document =
-                    new Document();
-
-
-            PdfWriter.getInstance(
-                document,
-                new FileOutputStream(file)
-            );
-
-
-            document.open();
-
-         // Add application logo to PDF
-            try {
-
-                com.lowagie.text.Image pdfLogo =
-                        com.lowagie.text.Image.getInstance(
-                                getClass()
-                                .getResource("/images/logo.png")
-                        );
-
-                // Same idea as your JavaFX ImageView size
-                pdfLogo.scaleToFit(120, 120);
-
-                // Position: top-left like your application sidebar/logo area
-                pdfLogo.setAlignment(
-                        com.lowagie.text.Image.ALIGN_LEFT
-                );
-
-                document.add(pdfLogo);
-
-
-            } catch(Exception e) {
-
-                e.printStackTrace();
-
+            File selectedFile = chooser.showSaveDialog(tableview.getScene().getWindow());
+            if (selectedFile == null) {
+                reportStatus.setText("Report export cancelled.");
+                return;
             }
 
-            document.add(
-                new Paragraph(
-                    "Inventory Report - "
-                    + year
-                )
-            );
-
-
-            PdfPTable table =
-                    new PdfPTable(5);
-
-
-            table.addCell("ID");
-            table.addCell("Name");
-            table.addCell("Stock");
-            table.addCell("Warehouse");
-            table.addCell("Capacity");
-
-
-            for(Ingredient i :
-                    tableview.getItems()){
-
-
-                table.addCell(
-                    i.getIngredientID()
-                );
-
-                table.addCell(
-                    i.getIngredientName()
-                );
-
-                table.addCell(
-                    String.valueOf(
-                        i.getStockQuantity()
-                    )
-                );
-
-                table.addCell(
-                    i.getWarehouseID()
-                );
-
-                table.addCell(
-                    String.valueOf(
-                        i.getCapacity()
-                    )
-                );
-
-            }
-
-
-            document.add(table);
-
-            document.close();
-
-
-            showAlert(
-                Alert.AlertType.INFORMATION,
-                "Success",
-                "Report generated"
-            );
-
-
-        }catch(Exception e){
-
-            e.printStackTrace();
-
+            Path generated = InventoryReportService.generate(
+                    selectedFile.toPath(), selectedYear, tableview.getItems());
+            reportStatus.setText("Saved: " + generated);
+            showAlert(Alert.AlertType.INFORMATION, "Report Generated",
+                    "Inventory report saved to:\n" + generated);
+        } catch (Exception exception) {
+            reportStatus.setText("Report failed: " + exception.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Report Failed",
+                    "The report could not be created.\n" + exception.getMessage());
         }
-
     }
 
-
-
-    private void showAlert(
-            Alert.AlertType type,
-            String title,
-            String message
-    ){
-
-        Alert alert =
-                new Alert(type);
-
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-
         alert.showAndWait();
-
     }
 
-
-
-
+    @FXML
+    private void backToDashboard() {
+        try {
+            App.setRoot("dashboard");
+        } catch (Exception exception) {
+            throw new IllegalStateException("Could not return to Inventory Dashboard.", exception);
+        }
+    }
 }

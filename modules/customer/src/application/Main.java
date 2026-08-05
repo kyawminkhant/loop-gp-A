@@ -48,10 +48,14 @@ public class Main extends Application {
             primaryStage.setMinHeight(600);
             primaryStage.show();
 
-            Platform.runLater(() -> {
-                AnimationUtil.attachBackgroundAmbient(root);
-                AnimationUtil.enableButtonEffects(root);
-            });
+            if (openDashboard) {
+                AnimationUtil.disableBackgroundAmbient();
+            } else {
+                Platform.runLater(() -> {
+                    AnimationUtil.attachBackgroundAmbient(root);
+                    AnimationUtil.enableButtonEffects(root);
+                });
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -74,6 +74,11 @@ public class App extends Application {
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        // The Direct3D pipeline can lose texture resources on some Windows
+        // drivers. Prefer JavaFX's stable software renderer for this UI-heavy app.
+        if (System.getProperty("prism.order") == null) {
+            System.setProperty("prism.order", "sw");
+        }
         launch();
     }
 

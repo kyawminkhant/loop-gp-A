@@ -12,6 +12,8 @@ public final class Session {
     private static User currentUser;
     private static int selectedProductId = -1;
     private static int editingReviewId = -1;
+    private static Runnable adminReturnNavigator;
+    private static Runnable productReturnNavigator;
 
     private Session() { }
 
@@ -24,6 +26,7 @@ public final class Session {
         currentUser = null;
         selectedProductId = -1;
         editingReviewId = -1;
+        productReturnNavigator = null;
     }
 
     public static int getSelectedProductId() { return selectedProductId; }
@@ -31,4 +34,42 @@ public final class Session {
 
     public static int getEditingReviewId() { return editingReviewId; }
     public static void setEditingReviewId(int id) { editingReviewId = id; }
+
+    public static void setAdminReturnNavigator(Runnable navigator) {
+        adminReturnNavigator = navigator;
+    }
+
+    public static boolean hasAdminGateway() {
+        return adminReturnNavigator != null;
+    }
+
+    public static void returnFromAdmin() {
+        if (adminReturnNavigator != null) {
+            Runnable navigator = adminReturnNavigator;
+            adminReturnNavigator = null;
+            navigator.run();
+        }
+    }
+
+    public static void setProductReturnNavigator(Runnable navigator) {
+        productReturnNavigator = navigator;
+    }
+
+    public static void clearProductReturnNavigator() {
+        productReturnNavigator = null;
+    }
+
+    public static boolean hasProductReturnNavigator() {
+        return productReturnNavigator != null;
+    }
+
+    public static boolean returnToProduct() {
+        if (productReturnNavigator == null) {
+            return false;
+        }
+        Runnable navigator = productReturnNavigator;
+        productReturnNavigator = null;
+        navigator.run();
+        return true;
+    }
 }

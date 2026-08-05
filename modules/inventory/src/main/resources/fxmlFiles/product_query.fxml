@@ -8,21 +8,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane stylesheets="@../styles/table.css" styleClass="window-root" prefHeight="650.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.ProductQueryController">
-   
-   <top>
-      <HBox styleClass="top-header" BorderPane.alignment="CENTER_LEFT">
-         <children>
-            <Label text="Inventory Scanner Camera UI" styleClass="top-header-label" />
-         </children>
-         <padding>
-            <Insets top="12.0" left="20.0" right="20.0" bottom="12.0" />
-         </padding>
-      </HBox>
-   </top>
    
    <top>
       <HBox alignment="CENTER_LEFT">
@@ -35,8 +25,9 @@
                   <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
                </children>
             </VBox>
+            <Label text="Inventory Product Query" styleClass="top-header-label" />
             <Pane HBox.hgrow="ALWAYS" />
-            <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+            <Button text="Back to Inventory" onAction="#backToDashboard" styleClass="pill-button" />
          </children>
       </HBox>
    </top>
@@ -123,5 +114,5 @@
             <Insets top="30.0" bottom="30.0" left="40.0" right="40.0" />
          </padding>
       </GridPane>
-=   </center>
+   </center>
 </BorderPane>

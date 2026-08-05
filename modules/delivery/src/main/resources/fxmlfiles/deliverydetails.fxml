@@ -25,9 +25,12 @@ fx:controller="LoopProject.loopproject.controllers.DeliveryDetailsController"
 
             <TableView fx:id="deliverydetailsTable" prefHeight="430" styleClass="deliverydetails-table">
                 <columns>
-                    <TableColumn fx:id="deliveryIdColumn" text="Delivery Id" prefWidth="180"/>
-                    <TableColumn fx:id="customerNameColumn" text="Customer Name" prefWidth="250"/>
-                    <TableColumn fx:id="customerAddressColumn" text="Customer Address" prefWidth="450"/>
+                    <TableColumn fx:id="deliveryIdColumn" text="Delivery ID" prefWidth="110"/>
+                    <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="90"/>
+                    <TableColumn fx:id="customerNameColumn" text="Customer" prefWidth="160"/>
+                    <TableColumn fx:id="customerAddressColumn" text="Address" prefWidth="280"/>
+                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="130"/>
+                    <TableColumn fx:id="driverColumn" text="Driver" prefWidth="120"/>
                 </columns>
             </TableView>
         </VBox>

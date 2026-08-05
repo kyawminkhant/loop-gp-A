@@ -20,7 +20,7 @@
                      </children>
                   </VBox>
                   <Pane HBox.hgrow="ALWAYS" />
-                  <ImageView fx:id="profileIcon" fitWidth="35" fitHeight="35" pickOnBounds="true" preserveRatio="true"/>
+                  <Button text="Back to Inventory" onAction="#back" styleClass="moreLocations"/>
                </children>
             </HBox>
       		<HBox styleClass="title-holder">
@@ -40,7 +40,7 @@
       			</columns>
       		</TableView>
       		<VBox alignment="CENTER">
-      			<Button text="Replenish Now" styleClass="replenishNow"/>
+			<Button text="Replenish Now" onAction="#replenish" styleClass="replenishNow"/>
       		</VBox>
       	</VBox>
       </center>

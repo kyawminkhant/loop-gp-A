@@ -67,7 +67,12 @@
                 </VBox>
 
                 <VBox fx:id="adminPanel" styleClass="info-card" spacing="13" disable="true" opacity="0.45">
-                    <Label text="2. Live Customer Directory" styleClass="card-title"/>
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label text="2. Live Customer Directory" styleClass="card-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Review Moderation" onAction="#handleOpenReviewModeration"
+                                styleClass="secondary-button"/>
+                    </HBox>
                     <Separator/>
 
                     <HBox spacing="12" alignment="CENTER_LEFT">

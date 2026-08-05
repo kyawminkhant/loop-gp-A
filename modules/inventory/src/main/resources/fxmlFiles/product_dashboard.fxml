@@ -1,76 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.FoodCardController"
             stylesheets="@../styles/product_dashboard.css"
             styleClass="root-pane">
-    
-    
-
     <center>
         <VBox styleClass="main-container" spacing="20" alignment="TOP_CENTER">
             <BorderPane.margin>
                 <Insets top="25" right="25" bottom="25" left="25"/>
             </BorderPane.margin>
-            
+
             <HBox alignment="CENTER_LEFT" styleClass="header-row">
                 <padding>
                     <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
                 <children>
                     <ImageView fx:id="logo" fitWidth="120" fitHeight="60" preserveRatio="true"/>
-                    <Pane HBox.hgrow="ALWAYS" />
-                    <HBox alignment="CENTER_RIGHT" spacing="12">
-                        <Button fx:id="homeBtn" styleClass="header-icon-btn" text="⌂" onAction="#Home"/>
-                        <Button fx:id="profileBtn" styleClass="header-profile-btn" text="•••" onAction="#profileBtn"/>
-                    </HBox>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="homeBtn" styleClass="header-icon-btn" text="HOME"
+                            onAction="#Home" minWidth="80" maxWidth="80"/>
                 </children>
             </HBox>
-            
+
             <VBox alignment="CENTER" spacing="12">
-                <Label text="Product Menu" styleClass="label-one"/>
-                <TextField fx:id="searchBar" promptText="Search food or ingredients..." styleClass="search-bar" prefWidth="420.0" maxWidth="420.0" />
+                <Label text="Ingredient Inventory" styleClass="label-one"/>
+                <TextField fx:id="searchBar" promptText="Search ingredients by name or ID..."
+                           styleClass="search-bar" prefWidth="420.0" maxWidth="420.0"/>
             </VBox>
-            
+
             <HBox alignment="CENTER_LEFT" spacing="20" styleClass="action-container">
                 <padding>
-                    <Insets left="15" right="15" />
+                    <Insets left="15" right="15"/>
                 </padding>
                 <children>
-                    <Label text="Select, Search or Scan the food to check the ingredients" styleClass="label-two" HBox.hgrow="ALWAYS"/>
-                    <Pane HBox.hgrow="ALWAYS" />
+                    <Label text="Select an ingredient to see its stock details"
+                           styleClass="label-two" HBox.hgrow="ALWAYS"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
                     <HBox spacing="10" alignment="CENTER_RIGHT">
-                        <Button text="QR SCAN" styleClass="scan_button"/>
-                        <Button fx:id="updateBtn" text="UPDATE" styleClass="scan_button" onAction="#updateProducts"/>
-                        <Button text="ADD STOCK" styleClass="scan_button" onAction="#openAddStock"/>
+                        <ComboBox fx:id="sortComboBox" promptText="SORT"
+                                  styleClass="sort-control" prefWidth="145"/>
+                        <Button text="QR SCAN" styleClass="scan_button" onAction="#openQrScanner"/>
+                        <Button fx:id="updateBtn" text="REFRESH" styleClass="scan_button"
+                                onAction="#updateProducts"/>
+                        <Button text="ADD INGREDIENT" styleClass="scan_button"
+                                onAction="#openAddStock"/>
                     </HBox>
                 </children>
             </HBox>
-            
+
             <VBox styleClass="food_container" alignment="CENTER" VBox.vgrow="ALWAYS">
-                <ScrollPane fx:id="scrollPane"
-                            fitToWidth="true"
-                            fitToHeight="true"
-                            hbarPolicy="NEVER" 
-                            vbarPolicy="AS_NEEDED"
-                            VBox.vgrow="ALWAYS"
-                            styleClass="visible-scrollpane">
+                <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true"
+                            hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                            VBox.vgrow="ALWAYS" styleClass="visible-scrollpane">
                     <padding>
                         <Insets top="15" right="15" bottom="15" left="15"/>
                     </padding>
-                    <TilePane fx:id="productGrid"
-                              hgap="20"
-                              vgap="20"
-                              prefTileWidth="140"
-                              prefTileHeight="160" 
-                              alignment="TOP_CENTER"
-                              maxWidth="Infinity">
-                    </TilePane>
+                    <TilePane fx:id="productGrid" hgap="20" vgap="20"
+                              prefTileWidth="140" prefTileHeight="160"
+                              alignment="TOP_CENTER" maxWidth="Infinity"/>
                 </ScrollPane>
             </VBox>
         </VBox>

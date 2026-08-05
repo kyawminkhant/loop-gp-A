@@ -2,57 +2,57 @@ package model;
 
 public class Delivery {
 
-    private String DeliveryId;
-    private int OderId;
-    private String Customer;
-    private int CustomerId;
-    private double Total;
-    private String Status;
-    private String Driver;
-    private String Action;
+    private final String deliveryId;
+    private final int orderId;
+    private final String customer;
+    private final String customerId;
+    private final double total;
+    private final String status;
+    private final String driver;
+    private final String action;
 
-    public Delivery(String deliveryId, int oderId,
-            String customer, int customerId, double total, String status,
+    public Delivery(String deliveryId, int orderId,
+            String customer, String customerId, double total, String status,
             String driver, String action) {
-        this.DeliveryId = deliveryId;
-        this.OderId = oderId;
-        this.Customer = customer;
-        this.CustomerId = customerId;
-        this.Total = total;
-        this.Status = status;
-        this.Driver = driver;
-        this.Action = action;
+        this.deliveryId = deliveryId;
+        this.orderId = orderId;
+        this.customer = customer;
+        this.customerId = customerId == null ? "Guest" : customerId;
+        this.total = total;
+        this.status = status;
+        this.driver = driver == null || driver.isBlank() ? "Unassigned" : driver;
+        this.action = action;
     }
 
     public String getDeliveryId() {
-        return DeliveryId;
+        return deliveryId;
     }
 
-    public int getOderId() {
-        return OderId;
+    public int getOrderId() {
+        return orderId;
     }
 
     public String getCustomer() {
-        return Customer;
+        return customer;
     }
 
-    public int getCustomerId() {
-        return CustomerId;
+    public String getCustomerId() {
+        return customerId;
     }
 
     public double getTotal() {
-        return Total;
+        return total;
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public String getDriver() {
-        return Driver;
+        return driver;
     }
 
     public String getAction() {
-        return Action;
+        return action;
     }
 }

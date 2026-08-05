@@ -14,8 +14,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-
-
 public class AddStockController {
 
 
@@ -44,7 +42,7 @@ public class AddStockController {
 
 
 
-    private String imagePath;
+    private File selectedImage;
 
 
 
@@ -69,40 +67,8 @@ private void uploadImage(){
 
 
     if(file != null){
-
-        try{
-
-            File destination =
-            new File(
-            "src/main/resources/FoodImage/"
-            +file.getName()
-            );
-
-
-            java.nio.file.Files.copy(
-                file.toPath(),
-                destination.toPath(),
-                java.nio.file.StandardCopyOption.REPLACE_EXISTING
-            );
-
-
-            imagePath =
-            "/FoodImage/" + file.getName();
-
-
-            foodImage.setImage(
-                new Image(
-                    destination.toURI().toString()
-                )
-            );
-
-
-        }catch(Exception e){
-
-            e.printStackTrace();
-
-        }
-
+        selectedImage = file;
+        foodImage.setImage(new Image(file.toURI().toString()));
     }
 
 }
@@ -141,6 +107,13 @@ private void uploadImage(){
 
         try{
 
+            int quantity = Integer.parseInt(stockQuantity.getText().trim());
+            int maximum = Integer.parseInt(capacity.getText().trim());
+            if (quantity < 0 || maximum <= 0 || quantity > maximum) {
+                showWarning("Stock quantity must be between 0 and the capacity.");
+                return;
+            }
+
 
             FXMLLoader loader =
                 new FXMLLoader(
@@ -167,17 +140,13 @@ private void uploadImage(){
 
                 ingredientName.getText(),
 
-                Integer.parseInt(
-                    stockQuantity.getText()
-                ),
+                quantity,
 
                 warehouseID.getText(),
 
-                Integer.parseInt(
-                    capacity.getText()
-                ),
+                maximum,
 
-                imagePath
+                selectedImage
             );
 
 
@@ -190,6 +159,8 @@ private void uploadImage(){
                     Modality.APPLICATION_MODAL
             );
 
+            stage.initOwner(foodImage.getScene().getWindow());
+
 
             stage.setScene(
                     new Scene(root)
@@ -200,12 +171,24 @@ private void uploadImage(){
 
 
 
+        }catch(NumberFormatException e){
+            showWarning("Stock quantity and capacity must be whole numbers.");
         }catch(Exception e){
-
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Could Not Add Ingredient");
+            alert.setHeaderText(null);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
 
         }
 
+    }
+
+    private void showWarning(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
    
 

@@ -48,6 +48,28 @@ public class UserDao {
         }
     }
 
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM reviews_users WHERE LOWER(email)=LOWER(?)";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? map(rs) : null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findByEmail user failed", e);
+        }
+    }
+
+    public User findOrCreateCustomer(String name, String email) {
+        User existing = findByEmail(email);
+        if (existing != null) {
+            return existing;
+        }
+        User customer = new User(0, name, email, "customer-session", "CUSTOMER", "");
+        insert(customer);
+        return customer;
+    }
+
     /** Used by the login screen (FR1). Returns null if no match. */
     public User findByEmailAndPassword(String email, String password) {
         String sql = "SELECT * FROM reviews_users WHERE email = ? AND password = ?";

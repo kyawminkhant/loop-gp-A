@@ -91,6 +91,7 @@
                             <options>
                                 <option>-Dloop.start=${loop.start}</option>
                                 <option>-Dloop.db.path=${loop.db.path}</option>
+                                <option>-Dprism.order=sw</option>
                             </options>
                         </configuration>
                     </execution>

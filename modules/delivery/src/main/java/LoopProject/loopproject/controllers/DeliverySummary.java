@@ -2,6 +2,7 @@ package LoopProject.loopproject.controllers;
 
 import java.io.IOException;
 
+import DAO.DeliveryDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import main.App;
@@ -22,7 +23,8 @@ public class DeliverySummary {
  
     @FXML
     public void initialize() {
-        
+        int[] counts = DeliveryDAO.getSummaryCounts();
+        updateSummary(counts[0], counts[1], counts[2], counts[3]);
     }
  
     public void updateSummary(int activeDeliveries, int idleDrivers, int failedAttempts, int warehouseBacklog) {

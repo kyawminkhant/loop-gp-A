@@ -1,9 +1,11 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
+import LoopsFirstYearProject.LoopsFirstYearProject.App;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -58,7 +60,7 @@ public class Manage_stock {
             FXMLLoader loader =
                 new FXMLLoader(
                 getClass()
-                .getResource("/fxmlfiles/transferItems.fxml")
+                    .getResource("/fxmlFiles/transferItems.fxml")
                 );
 
 
@@ -141,6 +143,18 @@ public class Manage_stock {
 
             }
 
+            for (TransferItems item : transferItems) {
+                if (item.getFromAddress() == null || item.getToAddress() == null
+                        || item.getProduct() == null || item.getQuantity() <= 0) {
+                    showWarning("Select both warehouses and an ingredient, then enter a quantity above zero.");
+                    return;
+                }
+                if (item.getFromAddress().equalsIgnoreCase(item.getToAddress())) {
+                    showWarning("The source and destination warehouses must be different.");
+                    return;
+                }
+            }
+
 
 
             FXMLLoader loader =
@@ -189,6 +203,23 @@ public class Manage_stock {
         }
 
 
+    }
+
+    private void showWarning(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Invalid Stock Transfer");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void backToDashboard() {
+        try {
+            App.setRoot("dashboard");
+        } catch (Exception exception) {
+            throw new IllegalStateException("Could not return to Inventory Dashboard.", exception);
+        }
     }
 
 }

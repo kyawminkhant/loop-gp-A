@@ -3,11 +3,7 @@ package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 import LoopsFirstYearProject.LoopsFirstYearProject.App;
 import Utils.ProfileMenu;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import java.io.*;
@@ -91,17 +87,10 @@ public class Dashboard {
 	    App.setRoot("manageStock");
 	    	}
 	    
-	    @FXML
-	    private void ProductQuery() {
-	        try {
-	            Parent root = FXMLLoader.load(getClass().getResource("/fxmlFiles/product_query.fxml"));
-	            Stage stage = (Stage) logo.getScene().getWindow(); // Uses the logo element to capture the current Window
-	            stage.setScene(new Scene(root));
-	            stage.show();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
+    @FXML
+    private void ProductQuery() throws IOException {
+        App.setRoot("product_query");
+    }
 	    
 	}
 

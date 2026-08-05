@@ -10,7 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -29,6 +28,9 @@ import java.util.Random;
 public class DashboardController {
 
     @FXML private TabPane mainTabPane;
+    @FXML private Tab preferencesTab;
+    @FXML private Tab orderHistoryTab;
+    @FXML private Tab chefReviewsTab;
     @FXML private ImageView headerLogo;
 
     @FXML private Label profileNameDisplayLabel;
@@ -81,6 +83,9 @@ public class DashboardController {
     private Customer currentCustomer;
     private Timeline notificationTimer;
     private final Random random = new Random();
+    private boolean preferencesLoaded;
+    private boolean ordersLoaded;
+    private boolean chefReviewsLoaded;
 
     @FXML
     public void initialize() {
@@ -92,41 +97,24 @@ public class DashboardController {
         }
 
         loadProfile();
-        loadPreferences();
-
-        setupOrderTable();
-        loadOrderHistory();
-
-        setupChefReviews();
-        loadMyReviews();
-
         startNotificationTimer();
-        setupUiAnimations();
+        mainTabPane.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldTab, selectedTab) -> loadTabWhenNeeded(selectedTab));
     }
 
-    private void setupUiAnimations() {
-        if (mainTabPane != null) {
-            mainTabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
-                if (newTab != null && newTab.getContent() != null) {
-                    AnimationUtil.fadeInContent(newTab.getContent());
-                }
-            });
+    private void loadTabWhenNeeded(Tab selectedTab) {
+        if (selectedTab == preferencesTab && !preferencesLoaded) {
+            loadPreferences();
+            preferencesLoaded = true;
+        } else if (selectedTab == orderHistoryTab && !ordersLoaded) {
+            setupOrderTable();
+            loadOrderHistory();
+            ordersLoaded = true;
+        } else if (selectedTab == chefReviewsTab && !chefReviewsLoaded) {
+            setupChefReviews();
+            loadMyReviews();
+            chefReviewsLoaded = true;
         }
-
-        Platform.runLater(() -> {
-            Parent root = profileNameField.getScene() != null
-                    ? profileNameField.getScene().getRoot()
-                    : null;
-            if (root == null) return;
-
-            AnimationUtil.enableButtonEffects(root);
-
-            Node[] cards = root.lookupAll(".info-card, .stat-card, .danger-card")
-                    .toArray(Node[]::new);
-            if (cards.length > 0) {
-                AnimationUtil.staggerIn(cards);
-            }
-        });
     }
 
     private void loadProfile() {
@@ -486,6 +474,21 @@ public class DashboardController {
         if (notificationTimer != null) {
             notificationTimer.stop();
         }
+    }
+
+    @FXML
+    private void handleBackToFood(ActionEvent event) {
+        stopNotificationTimer();
+        if (SessionManager.openPersonalizedProducts()) {
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Food Page");
+        alert.setHeaderText("The Product page is not open in this session");
+        alert.setContentText("Open Customers from the integrated Team Hub to return to the Food page here.");
+        alert.showAndWait();
+        startNotificationTimer();
     }
 
     @FXML

@@ -1,6 +1,6 @@
 # Simplified shared database schema
 
-All components use `database/loop.db`. The database contains 28 real tables,
+All components use `database/loop.db`. The database contains 30 real tables,
 down from 53, plus four compatibility views.
 
 ## Shared Product catalogue
@@ -51,10 +51,16 @@ Customer order history is read from the shared `orders_Orders` table.
 
 `inventory_Stock.stockYear` replaces the five separate yearly ingredient
 tables. Its `ingredientID` references the shared `product_Ingredient` table.
+The Inventory UI treats this normalized table as the live source for stock,
+analytics, warehouse totals, reports, additions, and transfers. The older
+analytics/location tables remain as imported historical reference data; they
+are not used as competing stock totals. Transfers are atomic and append an
+entry to `inventory_stock_TransactionLog`.
 
 ## Delivery
 
 - `delivery_AllDeliveries`
+- `delivery_Deliveries`
 - `delivery_DeliveryDetails`
 
 ## Finance
@@ -74,11 +80,17 @@ views, so its reporting code remains independent without copying rows:
 - `reviews_orders`
 - `reviews_reviews`
 - `reviews_helpful_votes`
+- `reviews_review_flags`
 - `reviews_admin_moderation_log`
 
 `reviews_orders.product_id` and `reviews_reviews.product_id` reference the
 shared `product_Products` table. `reviews_products` is now a view of the shared
 catalogue rather than another Product table.
+
+`reviews_review_flags` records one customer report per review, including its
+reason and timestamp. Customer reports remain separate from the review's
+moderation status so an administrator can sort, inspect, dismiss, mark, remove,
+or restore reviews without hiding them automatically.
 
 ## Migration
 

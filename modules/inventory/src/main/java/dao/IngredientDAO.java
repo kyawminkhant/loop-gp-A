@@ -64,7 +64,7 @@ public class IngredientDAO {
 	    return list;
 	}
 	
-	public static void addIngredient(
+	public static boolean addIngredient(
 	        String id,
 	        String name,
 	        int quantity,
@@ -72,6 +72,11 @@ public class IngredientDAO {
 	        int capacity,
 	        String imagePath
 	){
+	    if (id == null || id.isBlank() || name == null || name.isBlank()
+	            || warehouse == null || warehouse.isBlank()
+	            || quantity < 0 || capacity <= 0 || quantity > capacity) {
+	        return false;
+	    }
 
 	    String insertIngredient = "INSERT INTO product_Ingredient "
 	            + "(ingredientName, calories, protein, carbohydrates, sugars, fat, saturatedFat, fiber, sodium, imagePath) "
@@ -82,6 +87,9 @@ public class IngredientDAO {
 	    String insertStock = "INSERT INTO inventory_Stock "
 	            + "(stockYear, stockCode, ingredientID, stockQuantity, warehouseID, capacity) "
 	            + "VALUES (2026, ?, ?, ?, ?, ?)";
+	    String insertLog = "INSERT INTO inventory_stock_TransactionLog "
+	            + "(username, action, details, dateTime) "
+	            + "VALUES ('Inventory User', 'ADD_STOCK', ?, datetime('now'))";
 
 	    try(Connection con = DBConnection.getConnectionURLlocation()){
 	        con.setAutoCommit(false);
@@ -108,11 +116,17 @@ public class IngredientDAO {
 	                ps.setString(1, id);
 	                ps.setInt(2, ingredientId);
 	                ps.setInt(3, quantity);
-	                ps.setString(4, warehouse);
+	                ps.setString(4, warehouse.trim().toUpperCase());
 	                ps.setInt(5, capacity);
 	                ps.executeUpdate();
 	            }
+	            try (PreparedStatement ps = con.prepareStatement(insertLog)) {
+	                ps.setString(1, quantity + " x " + name.trim()
+	                        + " added to " + warehouse.trim().toUpperCase());
+	                ps.executeUpdate();
+	            }
 	            con.commit();
+	            return true;
 	        } catch (Exception exception) {
 	            con.rollback();
 	            throw exception;
@@ -121,6 +135,7 @@ public class IngredientDAO {
 	        }
 	    }catch(Exception e){
 	        e.printStackTrace();
+	        return false;
 	    }
 
 	}

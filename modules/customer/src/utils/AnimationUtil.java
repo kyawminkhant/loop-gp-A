@@ -208,6 +208,11 @@ public final class AnimationUtil {
         fadeSlideIn(wrap);
     }
 
+    /** Releases the animated canvas for table-heavy customer screens. */
+    public static void disableBackgroundAmbient() {
+        FlowFieldAmbient.stopActive();
+    }
+
     /** Kept for call-site compatibility — logo no longer animates. */
     public static void startAmbientLoop(Node node) {
         // intentionally empty

@@ -31,6 +31,9 @@
         </VBox>
     
 	<HBox spacing= "16">
+		<Button text="Refresh"
+                onAction="#refreshDeliveries"
+                styleClass="summary-button"/>
 		<Button text="Assign Drivers"
                 onAction="#handleAssignDrivers"
                 styleClass="assign-drivers-button"/>

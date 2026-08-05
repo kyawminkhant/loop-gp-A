@@ -2,6 +2,7 @@ package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import LoopsFirstYearProject.LoopsFirstYearProject.App;
 import dao.LocationsDAO;
 import model.StorageLocations;
 import javafx.fxml.FXML;
@@ -55,5 +56,15 @@ public class StorageLocationsController {
 	
 	@FXML 
 	private void moreStorage() {
-	};
+		storageLocationsTable.setItems(LocationsDAO.getStorageLocations("live"));
+	}
+
+	@FXML
+	private void back() {
+		try {
+			App.setRoot("analytics");
+		} catch (Exception exception) {
+			throw new IllegalStateException("Could not return to Inventory Analytics.", exception);
+		}
+	}
 }

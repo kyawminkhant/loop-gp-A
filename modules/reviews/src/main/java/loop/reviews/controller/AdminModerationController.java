@@ -17,6 +17,7 @@ import loop.reviews.Session;
 import loop.reviews.db.ModerationLogDao;
 import loop.reviews.db.ProductDao;
 import loop.reviews.db.ReviewDao;
+import loop.reviews.db.ReviewFlagDao;
 import loop.reviews.model.ModerationLog;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
@@ -28,6 +29,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * FR8 - admin moderation. The screen is product-first: the admin sees a list of
@@ -39,11 +42,13 @@ public class AdminModerationController {
 
     @FXML private StackPane root;
     @FXML private ComboBox<String> statusFilter;
+    @FXML private ComboBox<String> sortOrder;
     @FXML private TextField searchField;
     @FXML private VBox reviewList;
     @FXML private VBox logList;
 
     private final ReviewDao reviewDao = new ReviewDao();
+    private final ReviewFlagDao flagDao = new ReviewFlagDao();
     private final ProductDao productDao = new ProductDao();
     private final ModerationLogDao logDao = new ModerationLogDao();
 
@@ -56,9 +61,14 @@ public class AdminModerationController {
     @FXML
     private void initialize() {
         if (!Session.isAdmin()) { SceneManager.switchTo("home"); return; }
-        statusFilter.getItems().setAll("All", "Active", "Flagged", "Removed");
+        statusFilter.getItems().setAll(
+                "All", "Customer flagged", "Admin flagged", "Active", "Removed");
         statusFilter.getSelectionModel().selectFirst();
+        sortOrder.getItems().setAll(
+                "Most flagged", "Newest", "Lowest rated", "Highest rated");
+        sortOrder.getSelectionModel().selectFirst();
         statusFilter.valueProperty().addListener((obs, oldV, newV) -> render());
+        sortOrder.valueProperty().addListener((obs, oldV, newV) -> render());
         render();
         renderLog();
     }
@@ -83,19 +93,26 @@ public class AdminModerationController {
 
         String q = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
         List<Review> allReviews = reviewDao.findAll();
+        List<Product> products = new ArrayList<>(productDao.findAll());
+        sortProducts(products, allReviews);
 
         int shown = 0;
-        for (Product p : productDao.findAll()) {
+        for (Product p : products) {
             if (!q.isEmpty() && !p.getName().toLowerCase().contains(q)) continue;
 
-            int total = 0, flagged = 0, removed = 0;
+            int total = 0, customerFlags = 0, adminFlagged = 0, removed = 0;
+            boolean matchesFilter = false;
             for (Review r : allReviews) {
                 if (r.getProductId() != p.getId()) continue;
                 total++;
-                if (Review.FLAGGED.equals(r.getStatus())) flagged++;
+                customerFlags += r.getFlagCount();
+                if (Review.FLAGGED.equals(r.getStatus())) adminFlagged++;
                 if (Review.REMOVED.equals(r.getStatus())) removed++;
+                if (matchesStatusFilter(r)) matchesFilter = true;
             }
-            reviewList.getChildren().add(buildProductCard(p, total, flagged, removed));
+            if (!"All".equals(statusFilter.getValue()) && !matchesFilter) continue;
+            reviewList.getChildren().add(
+                    buildProductCard(p, total, customerFlags, adminFlagged, removed));
             shown++;
         }
         if (shown == 0) {
@@ -105,7 +122,12 @@ public class AdminModerationController {
         }
     }
 
-    private HBox buildProductCard(Product p, int total, int flagged, int removed) {
+    private HBox buildProductCard(
+            Product p,
+            int total,
+            int customerFlags,
+            int adminFlagged,
+            int removed) {
         HBox card = new HBox(14);
         card.getStyleClass().add("product-card");
         card.setAlignment(Pos.CENTER_LEFT);
@@ -114,7 +136,8 @@ public class AdminModerationController {
         Label name = new Label(p.getName());
         name.getStyleClass().add("product-name");
         String meta = total + (total == 1 ? " review" : " reviews");
-        if (flagged > 0) meta += "  ·  " + flagged + " flagged";
+        if (customerFlags > 0) meta += "  ·  " + customerFlags + " customer flags";
+        if (adminFlagged > 0) meta += "  ·  " + adminFlagged + " marked by admin";
         if (removed > 0) meta += "  ·  " + removed + " removed";
         Label metaLabel = new Label(meta);
         metaLabel.getStyleClass().add("product-meta");
@@ -135,6 +158,49 @@ public class AdminModerationController {
 
         card.getChildren().addAll(info, sp, manage);
         return card;
+    }
+
+    private void sortProducts(List<Product> products, List<Review> reviews) {
+        String selected = sortOrder.getValue();
+        Comparator<Product> comparator;
+        if ("Newest".equals(selected)) {
+            comparator = Comparator.comparingLong(
+                    product -> newestReview(product.getId(), reviews));
+        } else if ("Lowest rated".equals(selected)) {
+            comparator = Comparator.comparingDouble(Product::getAverageRating).reversed();
+        } else if ("Highest rated".equals(selected)) {
+            comparator = Comparator.comparingDouble(Product::getAverageRating);
+        } else {
+            comparator = Comparator.comparingInt(
+                    product -> customerFlagCount(product.getId(), reviews));
+        }
+        products.sort(comparator.reversed().thenComparing(Product::getName));
+    }
+
+    private int customerFlagCount(int productId, List<Review> reviews) {
+        int count = 0;
+        for (Review review : reviews) {
+            if (review.getProductId() == productId) count += review.getFlagCount();
+        }
+        return count;
+    }
+
+    private long newestReview(int productId, List<Review> reviews) {
+        long newest = 0;
+        for (Review review : reviews) {
+            if (review.getProductId() == productId) {
+                newest = Math.max(newest, review.getCreatedAt());
+            }
+        }
+        return newest;
+    }
+
+    private boolean matchesStatusFilter(Review review) {
+        String selected = statusFilter.getValue();
+        if (selected == null || "All".equals(selected)) return true;
+        if ("Customer flagged".equals(selected)) return review.getFlagCount() > 0;
+        if ("Admin flagged".equals(selected)) return Review.FLAGGED.equals(review.getStatus());
+        return selected.equals(review.getStatus());
     }
 
     // ---------- Single product's reviews view ----------
@@ -159,22 +225,24 @@ public class AdminModerationController {
         bar.getChildren().addAll(back, title);
         reviewList.getChildren().add(bar);
 
-        String status = statusFilter.getValue();
         String q = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
 
-        int shown = 0;
+        List<Review> matchingReviews = new ArrayList<>();
         for (Review r : reviewDao.findAll()) {
             if (r.getProductId() != productId) continue;
-            if (status != null && !"All".equals(status) && !status.equals(r.getStatus())) continue;
+            if (!matchesStatusFilter(r)) continue;
             if (!q.isEmpty()) {
                 String hay = (r.getCommentText() + " " + (r.getCustomerName() == null ? "" : r.getCustomerName()))
                         .toLowerCase();
                 if (!hay.contains(q)) continue;
             }
-            reviewList.getChildren().add(buildCard(r));
-            shown++;
+            matchingReviews.add(r);
         }
-        if (shown == 0) {
+        sortReviews(matchingReviews);
+        for (Review r : matchingReviews) {
+            reviewList.getChildren().add(buildCard(r));
+        }
+        if (matchingReviews.isEmpty()) {
             Label empty = new Label("No reviews match the current filter for this product.");
             empty.getStyleClass().add("empty-state");
             reviewList.getChildren().add(empty);
@@ -205,10 +273,21 @@ public class AdminModerationController {
         comment.getStyleClass().add("review-comment");
         comment.setWrapText(true);
 
+        Label customerFlags = null;
+        if (r.getFlagCount() > 0) {
+            String reasons = String.join(", ", flagDao.findReasons(r.getId()));
+            customerFlags = new Label(
+                    "Customer flags: " + r.getFlagCount() + "  ·  " + reasons);
+            customerFlags.getStyleClass().add("status-flagged");
+            customerFlags.setWrapText(true);
+        }
+
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_LEFT);
-        Button flag = new Button("Flag");
+        Button flag = new Button("Mark for review");
         flag.getStyleClass().add("btn-ghost");
+        Button dismissFlags = new Button("Dismiss customer flags");
+        dismissFlags.getStyleClass().add("btn-ghost");
         Button edit = new Button("Edit");
         edit.getStyleClass().add("btn-ghost");
         Button remove = new Button("Remove");
@@ -220,14 +299,49 @@ public class AdminModerationController {
         remove.setOnAction(e -> moderate(r, "DELETE", Review.REMOVED, "Removed by admin"));
         restore.setOnAction(e -> moderate(r, "RESTORE", Review.ACTIVE, "Restored by admin"));
         edit.setOnAction(e -> editComment(r));
+        dismissFlags.setOnAction(e -> dismissCustomerFlags(r));
 
         flag.setDisable(Review.FLAGGED.equals(r.getStatus()));
         restore.setDisable(Review.ACTIVE.equals(r.getStatus()));
         remove.setDisable(Review.REMOVED.equals(r.getStatus()));
+        dismissFlags.setDisable(r.getFlagCount() == 0);
 
-        actions.getChildren().addAll(flag, edit, remove, restore);
-        card.getChildren().addAll(head, comment, actions);
+        actions.getChildren().addAll(flag, dismissFlags, edit, remove, restore);
+        card.getChildren().addAll(head, comment);
+        if (customerFlags != null) {
+            card.getChildren().add(customerFlags);
+        }
+        card.getChildren().add(actions);
         return card;
+    }
+
+    private void sortReviews(List<Review> reviews) {
+        String selected = sortOrder.getValue();
+        Comparator<Review> comparator;
+        if ("Newest".equals(selected)) {
+            comparator = Comparator.comparingLong(Review::getCreatedAt);
+        } else if ("Lowest rated".equals(selected)) {
+            comparator = Comparator.comparingInt(Review::getRating).reversed();
+        } else if ("Highest rated".equals(selected)) {
+            comparator = Comparator.comparingInt(Review::getRating);
+        } else {
+            comparator = Comparator.comparingInt(Review::getFlagCount);
+        }
+        reviews.sort(comparator.reversed().thenComparing(
+                Comparator.comparingLong(Review::getCreatedAt).reversed()));
+    }
+
+    private void dismissCustomerFlags(Review review) {
+        int dismissed = flagDao.clearForReview(
+                review.getId(), Session.getCurrentUser().getId());
+        logDao.insert(new ModerationLog(
+                Session.getCurrentUser().getId(),
+                review.getId(),
+                "DISMISS_FLAGS",
+                dismissed + " customer flag(s) dismissed"));
+        Toast.show(root, "Customer flags dismissed for review #" + review.getId() + ".", false);
+        render();
+        renderLog();
     }
 
     private void moderate(Review r, String action, String newStatus, String note) {
@@ -290,7 +404,14 @@ public class AdminModerationController {
     @FXML private void clearSearch() {
         searchField.clear();
         statusFilter.getSelectionModel().selectFirst();
+        sortOrder.getSelectionModel().selectFirst();
         render();
     }
-    @FXML private void goHome() { SceneManager.switchTo("home"); }
+    @FXML private void goHome() {
+        if (Session.hasAdminGateway()) {
+            Session.returnFromAdmin();
+        } else {
+            SceneManager.switchTo("home");
+        }
+    }
 }

@@ -4,9 +4,14 @@ package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 import dao.IngredientDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import services.InventoryImageService;
+
+import java.io.File;
 
 
 public class ConfirmAddStockController {
@@ -26,7 +31,7 @@ public class ConfirmAddStockController {
     private int quantity;
     private String warehouse;
     private int capacity;
-    private String imagePath;
+    private File selectedImage;
 
 
 
@@ -36,7 +41,7 @@ public class ConfirmAddStockController {
             int quantity,
             String warehouse,
             int capacity,
-            String imagePath
+            File selectedImage
     ){
 
         this.id=id;
@@ -44,7 +49,7 @@ public class ConfirmAddStockController {
         this.quantity=quantity;
         this.warehouse=warehouse;
         this.capacity=capacity;
-        this.imagePath=imagePath;
+        this.selectedImage=selectedImage;
 
 
         details.setText(
@@ -56,20 +61,8 @@ public class ConfirmAddStockController {
         );
 
 
-        if(imagePath != null){
-
-            var stream = getClass()
-                    .getResourceAsStream(imagePath);
-
-            if(stream != null){
-
-                image.setImage(new Image(stream));
-
-            } else {
-
-                System.out.println("Image not found: " + imagePath);
-
-            }
+        if(selectedImage != null){
+            image.setImage(new Image(selectedImage.toURI().toString()));
         }
 
     }
@@ -81,17 +74,36 @@ public class ConfirmAddStockController {
     private void confirm(){
 
 
-        IngredientDAO.addIngredient(
-                id,
-                name,
-                quantity,
-                warehouse,
-                capacity,
-                imagePath
-        );
+        boolean saved;
+        try {
+            String imagePath = InventoryImageService.storeUploadedImage(selectedImage);
+            saved = IngredientDAO.addIngredient(
+                    id,
+                    name,
+                    quantity,
+                    warehouse,
+                    capacity,
+                    imagePath
+            );
+        } catch (Exception exception) {
+            saved = false;
+            exception.printStackTrace();
+        }
 
-
-        close();
+        if (saved) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Stock Added");
+            alert.setHeaderText(null);
+            alert.setContentText("The ingredient and its stock were saved to the shared database.");
+            alert.showAndWait();
+            closeAll();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Could Not Add Stock");
+            alert.setHeaderText("Inventory was not changed");
+            alert.setContentText("Check that the stock code is unique and quantity does not exceed capacity.");
+            alert.showAndWait();
+        }
 
     }
 
@@ -115,6 +127,15 @@ public class ConfirmAddStockController {
 
         stage.close();
 
+    }
+
+    private void closeAll() {
+        Stage confirmation = (Stage) details.getScene().getWindow();
+        Window addIngredientWindow = confirmation.getOwner();
+        confirmation.close();
+        if (addIngredientWindow instanceof Stage) {
+            ((Stage) addIngredientWindow).close();
+        }
     }
 
 }

@@ -10,55 +10,20 @@
             fx:controller="LoopProject.loopproject.controllers.ActiveDeliveries"
             stylesheets="@../styles/activeDeliveries.css"
             styleClass="ActiveDeliveries">
-
     <center>
         <VBox alignment="TOP_CENTER" spacing="10">
-            <!-- FIXED: Removed the self-closing '/' on ImageView -->
             <ImageView fx:id="logo" fitWidth="150" preserveRatio="true">
-                <image>
-                    <Image url="@../images/logo.png" />
-                </image>
+                <image><Image url="@../images/logo.png"/></image>
             </ImageView>
-
-            <VBox styleClass="main-container" alignment="TOP_CENTER">
+            <VBox styleClass="main-container" alignment="TOP_CENTER" spacing="12">
                 <Label text="Active Deliveries" styleClass="section-title"/>
-            
-                <VBox>
-                    <VBox styleClass="deliverybox">
-                        <Label text="DRV-05784" styleClass="delivery-id"/>
-                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
-                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
-                    </VBox>
-                    
-                    <VBox styleClass="deliverybox">
-                        <Label text="DRV-14812" styleClass="delivery-id"/>
-                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
-                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
-                    </VBox>
-                    
-                    <VBox styleClass="deliverybox">
-                        <Label text="DRV-15902" styleClass="delivery-id"/>
-                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
-                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
-                    </VBox>
-                    
-                    <VBox styleClass="deliverybox">
-                        <Label text="DRV-35289" styleClass="delivery-id"/>
-                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
-                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
-                    </VBox>
-                    
-                    <VBox styleClass="deliverybox">
-                        <Label text="DRV-46429" styleClass="delivery-id"/>
-                        <Label text="Warehouse → Customer" styleClass="delivery-route"/>
-                        <Button text="On Route" onAction="#onRoute" styleClass="status-button"/>
-                    </VBox>
-                </VBox>
+                <ScrollPane fitToWidth="true" prefHeight="480">
+                    <VBox fx:id="activeDeliveryList" spacing="12"/>
+                </ScrollPane>
+                <Label fx:id="statusLabel" text="Status updates are shared with Orders."
+                       wrapText="true"/>
             </VBox>
-            
-            <Button text="← Back"
-                    onAction="#goBack"
-                    styleClass="back-button"/>
+            <Button text="← Back" onAction="#goBack" styleClass="back-button"/>
         </VBox>
     </center>
 </BorderPane>
