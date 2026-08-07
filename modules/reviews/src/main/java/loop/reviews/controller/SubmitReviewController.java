@@ -15,6 +15,7 @@ import loop.reviews.db.ProductDao;
 import loop.reviews.db.ReviewDao;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
+import loop.reviews.util.ContentModeration;
 import loop.reviews.util.Toast;
 import loop.reviews.util.Validation;
 
@@ -127,7 +128,8 @@ public class SubmitReviewController {
         r.setCommentText(comment.trim());
         r.setImageUrl(Validation.isBlank(imageField.getText()) ? null : imageField.getText());
         r.setCreatedAt(System.currentTimeMillis());
-        r.setStatus(Review.ACTIVE);
+        String moderationReason = ContentModeration.flagReason(comment);
+        r.setStatus(moderationReason == null ? Review.ACTIVE : Review.FLAGGED);
         r.setEditDurationSeconds(300);
         try {
             reviewDao.insert(r);
@@ -137,7 +139,9 @@ public class SubmitReviewController {
             return;
         }
         productDao.recalculateAverage(product.getId());   // FR9
-        Toast.show(root, "Review submitted — thank you!", false);
+        Toast.show(root, moderationReason == null
+                ? "Review submitted — thank you!"
+                : "Review submitted for an administrator to check.", false);
         SceneManager.switchTo("product_reviews");
     }
 

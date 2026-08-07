@@ -53,10 +53,13 @@ Products, Orders, Delivery, Inventory, Reviews, and Finance do not contain
 separate login pages. Reviews opens as the active Customer account, or as
 **Guest** when no Customer session exists. The **Reviews** breadcrumb on a
 food-details page opens that food's reviews, and **Back to Food** returns to the
-same item. Customers can flag an
-inappropriate review once and select a reason. To access moderation, open
+same item. Customers cannot flag other customers' reviews. A local content
+check automatically hides clearly inappropriate submissions from customer
+lists and sends them to the administrator's moderation queue. To access moderation, open
 **Customers > Super Admin**, unlock with `admin123`, then select
 **Review Moderation**; there is no Admin button in the customer Reviews pages.
+Helpful and Unhelpful choices are reversible: select the same choice again to
+remove it, or select the other choice to switch the vote.
 Click the **LOOP logo** on a component page to return to the Team Hub.
 
 Orders and Delivery share `orders_Orders`: Delivery creates one linked

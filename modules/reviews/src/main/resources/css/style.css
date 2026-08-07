@@ -126,6 +126,50 @@
     -fx-border-color: -loop-gold;
 }
 
+/* ComboBox button and popup list share the warm LOOP palette. */
+.filter-combo {
+    -fx-background-color: -loop-cream;
+    -fx-border-color: -loop-maroon-br;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-padding: 4 8 4 12;
+}
+.filter-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -loop-ink;
+    -fx-font-size: 14px;
+    -fx-padding: 5 8;
+}
+.filter-combo .arrow-button { -fx-background-color: transparent; }
+.filter-combo .arrow { -fx-background-color: -loop-maroon-br; }
+
+.combo-box-popup .list-view {
+    -fx-background-color: #FFF3DC;
+    -fx-background-radius: 12;
+    -fx-border-color: #7B1E22;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-padding: 5;
+}
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: #FFF8EA;
+    -fx-text-fill: #3B211C;
+    -fx-font-family: "Times New Roman", "Georgia", serif;
+    -fx-font-size: 14px;
+    -fx-padding: 8 14;
+}
+.combo-box-popup .list-view .list-cell:hover,
+.combo-box-popup .list-view .list-cell:focused {
+    -fx-background-color: #F4C764;
+    -fx-text-fill: #68151F;
+}
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #7B1E22;
+    -fx-text-fill: #FFF8EA;
+    -fx-font-weight: bold;
+}
+
 /* ---------- Buttons ---------- */
 .btn-primary {
     -fx-background-color: -loop-green;
@@ -181,6 +225,12 @@
     -fx-cursor: hand;
 }
 .btn-vote:hover { -fx-background-color: -loop-gold-lt; -fx-text-fill: -loop-maroon-br; }
+.btn-vote-selected {
+    -fx-background-color: -loop-maroon-br;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.btn-vote-selected:hover { -fx-background-color: -loop-green-dk; -fx-text-fill: white; }
 .btn-vote:disabled { -fx-opacity: 0.5; }
 
 /* ---------- Product cards ---------- */

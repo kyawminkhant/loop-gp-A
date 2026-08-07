@@ -56,9 +56,9 @@
                     <HBox spacing="12" alignment="CENTER_LEFT" styleClass="card">
                         <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
                         <Label text="Sort" styleClass="field-label"/>
-                        <ComboBox fx:id="sortCombo"/>
+                        <ComboBox fx:id="sortCombo" prefWidth="210" styleClass="filter-combo"/>
                         <Label text="Stars" styleClass="field-label"/>
-                        <ComboBox fx:id="starFilterCombo"/>
+                        <ComboBox fx:id="starFilterCombo" prefWidth="165" styleClass="filter-combo"/>
                         <TextField fx:id="keywordField" promptText="Search comments..." HBox.hgrow="ALWAYS"/>
                         <Button text="Apply" styleClass="btn-primary" onAction="#applyFilters"/>
                         <Button text="Clear" styleClass="btn-ghost" onAction="#clearFilters"/>

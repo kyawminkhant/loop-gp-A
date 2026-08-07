@@ -16,6 +16,7 @@ import loop.reviews.db.ProductDao;
 import loop.reviews.db.ReviewDao;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
+import loop.reviews.util.ContentModeration;
 import loop.reviews.util.Toast;
 import loop.reviews.util.Validation;
 
@@ -96,10 +97,17 @@ public class EditReviewController {
             errorLabel.setText("Comment contains a disallowed character: " + bad);
             return;
         }
-        reviewDao.updateContent(review.getId(), rating, comment.trim());
+        String moderationReason = ContentModeration.flagReason(comment);
+        String status = review.getStatus();
+        if (Review.ACTIVE.equals(status) && moderationReason != null) {
+            status = Review.FLAGGED;
+        }
+        reviewDao.updateCustomerContent(review.getId(), rating, comment.trim(), status);
         productDao.recalculateAverage(review.getProductId());   // FR9
         if (ticker != null) ticker.stop();
-        Toast.show(root, "Review updated.", false);
+        Toast.show(root, moderationReason == null
+                ? "Review updated."
+                : "Review updated and sent for an administrator to check.", false);
         SceneManager.switchTo("my_reviews");
     }
 

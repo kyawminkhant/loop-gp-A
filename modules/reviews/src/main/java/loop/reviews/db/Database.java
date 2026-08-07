@@ -1,5 +1,7 @@
 package loop.reviews.db;
 
+import loop.reviews.util.ContentModeration;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -90,7 +92,7 @@ public final class Database {
             seedIfEmpty();
             seedReviewUsers();
             seedCatalogueReviews();
-            seedReviewFlags();
+            flagDetectedReviews();
             new ProductDao().recalculateAllAverages();
             initialized = true;
         } catch (SQLException e) {
@@ -476,54 +478,31 @@ public final class Database {
         return opening + " for " + productName + ". " + details[(index * 7 + rating) % details.length];
     }
 
-    /** Adds a small flagged queue so moderation sorting is populated on first run. */
-    private void seedReviewFlags() throws SQLException {
-        List<Integer> flaggers = new ArrayList<>();
+    /** Moves automatically-detected content out of every customer-facing query. */
+    private void flagDetectedReviews() throws SQLException {
+        List<Integer> reviewIds = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(
-                     "SELECT id FROM reviews_users WHERE email LIKE 'reviewer-%@loop.demo' " +
-                     "ORDER BY id LIMIT 24")) {
+                     "SELECT id,comment_text FROM reviews_reviews WHERE status='Active'")) {
             while (result.next()) {
-                flaggers.add(result.getInt(1));
+                if (ContentModeration.shouldHide(result.getString("comment_text"))) {
+                    reviewIds.add(result.getInt("id"));
+                }
             }
         }
-        if (flaggers.isEmpty()) {
+        if (reviewIds.isEmpty()) {
             return;
         }
-
-        String[] reasons = {
-            "Spam or misleading content",
-            "Offensive or abusive language",
-            "Harassment or personal attack",
-            "Personal information",
-            "Unrelated to the product"
-        };
-        String reviewsSql =
-                "SELECT r.id,r.customer_id FROM reviews_reviews r " +
-                "JOIN product_Products p ON p.productID=r.product_id " +
-                "WHERE p.status=1 AND r.status='Active' " +
-                "ORDER BY CASE WHEN r.rating<=2 THEN 0 ELSE 1 END,r.id LIMIT 24";
-        String insertSql =
-                "INSERT OR IGNORE INTO reviews_review_flags " +
-                "(review_id,customer_id,reason,created_at) VALUES(?,?,?,?)";
-        try (PreparedStatement reviews = connection.prepareStatement(reviewsSql);
-             ResultSet reviewRows = reviews.executeQuery();
-             PreparedStatement insert = connection.prepareStatement(insertSql)) {
-            int index = 0;
-            while (reviewRows.next() && index < flaggers.size()) {
-                int authorId = reviewRows.getInt("customer_id");
-                int flaggerId = flaggers.get(index);
-                if (flaggerId == authorId) {
-                    flaggerId = flaggers.get((index + 1) % flaggers.size());
-                }
-                insert.setInt(1, reviewRows.getInt("id"));
-                insert.setInt(2, flaggerId);
-                insert.setString(3, reasons[index % reasons.length]);
-                insert.setLong(4, Instant.now().minusSeconds((long) index * 43_200L).toEpochMilli());
-                insert.executeUpdate();
-                index++;
+        try (PreparedStatement update = connection.prepareStatement(
+                "UPDATE reviews_reviews SET status='Flagged' WHERE id=? AND status='Active'")) {
+            for (Integer reviewId : reviewIds) {
+                update.setInt(1, reviewId);
+                update.addBatch();
             }
+            update.executeBatch();
         }
+        System.out.println("[Database] Automatically hidden " + reviewIds.size()
+                + " review(s) pending administrator moderation.");
     }
 
     /**

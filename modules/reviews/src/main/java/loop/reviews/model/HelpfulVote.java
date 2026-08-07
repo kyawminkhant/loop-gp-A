@@ -2,8 +2,8 @@ package loop.reviews.model;
 
 /**
  * Records a single customer vote on a review (maps to "helpful_votes").
- * A UNIQUE(review_id, customer_id) constraint enforces one vote per customer
- * per review (FR7).
+ * A UNIQUE(review_id, customer_id) constraint stores one current choice per
+ * customer and review. The choice can be removed or switched (FR7).
  */
 public class HelpfulVote {
     public static final String HELPFUL = "helpful";

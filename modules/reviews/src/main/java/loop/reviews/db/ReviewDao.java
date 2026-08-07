@@ -28,9 +28,6 @@ public class ReviewDao {
         r.setHelpfulCount(rs.getInt("helpful_count"));
         r.setUnhelpfulCount(rs.getInt("unhelpful_count"));
         r.setEditDurationSeconds(rs.getInt("edit_duration_seconds"));
-        try {
-            r.setFlagCount(rs.getInt("flag_count"));
-        } catch (SQLException ignore) { /* aggregate not present */ }
         // customerName included when the query joins users (aliased as customer_name)
         try {
             String cn = rs.getString("customer_name");
@@ -40,9 +37,7 @@ public class ReviewDao {
     }
 
     private static final String SELECT_JOIN =
-        "SELECT r.*, u.name AS customer_name, " +
-        "(SELECT COUNT(*) FROM reviews_review_flags f " +
-        " WHERE f.review_id=r.id AND f.resolved_at IS NULL) AS flag_count " +
+        "SELECT r.*, u.name AS customer_name " +
         "FROM reviews_reviews r JOIN reviews_users u ON u.id = r.customer_id ";
 
     public List<Review> findAll() {
@@ -69,7 +64,7 @@ public class ReviewDao {
 
     /**
      * FR6: reviews for a product with sort + optional filters.
-     * @param sort one of "date", "rating", "helpful".
+     * @param sort one of "date", "rating_desc", "rating_asc", "helpful".
      * @param minStars 0 to ignore, else 1..5 exact star filter.
      * @param keyword null/blank to ignore, else case-insensitive substring on comment.
      * Only Active reviews are shown to normal users.
@@ -87,9 +82,18 @@ public class ReviewDao {
             params.add("%" + keyword.trim().toLowerCase() + "%");
         }
         switch (sort == null ? "helpful" : sort) {
-            case "date":   sql.append(" ORDER BY r.created_at DESC"); break;
-            case "rating": sql.append(" ORDER BY r.rating DESC, r.created_at DESC"); break;
-            default:       sql.append(" ORDER BY (r.helpful_count - r.unhelpful_count) DESC, r.created_at DESC");
+            case "date":
+                sql.append(" ORDER BY r.created_at DESC");
+                break;
+            case "rating":
+            case "rating_desc":
+                sql.append(" ORDER BY r.rating DESC, r.created_at DESC");
+                break;
+            case "rating_asc":
+                sql.append(" ORDER BY r.rating ASC, r.created_at DESC");
+                break;
+            default:
+                sql.append(" ORDER BY (r.helpful_count - r.unhelpful_count) DESC, r.created_at DESC");
         }
         List<Review> list = new ArrayList<>();
         try (PreparedStatement ps = conn().prepareStatement(sql.toString())) {
@@ -189,6 +193,21 @@ public class ReviewDao {
         }
     }
 
+    /** Customer edit that can move newly-detected content into the hidden moderation queue. */
+    public void updateCustomerContent(int reviewId, int rating, String comment, String status) {
+        String sql = "UPDATE reviews_reviews SET rating=?, comment_text=?, created_at=?, status=? WHERE id=?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setInt(1, rating);
+            ps.setString(2, comment);
+            ps.setLong(3, System.currentTimeMillis());
+            ps.setString(4, status);
+            ps.setInt(5, reviewId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("customer review update failed", e);
+        }
+    }
+
     public void updateStatus(int reviewId, String status) {
         try (PreparedStatement ps = conn().prepareStatement("UPDATE reviews_reviews SET status=? WHERE id=?")) {
             ps.setString(1, status);
@@ -196,17 +215,6 @@ public class ReviewDao {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("update status failed", e);
-        }
-    }
-
-    public void adjustHelpful(int reviewId, String voteType) {
-        String col = "helpful".equals(voteType) ? "helpful_count" : "unhelpful_count";
-        try (PreparedStatement ps = conn().prepareStatement(
-                "UPDATE reviews_reviews SET " + col + " = " + col + " + 1 WHERE id=?")) {
-            ps.setInt(1, reviewId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("adjustHelpful failed", e);
         }
     }
 

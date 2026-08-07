@@ -3,7 +3,6 @@ package loop.reviews.controller;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -17,7 +16,6 @@ import loop.reviews.Session;
 import loop.reviews.db.HelpfulVoteDao;
 import loop.reviews.db.ProductDao;
 import loop.reviews.db.ReviewDao;
-import loop.reviews.db.ReviewFlagDao;
 import loop.reviews.model.HelpfulVote;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
@@ -27,7 +25,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 /** FR6 (view/sort/filter), FR7 (helpful voting), FR9 (average + distribution). */
 public class ProductReviewsController {
@@ -49,7 +47,6 @@ public class ProductReviewsController {
     private final ProductDao productDao = new ProductDao();
     private final ReviewDao reviewDao = new ReviewDao();
     private final HelpfulVoteDao voteDao = new HelpfulVoteDao();
-    private final ReviewFlagDao flagDao = new ReviewFlagDao();
 
     private static final DateTimeFormatter FMT =
         DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm").withZone(ZoneId.systemDefault());
@@ -68,7 +65,8 @@ public class ProductReviewsController {
         writeButton.setManaged(!Session.isAdmin());
         backButton.setText(Session.hasProductReturnNavigator() ? "< Back to Food" : "< Back");
 
-        sortCombo.getItems().setAll("Most Helpful", "Newest", "Highest Rated");
+        sortCombo.getItems().setAll(
+                "Most Helpful", "Newest", "Highest Rated", "Lowest Rated");
         sortCombo.getSelectionModel().selectFirst();
         starFilterCombo.getItems().setAll("All stars", "5", "4", "3", "2", "1");
         starFilterCombo.getSelectionModel().selectFirst();
@@ -125,11 +123,16 @@ public class ProductReviewsController {
     private void renderReviews() {
         reviewList.getChildren().clear();
 
-        String sort = "helpful";
-        switch (sortCombo.getSelectionModel().getSelectedIndex()) {
-            case 1: sort = "date"; break;
-            case 2: sort = "rating"; break;
-            default: sort = "helpful";
+        String sort;
+        String selectedSort = sortCombo.getValue();
+        if ("Newest".equals(selectedSort)) {
+            sort = "date";
+        } else if ("Highest Rated".equals(selectedSort)) {
+            sort = "rating_desc";
+        } else if ("Lowest Rated".equals(selectedSort)) {
+            sort = "rating_asc";
+        } else {
+            sort = "helpful";
         }
         int minStars = 0;
         String starSel = starFilterCombo.getSelectionModel().getSelectedItem();
@@ -143,12 +146,15 @@ public class ProductReviewsController {
             reviewList.getChildren().add(empty);
             return;
         }
+        Map<Integer, String> customerVotes = Session.getCurrentUser() != null && !Session.isAdmin()
+                ? voteDao.findVoteTypesByCustomer(Session.getCurrentUser().getId())
+                : Map.of();
         for (Review r : reviews) {
-            reviewList.getChildren().add(buildReviewCard(r));
+            reviewList.getChildren().add(buildReviewCard(r, customerVotes.get(r.getId())));
         }
     }
 
-    private VBox buildReviewCard(Review r) {
+    private VBox buildReviewCard(Review r, String selectedVote) {
         VBox card = new VBox(8);
         card.getStyleClass().add("review-card");
 
@@ -174,66 +180,33 @@ public class ProductReviewsController {
         up.getStyleClass().add("btn-vote");
         Button down = new Button("👎 Unhelpful (" + r.getUnhelpfulCount() + ")");
         down.getStyleClass().add("btn-vote");
-        Button flag = new Button("Flag review");
-        flag.getStyleClass().add("btn-ghost");
         up.setOnAction(e -> vote(r, HelpfulVote.HELPFUL));
         down.setOnAction(e -> vote(r, HelpfulVote.UNHELPFUL));
-        flag.setOnAction(e -> flagReview(r));
-
-        // Only authenticated customers vote (FR7); admins view only.
-        boolean canVote = !Session.isAdmin();
-        up.setDisable(!canVote);
-        down.setDisable(!canVote);
-        boolean ownReview = Session.getCurrentUser() != null
-                && Session.getCurrentUser().getId() == r.getCustomerId();
-        boolean alreadyFlagged = Session.getCurrentUser() != null
-                && flagDao.hasFlagged(r.getId(), Session.getCurrentUser().getId());
-        flag.setDisable(!canVote || ownReview || alreadyFlagged);
-        if (ownReview) {
-            flag.setText("Your review");
-        } else if (alreadyFlagged) {
-            flag.setText("Flag submitted");
+        if (HelpfulVote.HELPFUL.equals(selectedVote)) {
+            up.getStyleClass().add("btn-vote-selected");
+        } else if (HelpfulVote.UNHELPFUL.equals(selectedVote)) {
+            down.getStyleClass().add("btn-vote-selected");
         }
 
-        actions.getChildren().addAll(up, down, flag);
+        // Only authenticated customers vote (FR7); admins view only.
+        boolean canVote = Session.getCurrentUser() != null && !Session.isAdmin();
+        up.setDisable(!canVote);
+        down.setDisable(!canVote);
+        actions.getChildren().addAll(up, down);
         card.getChildren().addAll(head, comment, actions);
         return card;
     }
 
     private void vote(Review r, String voteType) {
         int customerId = Session.getCurrentUser().getId();
-        if (voteDao.hasVoted(r.getId(), customerId)) {          // FR7 duplicate prevention
-            Toast.show(root, "You have already voted on this review.", true);
-            return;
-        }
-        voteDao.insert(new HelpfulVote(r.getId(), customerId, voteType));
-        reviewDao.adjustHelpful(r.getId(), voteType);
-        Toast.show(root, "Thanks for your feedback!", false);
-        renderReviews();
-    }
-
-    private void flagReview(Review review) {
-        List<String> reasons = List.of(
-                "Spam or misleading content",
-                "Offensive or abusive language",
-                "Harassment or personal attack",
-                "Personal information",
-                "Unrelated to the product",
-                "Other");
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(reasons.get(0), reasons);
-        dialog.setTitle("Flag inappropriate review");
-        dialog.setHeaderText("Why should this review be checked?");
-        dialog.setContentText("Reason:");
-        Optional<String> selection = dialog.showAndWait();
-        if (selection.isEmpty()) {
-            return;
-        }
-
-        int customerId = Session.getCurrentUser().getId();
-        if (flagDao.flag(review.getId(), customerId, selection.get())) {
-            Toast.show(root, "Review sent to the moderation queue.", false);
+        HelpfulVoteDao.ToggleResult result = voteDao.toggle(r.getId(), customerId, voteType);
+        String choice = HelpfulVote.HELPFUL.equals(voteType) ? "Helpful" : "Unhelpful";
+        if (result == HelpfulVoteDao.ToggleResult.REMOVED) {
+            Toast.show(root, "Your vote was removed.", false);
+        } else if (result == HelpfulVoteDao.ToggleResult.SWITCHED) {
+            Toast.show(root, "Your vote was changed to " + choice + ".", false);
         } else {
-            Toast.show(root, "You have already flagged this review.", true);
+            Toast.show(root, "Marked as " + choice + ".", false);
         }
         renderReviews();
     }
