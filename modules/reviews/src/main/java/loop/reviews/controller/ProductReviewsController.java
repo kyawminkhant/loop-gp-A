@@ -19,6 +19,7 @@ import loop.reviews.db.ReviewDao;
 import loop.reviews.model.HelpfulVote;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
+import loop.reviews.util.ReviewPhotoView;
 import loop.reviews.util.Toast;
 
 import java.time.Instant;
@@ -174,6 +175,8 @@ public class ProductReviewsController {
         comment.getStyleClass().add("review-comment");
         comment.setWrapText(true);
 
+        StackPane photo = ReviewPhotoView.create(r.getImageUrl());
+
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_LEFT);
         Button up = new Button("👍 Helpful (" + r.getHelpfulCount() + ")");
@@ -193,7 +196,11 @@ public class ProductReviewsController {
         up.setDisable(!canVote);
         down.setDisable(!canVote);
         actions.getChildren().addAll(up, down);
-        card.getChildren().addAll(head, comment, actions);
+        card.getChildren().addAll(head, comment);
+        if (photo != null) {
+            card.getChildren().add(photo);
+        }
+        card.getChildren().add(actions);
         return card;
     }
 

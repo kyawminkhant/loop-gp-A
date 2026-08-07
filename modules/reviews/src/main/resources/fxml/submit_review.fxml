@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
 
 <StackPane fx:id="root" styleClass="app-bg" xmlns="http://javafx.com/javafx"
@@ -49,8 +50,17 @@
                         <Label text="Photo (optional)" styleClass="field-label"/>
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <TextField fx:id="imageField" promptText="No file selected" editable="false" HBox.hgrow="ALWAYS"/>
-                            <Button text="Browse..." styleClass="btn-ghost" onAction="#browseImage"/>
+                            <Button fx:id="browseImageButton" text="Browse..." styleClass="btn-ghost" onAction="#browseImage"/>
+                            <Button fx:id="removeImageButton" text="Remove" styleClass="btn-ghost"
+                                    onAction="#clearSelectedImage" visible="false" managed="false"/>
                         </HBox>
+                        <StackPane fx:id="imagePreviewBox" styleClass="review-photo-preview"
+                                   visible="false" managed="false" alignment="CENTER_LEFT">
+                            <ImageView fx:id="imagePreview" fitWidth="520" fitHeight="230"
+                                       preserveRatio="true" smooth="true"/>
+                        </StackPane>
+                        <Label text="PNG, JPG, JPEG or GIF. Maximum 12 MB; saved as an optimized PNG."
+                               styleClass="hint" wrapText="true"/>
                     </VBox>
 
                     <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>

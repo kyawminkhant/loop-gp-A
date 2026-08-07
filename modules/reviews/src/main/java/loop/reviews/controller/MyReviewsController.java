@@ -21,6 +21,8 @@ import loop.reviews.db.ProductDao;
 import loop.reviews.db.ReviewDao;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
+import loop.reviews.util.ReviewImageService;
+import loop.reviews.util.ReviewPhotoView;
 import loop.reviews.util.Toast;
 
 import java.util.ArrayList;
@@ -95,6 +97,8 @@ public class MyReviewsController {
         comment.getStyleClass().add("review-comment");
         comment.setWrapText(true);
 
+        StackPane photo = ReviewPhotoView.create(r.getImageUrl());
+
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_LEFT);
         Label countdown = new Label();
@@ -109,7 +113,11 @@ public class MyReviewsController {
         delete.setOnAction(e -> onDelete(r));
         actions.getChildren().addAll(countdown, sp2, edit, delete);
 
-        card.getChildren().addAll(head, comment, actions);
+        card.getChildren().addAll(head, comment);
+        if (photo != null) {
+            card.getChildren().add(photo);
+        }
+        card.getChildren().add(actions);
 
         Row row = new Row();
         row.review = r; row.countdown = countdown; row.edit = edit; row.delete = delete;
@@ -159,6 +167,7 @@ public class MyReviewsController {
         if (res.isPresent() && res.get() == ButtonType.YES) {
             int productId = r.getProductId();
             reviewDao.delete(r.getId());
+            ReviewImageService.deleteManagedImage(r.getImageUrl());
             productDao.recalculateAverage(productId);   // FR5 -> FR9
             Toast.show(root, "Review deleted. Average rating updated.", false);
             buildList();

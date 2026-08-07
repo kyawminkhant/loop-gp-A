@@ -20,6 +20,7 @@ import loop.reviews.db.ReviewDao;
 import loop.reviews.model.ModerationLog;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
+import loop.reviews.util.ReviewPhotoView;
 import loop.reviews.util.Toast;
 import loop.reviews.util.Validation;
 
@@ -268,6 +269,8 @@ public class AdminModerationController {
         comment.getStyleClass().add("review-comment");
         comment.setWrapText(true);
 
+        StackPane photo = ReviewPhotoView.create(r.getImageUrl());
+
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_LEFT);
         Button flag = new Button("Mark for review");
@@ -290,6 +293,9 @@ public class AdminModerationController {
 
         actions.getChildren().addAll(flag, edit, remove, restore);
         card.getChildren().addAll(head, comment);
+        if (photo != null) {
+            card.getChildren().add(photo);
+        }
         card.getChildren().add(actions);
         return card;
     }
