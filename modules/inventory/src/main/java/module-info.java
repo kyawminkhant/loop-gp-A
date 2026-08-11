@@ -14,4 +14,5 @@ module LoopsFirstYearProject.LoopsFirstYearProject {
     opens model to javafx.base;
     opens LoopsFirstYearProject.LoopsFirstYearProject.controllers to javafx.fxml;
     exports LoopsFirstYearProject.LoopsFirstYearProject;
+    exports services;
 }

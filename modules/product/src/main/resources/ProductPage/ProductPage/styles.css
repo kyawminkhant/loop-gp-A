@@ -650,6 +650,23 @@
     -fx-border-width: 2px;
 }
 
+.food-card-button.food-card-unavailable {
+    -fx-background-color: rgba(231, 225, 211, 0.96);
+    -fx-border-color: #8c7770;
+    -fx-cursor: default;
+    -fx-opacity: 0.78;
+}
+
+.food-card-button.food-card-unavailable:hover {
+    -fx-background-color: rgba(231, 225, 211, 0.96);
+}
+
+.availability-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #9b2f2f;
+}
+
 .food-bar {
     -fx-background-color: transparent;
 }

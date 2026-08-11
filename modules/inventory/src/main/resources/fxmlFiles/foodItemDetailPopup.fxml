@@ -2,12 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="14" prefWidth="430" prefHeight="440"
+<VBox alignment="CENTER" spacing="12" prefWidth="470" prefHeight="540"
       stylesheets="@../styles/product_dashboard.css"
       styleClass="root-pane"
       xmlns="http://javafx.com/javafx/17"
@@ -21,7 +23,14 @@
     <Label fx:id="idLabel" styleClass="card-id-text"/>
     <Label fx:id="categoryLabel" styleClass="label-two"/>
     <Label fx:id="stockLabel" styleClass="label-two"/>
-    <HBox alignment="CENTER">
+    <Label text="Warehouse" styleClass="label-two"/>
+    <ComboBox fx:id="warehouseComboBox" prefWidth="240"/>
+    <TextField fx:id="stockInput" prefWidth="240" promptText="New stock quantity"
+               onAction="#handleUpdateStock"/>
+    <Label fx:id="messageLabel" wrapText="true" styleClass="label-two"/>
+    <HBox alignment="CENTER" spacing="10">
+        <Button text="Update Stock" onAction="#handleUpdateStock" styleClass="scan_button"/>
+        <Button text="Set to Zero" onAction="#handleSetZeroStock" styleClass="scan_button"/>
         <Button text="Close" onAction="#handleClose" styleClass="scan_button"/>
     </HBox>
 </VBox>

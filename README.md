@@ -70,7 +70,7 @@ For Eclipse development, follow [`ECLIPSE_SETUP.md`](ECLIPSE_SETUP.md) and impor
 
 ## Database
 
-Run modules from the repository root so relative paths resolve to `database/loop.db`. The committed database contains 30 real tables instead of the original 53, plus four compatibility views. The five yearly Inventory tables are now one `inventory_Stock` table with a `stockYear` column. Orders, Finance, Reviews, and Inventory reuse the canonical `product_*` catalogue instead of storing copied Product tables. See `database/SCHEMA.md` for the current structure.
+Run modules from the repository root so relative paths resolve to `database/loop.db`. The committed database contains 32 real tables instead of the original 53, plus four compatibility views. The five yearly Inventory tables are now one `inventory_Stock` table with a `stockYear` column. Orders, Finance, Reviews, and Inventory reuse the canonical `product_*` catalogue instead of storing copied Product tables. See `database/SCHEMA.md` for the current structure.
 
 Inventory analytics, warehouse totals, ingredient queries, additions, and
 transfers are calculated from the live `inventory_Stock` and
@@ -82,12 +82,29 @@ optional uploaded image to the shared `database` folder, then refreshes the
 grid. Inventory reports are exported as PDF files; the save dialog starts in
 `database/reports` and the page displays the final saved path.
 
+The **Warehouse Deliveries** page shows inbound ingredient shipments for ten
+London service areas. Deliveries move from Scheduled to In Transit and then
+Delivered automatically while the combined app is running. A completed
+delivery increases only the destination warehouse's stock and records the
+change in the Inventory transaction log. The page also provides manual demo
+buttons for creating or advancing a delivery.
+
 Product availability is calculated from each food's required default
-ingredient IDs and the live Inventory totals. A manually active food is hidden
-from the customer menu and shown as inactive in Product Manager when any
-required ingredient reaches zero. Restocking every missing ingredient makes
-the food available again automatically.
+ingredient IDs and the live Inventory totals. The normal hub Product page uses
+the overall stock view. When a customer logs in, their delivery address is
+assigned to a local warehouse and the personalised catalogue checks only that
+warehouse. A food remains visible but is inactive when a required ingredient
+is unavailable locally, with the missing ingredients shown on its card.
+Completing a replenishment delivery makes it available again the next time the
+catalogue is loaded.
+
+Finance now includes a **UK Locations** report built from those same Inventory
+warehouses. It assigns each order to the warehouse serving the customer's
+delivery address and shows revenue, product cost, profit, current stock,
+unavailable ingredients, and inbound deliveries for all ten service areas.
+Guest or unmatched addresses use the Central London warehouse. The location
+report can be exported as CSV from the Finance screen.
 
 The original source archives are not included or modified. Generated `target`, `bin`, class, crash-log, macOS metadata, and duplicate database files are excluded.
 
-`database/loop.sql` is a portable SQL dump of the simplified file. Both `PRAGMA integrity_check` and `PRAGMA foreign_key_check` pass. The data-preserving migration is kept at `database/migrations/001_simplify_shared_schema.sql`.
+`database/loop.sql` is a portable SQL dump of the simplified file. Both `PRAGMA integrity_check` and `PRAGMA foreign_key_check` pass. The data-preserving migrations are kept in `database/migrations`, including `002_location_inventory_deliveries.sql` for the location-based stock and delivery system.

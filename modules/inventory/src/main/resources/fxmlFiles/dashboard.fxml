@@ -134,6 +134,20 @@
                      <Label text="Product Query"
                             styleClass="menu-label"/>
                   </VBox>
+
+                  <VBox alignment="CENTER"
+                        prefWidth="180"
+                        prefHeight="180"
+                        spacing="15"
+                        styleClass="dashboard-tile"
+                        onMouseClicked="#WarehouseDeliveries">
+                     <ImageView fx:id="inventory_deliveries"
+                                fitHeight="80"
+                                fitWidth="80"
+                                preserveRatio="true"/>
+                     <Label text="Warehouse Deliveries"
+                            styleClass="menu-label"/>
+                  </VBox>
                </FlowPane>
             </VBox>
          </VBox>

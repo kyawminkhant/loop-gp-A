@@ -1042,6 +1042,56 @@
     -fx-border-color: rgba(27, 94, 32, 0.45);
 }
 
+/* UK location report: financial totals joined to Inventory warehouses. */
+.dashboard-location-button {
+    -fx-cursor: hand;
+}
+.dashboard-location-button:hover {
+    -fx-background-color: rgba(27, 94, 32, 0.50);
+}
+.location-finance-root {
+    -fx-background-color: #FFF8E1;
+}
+.location-kpi-card {
+    -fx-background-color: rgba(255, 255, 255, 0.55);
+    -fx-background-radius: 28;
+    -fx-border-color: rgba(27, 94, 32, 0.20);
+    -fx-border-radius: 28;
+    -fx-padding: 12 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 14, 0.25, 0, 4);
+}
+.location-kpi-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #5a6b56;
+}
+.location-kpi-value {
+    -fx-font-size: 17px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #1B5E20;
+}
+.location-data-note {
+    -fx-background-color: rgba(255, 136, 0, 0.16);
+    -fx-background-radius: 18;
+    -fx-padding: 9 16;
+    -fx-text-fill: #5b3a16;
+    -fx-font-size: 13px;
+}
+.location-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.48);
+    -fx-background-radius: 28;
+    -fx-border-color: rgba(255, 255, 255, 0.82);
+    -fx-border-radius: 28;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 18, 0.28, 0, 5);
+}
+.location-finance-root .default-color0.chart-bar {
+    -fx-bar-fill: #F08A1A;
+}
+.location-finance-root .default-color1.chart-bar {
+    -fx-bar-fill: #3C8D40;
+}
+
 /* Tooltips — match dashboard typography */
 .tooltip {
     -fx-background-color: linear-gradient(to bottom, rgba(252, 244, 232, 0.98), rgba(236, 226, 212, 0.96));
@@ -1196,4 +1246,3 @@
 .signup-btn-secondary:hover {
     -fx-background-color: rgba(27, 94, 32, 0.48);
 }
-

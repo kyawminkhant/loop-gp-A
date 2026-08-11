@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" spacing="14.0" styleClass="root location-finance-root"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gp.loop.finance.LocationPerformanceController">
+   <padding>
+      <Insets bottom="18.0" left="22.0" right="22.0" top="14.0" />
+   </padding>
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="18.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#backToDashboard" styleClass="button-green" text="← Finance" />
+            <ImageView fitHeight="72.0" pickOnBounds="true" preserveRatio="true">
+               <image><Image url="@/gp/loop/loop-logo.png" /></image>
+            </ImageView>
+            <VBox spacing="2.0">
+               <children>
+                  <Label style="-fx-font-size:30px;-fx-font-weight:800;-fx-text-fill:#1B5E20;" text="UK Location Performance" />
+                  <Label style="-fx-font-size:14px;-fx-text-fill:#5a6b56;" text="Finance figures linked to Inventory warehouses and customer delivery areas" />
+               </children>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#refresh" styleClass="button-green" text="Refresh" />
+            <Button mnemonicParsing="false" onAction="#exportCsv" styleClass="button-orange" text="Export CSV" />
+         </children>
+      </HBox>
+
+      <HBox alignment="CENTER" spacing="12.0">
+         <children>
+            <VBox alignment="CENTER" spacing="5.0" styleClass="location-kpi-card" HBox.hgrow="ALWAYS">
+               <children><Label styleClass="location-kpi-title" text="UK Areas" /><Label fx:id="locationCountValue" styleClass="location-kpi-value" text="0" /></children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0" styleClass="location-kpi-card" HBox.hgrow="ALWAYS">
+               <children><Label styleClass="location-kpi-title" text="Revenue" /><Label fx:id="revenueValue" styleClass="location-kpi-value" text="£0.00" /></children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0" styleClass="location-kpi-card" HBox.hgrow="ALWAYS">
+               <children><Label styleClass="location-kpi-title" text="Profit" /><Label fx:id="profitValue" styleClass="location-kpi-value" text="£0.00" /></children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0" styleClass="location-kpi-card" HBox.hgrow="ALWAYS">
+               <children><Label styleClass="location-kpi-title" text="Current Stock" /><Label fx:id="stockValue" styleClass="location-kpi-value" text="0" /></children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0" styleClass="location-kpi-card" HBox.hgrow="ALWAYS">
+               <children><Label styleClass="location-kpi-title" text="Unavailable Ingredients" /><Label fx:id="unavailableValue" styleClass="location-kpi-value" text="0" /></children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0" styleClass="location-kpi-card" HBox.hgrow="ALWAYS">
+               <children><Label styleClass="location-kpi-title" text="Inbound Deliveries / Units" /><Label fx:id="inboundValue" styleClass="location-kpi-value" text="0 / 0 units" /></children>
+            </VBox>
+         </children>
+      </HBox>
+
+      <Label fx:id="dataNote" maxWidth="1.7976931348623157E308" styleClass="location-data-note" text="Loading warehouse data…" />
+
+      <StackPane prefHeight="240.0" minHeight="220.0" styleClass="location-panel">
+         <children>
+            <BarChart fx:id="locationChart" animated="false" legendSide="BOTTOM" title="Revenue and profit by service area">
+               <xAxis><CategoryAxis tickLabelRotation="-30.0" /></xAxis>
+               <yAxis><NumberAxis label="GBP (£)" /></yAxis>
+            </BarChart>
+         </children>
+      </StackPane>
+
+      <StackPane styleClass="location-panel" VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="locationTable" styleClass="finance-table" StackPane.alignment="CENTER">
+               <columns>
+                  <TableColumn fx:id="locationColumn" prefWidth="155.0" text="Service Area" />
+                  <TableColumn fx:id="warehouseColumn" prefWidth="185.0" text="Inventory Warehouse" />
+                  <TableColumn fx:id="ordersColumn" prefWidth="70.0" text="Orders" />
+                  <TableColumn fx:id="revenueColumn" prefWidth="90.0" text="Revenue" />
+                  <TableColumn fx:id="costColumn" prefWidth="85.0" text="Cost" />
+                  <TableColumn fx:id="profitColumn" prefWidth="85.0" text="Profit" />
+                  <TableColumn fx:id="stockColumn" prefWidth="120.0" text="Stock / Capacity" />
+                  <TableColumn fx:id="unavailableColumn" prefWidth="110.0" text="Unavailable" />
+                  <TableColumn fx:id="inboundColumn" prefWidth="145.0" text="Inbound" />
+               </columns>
+            </TableView>
+         </children>
+      </StackPane>
+   </children>
+</VBox>

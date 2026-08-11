@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import models.Customer;
+import utils.SessionManager;
 
 public final class FoodBarRepository {
 
@@ -38,7 +40,7 @@ public final class FoodBarRepository {
         Map<Integer, ArrayList<String>> nutritionByProduct =
             mapRowsByProductId(defaultIngredients, 10);
         Map<Integer, ProductAvailabilityService.Availability> availabilityByProduct =
-            ProductAvailabilityService.loadAll();
+            loadAvailability();
 
         List<FoodBarData> cards = new ArrayList<>();
 
@@ -50,11 +52,10 @@ public final class FoodBarRepository {
             if (!"Active".equalsIgnoreCase(status)) {
                 continue;
             }
-            if (!availabilityByProduct
-                    .getOrDefault(productId, ProductAvailabilityService.Availability.available())
-                    .isAvailable()) {
-                continue;
-            }
+            ProductAvailabilityService.Availability availability =
+                    availabilityByProduct.getOrDefault(
+                            productId,
+                            ProductAvailabilityService.Availability.available());
 
             String name = value(product, 1, "Unnamed product");
             String shortDescription = value(product, 2, "");
@@ -107,11 +108,23 @@ public final class FoodBarRepository {
                 dietaryIcon(dietary),
                 healthGoalIcon(healthGoal),
                 cuisineIcon(cuisine),
-                null
+                null,
+                availability.isAvailable(),
+                availability.getUnavailableMessage()
             ));
         }
 
         return cards;
+    }
+
+    private static Map<Integer, ProductAvailabilityService.Availability> loadAvailability()
+            throws ClassNotFoundException, SQLException {
+        Customer customer = SessionManager.getCurrentCustomer();
+        if (ProductBrowseContext.isPersonalized() && customer != null) {
+            return ProductAvailabilityService.loadAllForAddress(
+                    customer.getDeliveryAddress());
+        }
+        return ProductAvailabilityService.loadAll();
     }
 
     private static Map<Integer, RatingSummary> mapRatings(

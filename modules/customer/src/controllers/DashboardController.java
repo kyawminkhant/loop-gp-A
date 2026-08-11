@@ -21,6 +21,7 @@ import utils.ImageFileUtil;
 import utils.NavigationUtil;
 import utils.SessionManager;
 import utils.ValidationUtil;
+import services.InventoryDeliveryService;
 
 import java.util.List;
 import java.util.Random;
@@ -41,6 +42,7 @@ public class DashboardController {
     @FXML private Label profileStatusLabel;
     @FXML private TextField profileMobileField;
     @FXML private TextField profileAddressField;
+    @FXML private Label profileWarehouseLabel;
     @FXML private Label profileMessageLabel;
 
     @FXML private CheckBox prefVegan;
@@ -125,6 +127,7 @@ public class DashboardController {
         profileStatusLabel.setText(currentCustomer.getStatus());
         profileMobileField.setText(currentCustomer.getMobile());
         profileAddressField.setText(currentCustomer.getDeliveryAddress());
+        updateWarehouseAssignment();
 
         profileIdCardImage.setImage(ImageFileUtil.loadImage(currentCustomer.getIdCardImagePath()));
 
@@ -198,6 +201,7 @@ public class DashboardController {
             currentCustomer.setDeliveryAddress(address);
             SessionManager.setCurrentCustomer(currentCustomer);
             profileNameDisplayLabel.setText(name);
+            updateWarehouseAssignment();
 
             profileMessageLabel.setStyle("-fx-text-fill: #2f6b3f;");
             profileMessageLabel.setText("Profile updated successfully.");
@@ -206,6 +210,18 @@ public class DashboardController {
             profileMessageLabel.setStyle("-fx-text-fill: #b03a2e;");
             profileMessageLabel.setText("Update failed. Please try again.");
             AnimationUtil.shake(profileMessageLabel);
+        }
+    }
+
+    private void updateWarehouseAssignment() {
+        try {
+            InventoryDeliveryService.WarehouseAssignment warehouse =
+                    InventoryDeliveryService.resolveWarehouse(
+                            currentCustomer.getDeliveryAddress());
+            profileWarehouseLabel.setText("Local fulfilment: "
+                    + warehouse.getDisplayName());
+        } catch (Exception exception) {
+            profileWarehouseLabel.setText("Local fulfilment warehouse unavailable");
         }
     }
 

@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import services.InventoryDeliveryService;
 import java.io.IOException;
 
 public class App extends Application {
@@ -18,6 +19,7 @@ public class App extends Application {
         primaryStage = stage;
         
         try {
+            InventoryDeliveryService.startAutomaticUpdates();
             LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.verifySharedSchema();
             System.out.println("Inventory connected to shared database: "
                     + LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.getDatabasePath());

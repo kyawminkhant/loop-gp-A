@@ -1,85 +1,120 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
-import dao.IngredientDAO;
+import dao.FoodItemDAO;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import model.FoodItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import services.InventoryDeliveryService;
+import services.InventoryImageService;
 
-public class FoodItemDetailPopupController {
+/** Views and updates one ingredient at a selected warehouse. */
+public final class FoodItemDetailPopupController {
 
-    @FXML
-    private Label foodName;
+    @FXML private Label idLabel;
+    @FXML private Label nameLabel;
+    @FXML private Label categoryLabel;
+    @FXML private Label stockLabel;
+    @FXML private Label messageLabel;
+    @FXML private ImageView foodImageView;
+    @FXML private ComboBox<String> warehouseComboBox;
+    @FXML private TextField stockInput;
 
-    @FXML
-    private Label foodID;
-
-    @FXML
-    private Label stock;
-
-    @FXML
-    private Label capacity;
-
-    @FXML
-    private TextField stockInput;
-
-    @FXML
-    private Button zeroStockButton;
-
-    private FoodItem food;
-    private IngredientDAO ingredientDAO = new IngredientDAO();
+    private int ingredientId;
 
     @FXML
-    public void initialize() {
-        zeroStockButton.setOnAction(event -> handleSetZeroStock());
-        stockInput.setOnAction(event -> handleUpdateStock());
+    private void initialize() {
+        try {
+            warehouseComboBox.getItems().setAll(
+                    InventoryDeliveryService.loadWarehouseChoices());
+            warehouseComboBox.getSelectionModel().selectFirst();
+        } catch (Exception exception) {
+            messageLabel.setText("Could not load warehouses.");
+        }
+        warehouseComboBox.setOnAction(event -> refreshStock());
     }
 
-    public void setIngredientDetails(FoodItem selectedFood) {
-        if (selectedFood == null) {
-            foodName.setText("Name: Not Found");
-            foodID.setText("ID: Not Found");
-            stock.setText("Stock: Not Found");
-            capacity.setText("Capacity: Not Found");
-            return;
+    public void setFoodData(
+            String id, String name, String category, int stock, String imagePath) {
+        try {
+            ingredientId = Integer.parseInt(id);
+        } catch (NumberFormatException exception) {
+            ingredientId = -1;
         }
+        idLabel.setText("ID: " + id);
+        nameLabel.setText(name);
+        categoryLabel.setText("Category: " + category);
+        stockLabel.setText("All warehouses: " + stock + " units");
+        refreshStock();
 
-        this.food = selectedFood;
-
-        foodName.setText("Name: " + food.getName());
-        foodID.setText("ID: " + food.getIngredientID());
-        stock.setText("Stock: " + food.getStockQuantity());
-        capacity.setText("Capacity: " + food.getCapacity());
+        InventoryImageService.loadImage(imagePath)
+                .ifPresentOrElse(foodImageView::setImage, this::setDefaultImage);
     }
 
     @FXML
     private void handleUpdateStock() {
-        if (food == null) return;
-
-        String inputText = stockInput.getText();
-        if (inputText == null || inputText.trim().isEmpty()) return;
-
+        String input = stockInput.getText();
         try {
-            int newStock = Integer.parseInt(inputText.trim());
-            updateStockValue(newStock);
-            stockInput.clear();
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid stock input: " + inputText);
+            int quantity = Integer.parseInt(input == null ? "" : input.trim());
+            updateStock(quantity);
+        } catch (NumberFormatException exception) {
+            messageLabel.setText("Enter a whole stock quantity.");
         }
     }
 
     @FXML
     private void handleSetZeroStock() {
-        if (food == null) return;
-        updateStockValue(0);
+        updateStock(0);
     }
 
-    private void updateStockValue(int newStockQuantity) {
-        food.setStock(newStockQuantity);
+    private void updateStock(int quantity) {
+        String warehouse = warehouseComboBox.getValue();
+        if (ingredientId <= 0 || warehouse == null) {
+            messageLabel.setText("Select an ingredient and warehouse first.");
+            return;
+        }
+        try {
+            FoodItemDAO.updateStockForIngredientAtWarehouse(
+                    ingredientId, warehouse, quantity);
+            stockInput.clear();
+            messageLabel.setText("Stock updated for " + warehouse + ".");
+            refreshStock();
+        } catch (Exception exception) {
+            messageLabel.setText(exception.getMessage());
+        }
+    }
 
-        stock.setText("Stock: " + newStockQuantity);
+    private void refreshStock() {
+        if (ingredientId <= 0 || warehouseComboBox.getValue() == null) {
+            return;
+        }
+        try {
+            String warehouse = warehouseComboBox.getValue();
+            int quantity = FoodItemDAO.getStockForIngredientAtWarehouse(
+                    ingredientId, warehouse);
+            int capacity = FoodItemDAO.getCapacityForIngredientAtWarehouse(
+                    ingredientId, warehouse);
+            stockLabel.setText(warehouse + ": " + quantity + " / " + capacity + " units");
+        } catch (Exception exception) {
+            messageLabel.setText("Could not read warehouse stock.");
+        }
+    }
 
-        IngredientDAO.updateStock(food.getIngredientID(), newStockQuantity);
+    private void setDefaultImage() {
+        try {
+            foodImageView.setImage(new Image(
+                    getClass().getResourceAsStream("/images/logo.png")));
+        } catch (Exception exception) {
+            System.err.println("Default popup image could not load.");
+        }
+    }
+
+    @FXML
+    private void handleClose() {
+        Stage stage = (Stage) foodImageView.getScene().getWindow();
+        stage.close();
     }
 }

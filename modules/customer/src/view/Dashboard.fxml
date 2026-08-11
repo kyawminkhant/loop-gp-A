@@ -91,6 +91,8 @@
                                 <Label text="Delivery Address" styleClass="field-label"/>
                                 <TextField fx:id="profileAddressField" styleClass="glass-input" maxWidth="Infinity"
                                            promptText="Your delivery address"/>
+                                <Label fx:id="profileWarehouseLabel" text="Local fulfilment warehouse"
+                                       styleClass="warehouse-note" wrapText="true"/>
                                 <Label fx:id="profileMessageLabel" styleClass="message-label" wrapText="true"/>
                                 <Button text="Save Changes" onAction="#handleSaveProfile" styleClass="primary-button" maxWidth="Infinity"/>
                             </VBox>

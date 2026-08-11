@@ -34,6 +34,9 @@ public class Dashboard {
 	@FXML
 	private ImageView generate_report;
 
+	@FXML
+	private ImageView inventory_deliveries;
+
 	
 	@FXML
 	public void initialize() {
@@ -64,6 +67,9 @@ public class Dashboard {
 	    generate_report.setImage(
 		        new Image(getClass().getResourceAsStream("/images/generate_report.png"))
 		    );
+	    inventory_deliveries.setImage(
+		        new Image(getClass().getResourceAsStream("/images/manage_stock.png"))
+		    );
 	    }
 	    
 	    
@@ -91,6 +97,11 @@ public class Dashboard {
     private void ProductQuery() throws IOException {
         App.setRoot("product_query");
     }
+
+	@FXML
+	private void WarehouseDeliveries() throws IOException {
+		App.setRoot("warehouseDeliveries");
+	}
 	    
 	}
 
