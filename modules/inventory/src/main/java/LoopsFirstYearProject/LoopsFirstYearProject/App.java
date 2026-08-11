@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import services.InventoryDeliveryService;
 import java.io.IOException;
+import java.net.URL;
 
 public class App extends Application {
 
@@ -66,7 +67,18 @@ public class App extends Application {
     @SuppressWarnings("exports")
 	public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/fxmlFiles/" + fxml + ".fxml"));
-        return fxmlLoader.load();
+        Parent root = fxmlLoader.load();
+        applyTheme(root);
+        return root;
+    }
+
+    /** Applies the shared hub palette to main pages and modal Inventory windows. */
+    public static void applyTheme(Parent root) {
+        URL sharedTheme = App.class.getResource("/styles/hub-theme.css");
+        if (root != null && sharedTheme != null
+                && !root.getStylesheets().contains(sharedTheme.toExternalForm())) {
+            root.getStylesheets().add(sharedTheme.toExternalForm());
+        }
     }
 
     public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
+import LoopsFirstYearProject.LoopsFirstYearProject.App;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -59,6 +60,8 @@ public class Product_dashboard {
 
             Parent root =
                     loader.load();
+
+            App.applyTheme(root);
 
 
             Stage stage =

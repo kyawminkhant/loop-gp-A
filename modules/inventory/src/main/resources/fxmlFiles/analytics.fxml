@@ -2,46 +2,77 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.control.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
+<BorderPane prefHeight="800.0" prefWidth="1200.0"
+      xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@../styles/analytics.css"
       fx:controller="LoopsFirstYearProject.LoopsFirstYearProject.controllers.AnalyticsController"
       styleClass="border-pane">
-      <center>
-      	<VBox spacing="18">
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <VBox styleClass="greenBorder">
-                     <children>
-                        <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
-                     </children>
-                  </VBox>
-                  <Pane HBox.hgrow="ALWAYS" />
-                  <Button text="Back to Inventory" onAction="#back" styleClass="moreLocations"/>
-               </children>
-            </HBox>
-      		<HBox styleClass="title-holder">
-      			<Label text="Analytics" styleClass="title"/>
-      			<Pane HBox.hgrow="ALWAYS"/>
-      			<Button text="More Locations" onAction="#moreLocations" styleClass="moreLocations"/>
-      		</HBox>
-      		<TableView fx:id="analytics" styleClass="table_text">
-      			<columns>
-      				<TableColumn fx:id="product" text="Product"/>
-      				<TableColumn fx:id="locationColumn" text="Location"/>
-      				<TableColumn fx:id="currentQuantity" text="Current Quantity"/>
-      				<TableColumn fx:id="minThreshold" text="Minimum Threshold"/>
-      				<TableColumn fx:id="status" text="Status"/>
-      				<TableColumn fx:id="lastRestock" text="Last Restock"/>
-      				<TableColumn fx:id="daysUntilReorder" text="Days Until Reorder"/>
-      			</columns>
-      		</TableView>
-      		<VBox alignment="CENTER">
-			<Button text="Replenish Now" onAction="#replenish" styleClass="replenishNow"/>
-      		</VBox>
-      	</VBox>
-      </center>
+   <center>
+      <VBox spacing="16">
+         <HBox alignment="CENTER_LEFT">
+            <children>
+               <VBox styleClass="greenBorder">
+                  <children>
+                     <ImageView fx:id="logo" fitWidth="120" fitHeight="120"/>
+                  </children>
+               </VBox>
+               <Pane HBox.hgrow="ALWAYS"/>
+               <Button text="Back to Inventory" onAction="#back" styleClass="moreLocations"/>
+            </children>
+         </HBox>
+
+         <HBox styleClass="title-holder" alignment="CENTER_LEFT">
+            <VBox spacing="2">
+               <Label text="Inventory Analytics" styleClass="title"/>
+               <Label text="Live stock health across every warehouse service area" styleClass="analytics-subtitle"/>
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button text="More Locations" onAction="#moreLocations" styleClass="moreLocations"/>
+         </HBox>
+
+         <HBox alignment="CENTER" spacing="12" styleClass="analytics-summary-row">
+            <VBox alignment="CENTER" spacing="4" styleClass="analytics-summary-card" HBox.hgrow="ALWAYS">
+               <Label text="Stock Records" styleClass="analytics-summary-title"/>
+               <Label fx:id="totalRows" text="0" styleClass="analytics-summary-value"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="analytics-summary-card" HBox.hgrow="ALWAYS">
+               <Label text="Locations" styleClass="analytics-summary-title"/>
+               <Label fx:id="locationCount" text="0" styleClass="analytics-summary-value"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="analytics-summary-card" HBox.hgrow="ALWAYS">
+               <Label text="Low Stock" styleClass="analytics-summary-title"/>
+               <Label fx:id="lowCount" text="0" styleClass="analytics-summary-value"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="analytics-summary-card" HBox.hgrow="ALWAYS">
+               <Label text="Critical" styleClass="analytics-summary-title"/>
+               <Label fx:id="criticalCount" text="0" styleClass="analytics-summary-value analytics-critical-value"/>
+            </VBox>
+         </HBox>
+
+         <HBox alignment="CENTER_LEFT" spacing="12" styleClass="analytics-toolbar">
+            <TextField fx:id="searchField" promptText="Search ingredient or location…" styleClass="hub-search-field" HBox.hgrow="ALWAYS"/>
+            <ComboBox fx:id="statusFilter" prefWidth="180" styleClass="hub-combo-box"/>
+            <Button text="Refresh" onAction="#refresh" styleClass="moreLocations"/>
+         </HBox>
+
+         <TableView fx:id="analytics" styleClass="table_text" VBox.vgrow="ALWAYS">
+            <columns>
+               <TableColumn fx:id="product" text="Product"/>
+               <TableColumn fx:id="locationColumn" text="Location"/>
+               <TableColumn fx:id="currentQuantity" text="Current Quantity"/>
+               <TableColumn fx:id="minThreshold" text="Minimum Threshold"/>
+               <TableColumn fx:id="status" text="Status"/>
+               <TableColumn fx:id="lastRestock" text="Last Restock"/>
+               <TableColumn fx:id="daysUntilReorder" text="Days Until Reorder"/>
+            </columns>
+         </TableView>
+         <Label fx:id="analyticsMessage" text="Loading live analytics…" styleClass="analytics-message"/>
+         <VBox alignment="CENTER">
+            <Button text="Replenish Now" onAction="#replenish" styleClass="replenishNow"/>
+         </VBox>
+      </VBox>
+   </center>
 </BorderPane>

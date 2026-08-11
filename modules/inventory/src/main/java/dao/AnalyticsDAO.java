@@ -13,8 +13,6 @@ import java.sql.SQLException;
 /** Builds analytics from the live normalized stock table. */
 public final class AnalyticsDAO {
 
-    private static final int CURRENT_STOCK_YEAR = 2026;
-
     private AnalyticsDAO() { }
 
     public static ObservableList<Analytics> getLocations() {
@@ -55,13 +53,12 @@ public final class AnalyticsDAO {
                 %s
                 LEFT JOIN inventory_stock_analytics legacy
                   ON legacy.product = ingredient.ingredientName
-                WHERE stock.stockYear = ?
+                WHERE stock.stockYear = (SELECT MAX(latest.stockYear) FROM inventory_Stock latest)
                 ORDER BY CASE status WHEN 'CRITICAL' THEN 0 WHEN 'LOW' THEN 1 ELSE 2 END,
                          ingredient.ingredientName, stock.warehouseID
                 """.formatted(locationColumn, warehouseJoin);
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, CURRENT_STOCK_YEAR);
                 try (ResultSet result = statement.executeQuery()) {
                     while (result.next()) {
                         list.add(new Analytics(

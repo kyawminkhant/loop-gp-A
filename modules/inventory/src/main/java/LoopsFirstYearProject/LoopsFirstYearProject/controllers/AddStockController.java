@@ -1,5 +1,6 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
+import LoopsFirstYearProject.LoopsFirstYearProject.App;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -126,6 +127,8 @@ private void uploadImage(){
 
             Parent root =
                     loader.load();
+
+            App.applyTheme(root);
 
 
 
