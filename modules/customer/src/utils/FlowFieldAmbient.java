@@ -6,6 +6,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,9 @@ public final class FlowFieldAmbient {
     }
 
     private static final class FlowFieldEngine {
+        private static final long ACTIVE_FRAME_INTERVAL_NS = 1_000_000_000L / 30L;
+        private static final long BACKGROUND_FRAME_INTERVAL_NS = 1_000_000_000L / 10L;
+
         private final Canvas canvas;
         private final GraphicsContext gc;
         private final List<Particle> particles = new ArrayList<>();
@@ -71,8 +76,9 @@ public final class FlowFieldAmbient {
 
         private final double noiseScale = 0.0065;
         private double angle = Math.toRadians(-90);
-        private final double tailFadeAlpha = 0.06;
+        private final double tailFadeAlpha = 0.11;
         private long frame;
+        private long lastRenderedAt;
         private boolean primed;
 
         // Fixed Loop palette — no click recolor (keeps animation smooth)
@@ -92,6 +98,21 @@ public final class FlowFieldAmbient {
                         stop();
                         return;
                     }
+                    Window window = canvas.getScene() == null
+                            ? null : canvas.getScene().getWindow();
+                    if (window == null || !window.isShowing()) {
+                        return;
+                    }
+
+                    boolean background = !window.isFocused()
+                            || (window instanceof Stage stage && stage.isIconified());
+                    long interval = background
+                            ? BACKGROUND_FRAME_INTERVAL_NS : ACTIVE_FRAME_INTERVAL_NS;
+                    if (lastRenderedAt != 0 && now - lastRenderedAt < interval) {
+                        return;
+                    }
+                    lastRenderedAt = now;
+
                     double w = canvas.getWidth();
                     double h = canvas.getHeight();
                     if (w < 2 || h < 2) return;
@@ -112,8 +133,9 @@ public final class FlowFieldAmbient {
         }
 
         private void ensureParticles(double w, double h) {
-            // Slightly fewer particles = smoother FPS on JavaFX Canvas
-            int target = (int) Math.max(220, Math.min(380, w / 2.8));
+            // Scale gently with the visible area, with a firm ceiling for laptops.
+            int target = (int) Math.max(150,
+                    Math.min(240, Math.sqrt(w * h) * 0.27));
             while (particles.size() < target) {
                 Particle p = new Particle(RAND.nextDouble() * w, RAND.nextDouble() * h);
                 p.assign(warmColor, coolColor);
@@ -187,10 +209,12 @@ public final class FlowFieldAmbient {
             vx += Math.cos(a) * 0.35;
             vy += Math.sin(a) * 0.35;
 
-            double speed = Math.hypot(vx, vy);
-            if (speed > maxSpeed && speed > 0) {
-                vx = vx / speed * maxSpeed;
-                vy = vy / speed * maxSpeed;
+            double speedSquared = vx * vx + vy * vy;
+            double maximumSquared = maxSpeed * maxSpeed;
+            if (speedSquared > maximumSquared) {
+                double scale = maxSpeed / Math.sqrt(speedSquared);
+                vx *= scale;
+                vy *= scale;
             }
 
             x += vx;

@@ -87,6 +87,7 @@ public class LoginController {
         SessionManager.setCurrentCustomer(customer);
 
         if (SessionManager.openPersonalizedProducts()) {
+            AnimationUtil.disableBackgroundAmbient();
             return;
         }
 

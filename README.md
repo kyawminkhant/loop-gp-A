@@ -25,6 +25,7 @@ Only the **Customers** component has authentication. A ready-to-use customer and
 | Access | Email | Password |
 | --- | --- | --- |
 | Demo Customer | `customer@loop.com` | `customer123` |
+| Review Submission Demo | `review.demo@loop.demo` | `demo123` |
 | Customer Super Admin | No email required | `admin123` |
 
 Additional preference demo accounts use the shared password `demo123`:
@@ -36,6 +37,14 @@ the normal, unpersonalized catalogue. Each demo account also includes two
 orders and two chef reviews so its dashboard is populated.
 The Demo Customer row is an optional sign-in account; it is not the default
 identity. Pages opened without a Customer login display **Guest**.
+
+For the Slide 5 review-validation recording, sign in through **Customers** as
+`review.demo@loop.demo` with `demo123`. Open **Vegetable Gyoza**, select
+**Reviews**, then **Write a Review**. A comment over 500 characters is rejected
+with `Review must be at most 500 characters.` Shorten it to 500 characters or
+fewer and submit it successfully. Beef Bulgogi, Thai Green Curry, Falafel
+Mezze Bowl, and Mediterranean Salmon are additional purchased foods reserved
+for repeat practice if one of them has already been reviewed.
 
 The larger review dataset also includes review personas such as Naruto
 Uzumaki, Monkey D. Luffy, Satoru Gojo, Levi Ackerman, and other familiar anime
