@@ -59,7 +59,7 @@
                         <ComboBox fx:id="sortCombo" prefWidth="210" styleClass="filter-combo"/>
                         <Label text="Stars" styleClass="field-label"/>
                         <ComboBox fx:id="starFilterCombo" prefWidth="165" styleClass="filter-combo"/>
-                        <TextField fx:id="keywordField" promptText="Search comments..." HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="keywordField" promptText="Search comments or usernames..." HBox.hgrow="ALWAYS"/>
                         <Button text="Apply" styleClass="btn-primary" onAction="#applyFilters"/>
                         <Button text="Clear" styleClass="btn-ghost" onAction="#clearFilters"/>
                     </HBox>
