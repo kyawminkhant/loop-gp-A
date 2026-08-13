@@ -31,6 +31,16 @@ public class Acceptdelivery {
     @FXML private VBox card207;
     @FXML private VBox card208;
     
+    
+    @FXML
+    private void goBack(ActionEvent event) {
+        try {
+            App.setRoot("login");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     @FXML
     public void initialize() {
         refreshAvailableOrders();
