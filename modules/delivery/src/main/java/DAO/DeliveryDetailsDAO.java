@@ -1,4 +1,3 @@
-package DAO;
 
 import Database.DBconnection;
 import javafx.collections.FXCollections;
