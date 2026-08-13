@@ -179,7 +179,7 @@ public final class Database {
                 "  status                TEXT    NOT NULL DEFAULT 'Active'," +
                 "  helpful_count         INTEGER NOT NULL DEFAULT 0," +
                 "  unhelpful_count       INTEGER NOT NULL DEFAULT 0," +
-                "  edit_duration_seconds INTEGER NOT NULL DEFAULT 300," +
+                "  edit_duration_seconds INTEGER NOT NULL DEFAULT 86400," +
                 "  UNIQUE(product_id, customer_id)" +                 // no duplicate reviews
                 ");");
 

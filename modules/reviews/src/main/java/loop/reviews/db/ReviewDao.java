@@ -168,7 +168,7 @@ public class ReviewDao {
             ps.setString(7, r.getStatus() == null ? Review.ACTIVE : r.getStatus());
             ps.setInt(8, r.getHelpfulCount());
             ps.setInt(9, r.getUnhelpfulCount());
-            ps.setInt(10, r.getEditDurationSeconds() == 0 ? 300 : r.getEditDurationSeconds());
+            ps.setInt(10, r.getEditDurationSeconds() == 0 ? 86400 : r.getEditDurationSeconds());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) r.setId(keys.getInt(1));
