@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Year;
 
 public class FoodItemDAO {
 
@@ -132,6 +133,105 @@ public class FoodItemDAO {
         } catch (SQLException exception) {
             throw new IllegalStateException("Could not load ingredient stock.", exception);
         }
+    }
+
+    public static int getStockForIngredientAtWarehouse(
+            int ingredientId, String warehouseId) {
+        return readWarehouseValue(ingredientId, warehouseId, "stockQuantity");
+    }
+
+    public static int getCapacityForIngredientAtWarehouse(
+            int ingredientId, String warehouseId) {
+        return readWarehouseValue(ingredientId, warehouseId, "capacity");
+    }
+
+    private static int readWarehouseValue(
+            int ingredientId, String warehouseId, String column) {
+        if (!"stockQuantity".equals(column) && !"capacity".equals(column)) {
+            throw new IllegalArgumentException("Unsupported stock column.");
+        }
+        String sql = "SELECT " + column + " FROM inventory_Stock "
+                + "WHERE stockYear=? AND ingredientID=? "
+                + "AND UPPER(TRIM(warehouseID))=? LIMIT 1";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, Year.now().getValue());
+            statement.setInt(2, ingredientId);
+            statement.setString(3, normaliseWarehouse(warehouseId));
+            try (ResultSet result = statement.executeQuery()) {
+                return result.next() ? result.getInt(1) : 0;
+            }
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Could not load warehouse stock.", exception);
+        }
+    }
+
+    public static void updateStockForIngredientAtWarehouse(
+            int ingredientId, String warehouseId, int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Stock cannot be negative.");
+        }
+        String warehouse = normaliseWarehouse(warehouseId);
+        try (Connection connection = DBConnection.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                String stockCode;
+                int capacity;
+                try (PreparedStatement statement = connection.prepareStatement("""
+                        SELECT stockCode, capacity FROM inventory_Stock
+                        WHERE stockYear=? AND ingredientID=?
+                          AND UPPER(TRIM(warehouseID))=? LIMIT 1
+                        """)) {
+                    statement.setInt(1, Year.now().getValue());
+                    statement.setInt(2, ingredientId);
+                    statement.setString(3, warehouse);
+                    try (ResultSet result = statement.executeQuery()) {
+                        if (!result.next()) {
+                            throw new SQLException("Warehouse stock row was not found.");
+                        }
+                        stockCode = result.getString("stockCode");
+                        capacity = result.getInt("capacity");
+                    }
+                }
+                if (quantity > capacity) {
+                    throw new IllegalArgumentException(
+                            "Stock cannot exceed the warehouse capacity of " + capacity + ".");
+                }
+                try (PreparedStatement statement = connection.prepareStatement("""
+                        UPDATE inventory_Stock SET stockQuantity=?
+                        WHERE stockYear=? AND stockCode=?
+                        """)) {
+                    statement.setInt(1, quantity);
+                    statement.setInt(2, Year.now().getValue());
+                    statement.setString(3, stockCode);
+                    statement.executeUpdate();
+                }
+                try (PreparedStatement statement = connection.prepareStatement("""
+                        INSERT INTO inventory_stock_TransactionLog
+                          (username, action, details, dateTime)
+                        VALUES ('Inventory User', 'LOCATION_STOCK_UPDATE', ?, datetime('now'))
+                        """)) {
+                    statement.setString(1, "Ingredient #" + ingredientId + " set to "
+                            + quantity + " units at " + warehouse);
+                    statement.executeUpdate();
+                }
+                connection.commit();
+            } catch (Exception exception) {
+                connection.rollback();
+                if (exception instanceof RuntimeException) {
+                    throw (RuntimeException) exception;
+                }
+                throw new IllegalStateException("Could not update warehouse stock.", exception);
+            } finally {
+                connection.setAutoCommit(true);
+            }
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Could not update warehouse stock.", exception);
+        }
+    }
+
+    private static String normaliseWarehouse(String value) {
+        return value == null ? "" : value.trim().toUpperCase();
     }
 
 }

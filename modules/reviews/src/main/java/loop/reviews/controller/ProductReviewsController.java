@@ -2,9 +2,12 @@ package loop.reviews.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -19,14 +22,18 @@ import loop.reviews.db.ReviewDao;
 import loop.reviews.model.HelpfulVote;
 import loop.reviews.model.Product;
 import loop.reviews.model.Review;
+import loop.reviews.util.ContentModeration;
+import loop.reviews.util.ReviewImageService;
 import loop.reviews.util.ReviewPhotoView;
 import loop.reviews.util.Toast;
+import loop.reviews.util.Validation;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /** FR6 (view/sort/filter), FR7 (helpful voting), FR9 (average + distribution). */
 public class ProductReviewsController {
@@ -141,6 +148,11 @@ public class ProductReviewsController {
         String keyword = keywordField.getText();
 
         List<Review> reviews = reviewDao.findByProduct(product.getId(), sort, minStars, keyword);
+        if (Session.getCurrentUser() != null && !Session.isAdmin()) {
+            int currentCustomerId = Session.getCurrentUser().getId();
+            reviews.sort(java.util.Comparator.comparing(
+                    (Review review) -> review.getCustomerId() != currentCustomerId));
+        }
         if (reviews.isEmpty()) {
             Label empty = new Label("No reviews yet. Be the first to share your thoughts!");
             empty.getStyleClass().add("empty-state");
@@ -163,13 +175,20 @@ public class ProductReviewsController {
         head.setAlignment(Pos.CENTER_LEFT);
         Label who = new Label(r.getCustomerName() == null ? "Customer" : r.getCustomerName());
         who.getStyleClass().add("review-author");
+        boolean ownReview = Session.getCurrentUser() != null
+                && !Session.isAdmin()
+                && Session.getCurrentUser().getId() == r.getCustomerId();
+        Label ownBadge = new Label("Your review");
+        ownBadge.getStyleClass().add("badge-own-review");
+        ownBadge.setVisible(ownReview);
+        ownBadge.setManaged(ownReview);
         Label stars = new Label(HomeController.starString(r.getRating()));
         stars.getStyleClass().add("stars");
         Region sp = new Region();
         HBox.setHgrow(sp, Priority.ALWAYS);
         Label date = new Label(FMT.format(Instant.ofEpochMilli(r.getCreatedAt())));
         date.getStyleClass().add("review-date");
-        head.getChildren().addAll(who, stars, sp, date);
+        head.getChildren().addAll(who, ownBadge, stars, sp, date);
 
         Label comment = new Label(r.getCommentText());
         comment.getStyleClass().add("review-comment");
@@ -196,12 +215,175 @@ public class ProductReviewsController {
         up.setDisable(!canVote);
         down.setDisable(!canVote);
         actions.getChildren().addAll(up, down);
+        if (ownReview) {
+            Region actionSpacer = new Region();
+            HBox.setHgrow(actionSpacer, Priority.ALWAYS);
+            Button edit = new Button(r.isEditWindowOpen()
+                    ? "Edit your review" : "Edit window closed");
+            edit.getStyleClass().add("btn-ghost");
+            edit.setDisable(!r.isEditWindowOpen());
+            edit.setOnAction(event -> beginInlineEdit(card, r));
+            Button delete = new Button("Delete your review");
+            delete.getStyleClass().add("btn-danger");
+            delete.setDisable(!r.isEditWindowOpen());
+            delete.setOnAction(event -> deleteOwnReview(r));
+            actions.getChildren().addAll(actionSpacer, edit, delete);
+            card.getStyleClass().add("review-card-own");
+        }
         card.getChildren().addAll(head, comment);
         if (photo != null) {
             card.getChildren().add(photo);
         }
         card.getChildren().add(actions);
         return card;
+    }
+
+    private void beginInlineEdit(VBox card, Review review) {
+        if (!isOwnedByCurrentCustomer(review) || !review.isEditWindowOpen()) {
+            Toast.show(root, "The edit window for this review has closed.", true);
+            renderReviews();
+            return;
+        }
+
+        Label heading = new Label("Edit your review");
+        heading.getStyleClass().add("section-title");
+
+        ComboBox<Integer> rating = new ComboBox<>();
+        rating.getItems().setAll(1, 2, 3, 4, 5);
+        rating.getSelectionModel().select(Integer.valueOf(review.getRating()));
+        Label starPreview = new Label(HomeController.starString(review.getRating()));
+        starPreview.getStyleClass().add("stars");
+        rating.valueProperty().addListener((observable, oldValue, newValue) ->
+                starPreview.setText(newValue == null
+                        ? "" : HomeController.starString(newValue)));
+        HBox ratingRow = new HBox(10, new Label("Rating"), rating, starPreview);
+        ratingRow.setAlignment(Pos.CENTER_LEFT);
+
+        TextArea comment = new TextArea(review.getCommentText());
+        comment.setWrapText(true);
+        comment.setPrefRowCount(4);
+        Label limit = new Label("Maximum " + Validation.MAX_COMMENT_LENGTH + " characters.");
+        limit.getStyleClass().add("hint");
+        Label error = new Label();
+        error.getStyleClass().add("error-text");
+        error.setWrapText(true);
+
+        Button save = new Button("Save changes");
+        save.getStyleClass().add("btn-primary");
+        Button cancel = new Button("Cancel");
+        cancel.getStyleClass().add("btn-ghost");
+        save.setOnAction(event -> saveInlineEdit(review, rating, comment, error));
+        cancel.setOnAction(event -> renderReviews());
+
+        Label countdown = new Label(formatEditTime(review.remainingSeconds()));
+        countdown.getStyleClass().add("countdown");
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox actions = new HBox(10, countdown, spacer, save, cancel);
+        actions.setAlignment(Pos.CENTER_LEFT);
+
+        card.getChildren().setAll(heading, ratingRow, comment, limit, error, actions);
+    }
+
+    private void saveInlineEdit(
+            Review displayedReview,
+            ComboBox<Integer> rating,
+            TextArea commentArea,
+            Label error) {
+        Review current = reviewDao.findById(displayedReview.getId());
+        if (current == null || !isOwnedByCurrentCustomer(current)) {
+            error.setText("This review is no longer available.");
+            return;
+        }
+        if (!current.isEditWindowOpen()) {
+            error.setText("The edit window has closed; changes cannot be saved.");
+            return;
+        }
+
+        Integer selectedRating = rating.getValue();
+        String comment = commentArea.getText();
+        if (selectedRating == null || !Validation.isValidRating(selectedRating)) {
+            error.setText("Rating must be between 1 and 5.");
+            return;
+        }
+        if (Validation.isBlank(comment)) {
+            error.setText("Comment cannot be empty.");
+            return;
+        }
+        if (Validation.exceedsCommentLimit(comment)) {
+            error.setText("Review must be at most "
+                    + Validation.MAX_COMMENT_LENGTH + " characters.");
+            return;
+        }
+        String bad = Validation.firstDisallowedChar(comment);
+        if (bad != null) {
+            error.setText("Comment contains a disallowed character: " + bad);
+            return;
+        }
+
+        String moderationReason = ContentModeration.flagReason(comment);
+        String status = current.getStatus();
+        if (Review.ACTIVE.equals(status) && moderationReason != null) {
+            status = Review.FLAGGED;
+        }
+        reviewDao.updateCustomerContent(
+                current.getId(), selectedRating, comment.trim(), status);
+        productDao.recalculateAverage(current.getProductId());
+        product = productDao.findById(current.getProductId());
+        renderHeader();
+        renderDistribution();
+        renderReviews();
+        Toast.show(root, moderationReason == null
+                ? "Review updated."
+                : "Review updated and sent for an administrator to check.", false);
+    }
+
+    private boolean isOwnedByCurrentCustomer(Review review) {
+        return Session.getCurrentUser() != null
+                && !Session.isAdmin()
+                && Session.getCurrentUser().getId() == review.getCustomerId();
+    }
+
+    private void deleteOwnReview(Review displayedReview) {
+        Review current = reviewDao.findById(displayedReview.getId());
+        if (current == null || !isOwnedByCurrentCustomer(current)) {
+            Toast.show(root, "This review is no longer available.", true);
+            renderReviews();
+            return;
+        }
+        if (!current.isEditWindowOpen()) {
+            Toast.show(root, "The delete window for this review has closed.", true);
+            renderReviews();
+            return;
+        }
+
+        Alert confirmation = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Delete your review permanently?",
+                ButtonType.YES,
+                ButtonType.NO);
+        confirmation.setTitle("Delete Review");
+        confirmation.setHeaderText("This action cannot be undone.");
+        Optional<ButtonType> choice = confirmation.showAndWait();
+        if (choice.isEmpty() || choice.get() != ButtonType.YES) {
+            return;
+        }
+
+        int productId = current.getProductId();
+        reviewDao.delete(current.getId());
+        ReviewImageService.deleteManagedImage(current.getImageUrl());
+        productDao.recalculateAverage(productId);
+        product = productDao.findById(productId);
+        renderHeader();
+        renderDistribution();
+        renderReviews();
+        Toast.show(root, "Your review was deleted and the rating was updated.", false);
+    }
+
+    private String formatEditTime(long remainingSeconds) {
+        long minutes = remainingSeconds / 60;
+        long seconds = remainingSeconds % 60;
+        return String.format("Edit window: %d:%02d left", minutes, seconds);
     }
 
     private void vote(Review r, String voteType) {

@@ -38,6 +38,19 @@ public final class DeliveryDAO {
                 + "AND orders.status NOT IN ('Delivered', 'Cancelled')");
     }
 
+    public static ObservableList<Delivery> getActiveDeliveriesForDriver(String driverName) {
+        ObservableList<Delivery> matches = FXCollections.observableArrayList();
+        if (driverName == null || driverName.isBlank()) {
+            return matches;
+        }
+        for (Delivery delivery : getActiveDeliveries()) {
+            if (driverName.trim().equalsIgnoreCase(delivery.getDriver())) {
+                matches.add(delivery);
+            }
+        }
+        return matches;
+    }
+
     public static boolean assignDriver(int orderId, String driverName) {
         if (driverName == null || driverName.isBlank()) {
             return false;

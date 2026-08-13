@@ -57,6 +57,35 @@ class CustomerDAOTest {
     }
 
     @Test
+    void registerCustomer_duplicateId_rollsBackPartialInsert() {
+        if (!customerDAO.emailExists(TEST_EMAIL)) {
+            assertTrue(customerDAO.registerCustomer(
+                    "JUnit Customer",
+                    TEST_EMAIL,
+                    "07123456789",
+                    "secret123",
+                    "10 Test Street",
+                    TEST_ID,
+                    TEST_IMAGE
+            ));
+        }
+
+        String rollbackEmail = "rollback.customer@example.com";
+        boolean registered = customerDAO.registerCustomer(
+                "Rollback Customer",
+                rollbackEmail,
+                "07111222333",
+                "secret123",
+                "30 Rollback Street",
+                TEST_ID,
+                TEST_IMAGE
+        );
+
+        assertFalse(registered);
+        assertFalse(customerDAO.emailExists(rollbackEmail));
+    }
+
+    @Test
     void authenticate_validCredentials_returnsCustomer() {
         Customer customer = customerDAO.authenticate(TEST_EMAIL, "secret123");
         assertNotNull(customer);

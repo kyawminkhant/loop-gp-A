@@ -1477,7 +1477,10 @@ public class ViewFoodController {
 
     private String resolveExistingImageUrl(ArrayList<String> candidates) {
         for (String candidate : candidates) {
-            String imageUrl = resolveImageUrl(candidate);
+            // These are optional icon alternatives.  Resolve them directly so an
+            // absent alternative does not produce a misleading console error
+            // before a later fallback icon is found.
+            String imageUrl = resolveSingleImageCandidate(candidate);
             if (imageUrl != null) {
                 return imageUrl;
             }

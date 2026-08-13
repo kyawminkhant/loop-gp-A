@@ -44,6 +44,7 @@
                         <Label text="Your review" styleClass="field-label"/>
                         <TextArea fx:id="commentArea" promptText="Tell others what you thought..."
                                   wrapText="true" prefRowCount="5"/>
+                        <Label text="Maximum 500 characters." styleClass="hint"/>
                     </VBox>
 
                     <VBox spacing="6">

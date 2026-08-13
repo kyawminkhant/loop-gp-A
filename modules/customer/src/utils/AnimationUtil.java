@@ -15,6 +15,10 @@ import javafx.util.Duration;
  */
 public final class AnimationUtil {
 
+    private static final Object BUTTON_EFFECTS_KEY = new Object();
+    private static final Object SCALE_ANIMATION_KEY = new Object();
+    private static final Object SHAKE_ANIMATION_KEY = new Object();
+
     private AnimationUtil() {}
 
     /** Fade + slight upward slide when a screen appears. */
@@ -70,12 +74,17 @@ public final class AnimationUtil {
     /** Gentle shake for validation / error feedback. */
     public static void shake(Node node) {
         if (node == null) return;
+        stopStoredAnimation(node, SHAKE_ANIMATION_KEY);
         TranslateTransition shake = new TranslateTransition(Duration.millis(55), node);
         shake.setFromX(0);
         shake.setByX(8);
         shake.setCycleCount(6);
         shake.setAutoReverse(true);
-        shake.setOnFinished(e -> node.setTranslateX(0));
+        node.getProperties().put(SHAKE_ANIMATION_KEY, shake);
+        shake.setOnFinished(e -> {
+            node.setTranslateX(0);
+            node.getProperties().remove(SHAKE_ANIMATION_KEY, shake);
+        });
         shake.play();
     }
 
@@ -129,6 +138,10 @@ public final class AnimationUtil {
 
         for (Node node : root.lookupAll(".button")) {
             if (!(node instanceof Button button)) continue;
+            if (Boolean.TRUE.equals(button.getProperties().get(BUTTON_EFFECTS_KEY))) {
+                continue;
+            }
+            button.getProperties().put(BUTTON_EFFECTS_KEY, Boolean.TRUE);
 
             button.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_ENTERED, e ->
                     scaleTo(button, 1.045));
@@ -164,11 +177,22 @@ public final class AnimationUtil {
     }
 
     private static void scaleTo(Node node, double value) {
+        stopStoredAnimation(node, SCALE_ANIMATION_KEY);
         ScaleTransition scale = new ScaleTransition(Duration.millis(120), node);
         scale.setToX(value);
         scale.setToY(value);
         scale.setInterpolator(Interpolator.EASE_BOTH);
+        node.getProperties().put(SCALE_ANIMATION_KEY, scale);
+        scale.setOnFinished(event ->
+                node.getProperties().remove(SCALE_ANIMATION_KEY, scale));
         scale.play();
+    }
+
+    private static void stopStoredAnimation(Node node, Object key) {
+        Object existing = node.getProperties().remove(key);
+        if (existing instanceof Animation animation) {
+            animation.stop();
+        }
     }
 
     /** Soft opacity pulse for live indicators (text badges). */

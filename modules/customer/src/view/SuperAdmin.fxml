@@ -95,13 +95,35 @@
                             <TableColumn fx:id="statusColumn" text="Status" prefWidth="90"/>
                         </columns>
                     </TableView>
+
+                    <Separator/>
+                    <Label text="3. Chef Directory" styleClass="card-title"/>
+                    <Label text="Add chefs here to maintain the team directory."
+                           styleClass="helper-text"/>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <TextField fx:id="chefNameField" promptText="Chef name"
+                                   styleClass="glass-input" prefWidth="260" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="chefSpecialityField" promptText="Speciality, e.g. Modern British"
+                                   styleClass="glass-input" prefWidth="310" HBox.hgrow="ALWAYS"/>
+                        <Button text="Add Chef" onAction="#handleAddChef" styleClass="primary-button"/>
+                    </HBox>
+                    <Label fx:id="chefMessageLabel" styleClass="message-label" wrapText="true"/>
+                    <TableView fx:id="chefTable" prefHeight="180">
+                        <placeholder>
+                            <Label text="No chefs are currently available." styleClass="helper-text"/>
+                        </placeholder>
+                        <columns>
+                            <TableColumn fx:id="chefNameColumn" text="Chef" prefWidth="210"/>
+                            <TableColumn fx:id="chefSpecialityColumn" text="Speciality" prefWidth="430"/>
+                        </columns>
+                    </TableView>
                 </VBox>
 
                 <!-- Detail box opens when a customer is selected -->
                 <VBox fx:id="detailPanel" styleClass="info-card" spacing="14"
                       managed="false" visible="false">
                     <HBox alignment="CENTER_LEFT" spacing="12">
-                        <Label text="3. Customer Detail Box" styleClass="card-title"/>
+                        <Label text="4. Customer Detail Box" styleClass="card-title"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Button text="Close" onAction="#handleCloseDetail" styleClass="back-button"/>
                     </HBox>

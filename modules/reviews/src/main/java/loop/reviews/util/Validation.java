@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
  */
 public final class Validation {
 
+    public static final int MAX_COMMENT_LENGTH = 500;
+
     // Matches any single disallowed character.
     private static final Pattern DISALLOWED =
         Pattern.compile("[@#/\\\\?\"'~`$]");
@@ -47,5 +49,9 @@ public final class Validation {
 
     public static boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
+    }
+
+    public static boolean exceedsCommentLimit(String comment) {
+        return comment != null && comment.length() > MAX_COMMENT_LENGTH;
     }
 }

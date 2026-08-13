@@ -15,7 +15,6 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.LoginController"
             styleClass="page-root">
-
     <center>
         <StackPane>
             <VBox alignment="CENTER" spacing="14" styleClass="glass-card"
@@ -50,14 +49,13 @@
 
                 <Button text="Log In" onAction="#handleLogin" defaultButton="true"
                         styleClass="primary-button" maxWidth="Infinity"/>
-
                 <Button text="Create an Account" onAction="#handleGoToRegister"
                         styleClass="secondary-button" maxWidth="Infinity"/>
-
+                <Button text="Driver Access →" onAction="#handleGoToDriverLogin"
+                        styleClass="admin-link-button" maxWidth="Infinity"/>
                 <Button text="Super Admin Access →" onAction="#handleGoToSuperAdmin"
                         styleClass="admin-link-button" maxWidth="Infinity"/>
             </VBox>
         </StackPane>
     </center>
-
 </BorderPane>

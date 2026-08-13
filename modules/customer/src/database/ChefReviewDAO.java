@@ -15,17 +15,58 @@ public class ChefReviewDAO {
         List<Chef> list = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection();
              Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery("SELECT * FROM customer_Chefs ORDER BY chefName ASC")) {
+             ResultSet rs = st.executeQuery("""
+                     SELECT chef.chefID, chef.chefName, chef.speciality,
+                            COALESCE(AVG(review.rating), 0) AS averageRating,
+                            COUNT(review.reviewID) AS reviewCount
+                     FROM customer_Chefs chef
+                     LEFT JOIN customer_ChefReviews review ON review.chefID = chef.chefID
+                     GROUP BY chef.chefID, chef.chefName, chef.speciality
+                     ORDER BY chef.chefName ASC
+                     """)) {
             while (rs.next()) {
                 Chef c = new Chef();
                 c.setChefID(rs.getString("chefID"));
                 c.setChefName(rs.getString("chefName"));
                 c.setSpeciality(rs.getString("speciality"));
-                c.setAverageRating(rs.getDouble("averageRating"));
+                c.setAverageRating(Math.round(rs.getDouble("averageRating") * 10.0) / 10.0);
+                c.setReviewCount(rs.getInt("reviewCount"));
                 list.add(c);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
+    }
+
+    /** Adds a chef to the shared Customer chef directory. */
+    public boolean addChef(String chefName, String speciality) {
+        String sql = """
+                INSERT INTO customer_Chefs (chefID, chefName, speciality, averageRating)
+                VALUES (?, ?, ?, 0)
+                """;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, UUID.randomUUID().toString());
+            ps.setString(2, chefName.trim());
+            ps.setString(3, speciality.trim());
+            return ps.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean chefNameExists(String chefName) {
+        String sql = "SELECT 1 FROM customer_Chefs WHERE LOWER(chefName) = LOWER(?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, chefName.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean hasReviewed(String customerID, String chefID) {
@@ -40,18 +81,27 @@ public class ChefReviewDAO {
 
     public boolean addReview(String customerID, String chefID, int rating, String reviewText) {
         String sql = "INSERT INTO customer_ChefReviews (reviewID, customerID, chefID, rating, reviewText, createdAt) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, UUID.randomUUID().toString());
-            ps.setString(2, customerID);
-            ps.setString(3, chefID);
-            ps.setInt(4, rating);
-            ps.setString(5, reviewText);
-            ps.setString(6, LocalDate.now().toString());
-            ps.executeUpdate();
-            updateAverageRating(conn, chefID);
-            return true;
-        } catch (SQLException e) { e.printStackTrace(); return false; }
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, UUID.randomUUID().toString());
+                ps.setString(2, customerID);
+                ps.setString(3, chefID);
+                ps.setInt(4, rating);
+                ps.setString(5, reviewText);
+                ps.setString(6, LocalDate.now().toString());
+                ps.executeUpdate();
+                updateAverageRating(conn, chefID);
+                conn.commit();
+                return true;
+            } catch (SQLException exception) {
+                conn.rollback();
+                throw exception;
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            return false;
+        }
     }
 
     private void updateAverageRating(Connection conn, String chefID) throws SQLException {
@@ -96,6 +146,41 @@ public class ChefReviewDAO {
                 }
             }
         } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
+    /** Returns the customer comments for one chef, newest first. */
+    public List<ChefReview> getReviewsByChef(String chefID) {
+        List<ChefReview> list = new ArrayList<>();
+        String sql = """
+                SELECT review.reviewID, review.customerID, review.chefID,
+                       review.rating, review.reviewText, review.createdAt,
+                       person.name AS reviewerName
+                FROM customer_ChefReviews review
+                JOIN customer_Customers customer ON customer.customerID = review.customerID
+                JOIN customer_People person ON person.personID = customer.personID
+                WHERE review.chefID = ?
+                ORDER BY review.createdAt DESC, review.reviewID DESC
+                """;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, chefID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ChefReview review = new ChefReview();
+                    review.setReviewID(rs.getString("reviewID"));
+                    review.setCustomerID(rs.getString("customerID"));
+                    review.setChefID(rs.getString("chefID"));
+                    review.setRating(rs.getInt("rating"));
+                    review.setReviewText(rs.getString("reviewText"));
+                    review.setCreatedAt(rs.getString("createdAt"));
+                    review.setReviewerName(rs.getString("reviewerName"));
+                    list.add(review);
+                }
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
         return list;
     }
 }

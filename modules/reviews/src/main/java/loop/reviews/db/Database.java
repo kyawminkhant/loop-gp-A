@@ -562,6 +562,40 @@ public final class Database {
         }
     }
 
+    /**
+     * Keeps several purchased-but-unreviewed foods available for the review
+     * validation video. Existing reviews are deliberately left untouched, so
+     * each successful practice run can move to the next eligible food.
+     */
+    public void ensureReviewSubmissionDemoPurchases(int customerId) {
+        String productsSql =
+                "SELECT productID FROM product_Products " +
+                "WHERE status=1 AND productName IN " +
+                "('Vegetable Gyoza','Beef Bulgogi','Thai Green Curry'," +
+                "'Falafel Mezze Bowl','Mediterranean Salmon') " +
+                "ORDER BY productID";
+        String orderSql =
+                "INSERT INTO reviews_orders(customer_id,product_id,order_date) " +
+                "SELECT ?,?,'2026-08-01' WHERE NOT EXISTS " +
+                "(SELECT 1 FROM reviews_orders WHERE customer_id=? AND product_id=?)";
+
+        try (PreparedStatement products = connection.prepareStatement(productsSql);
+             ResultSet productRows = products.executeQuery();
+             PreparedStatement order = connection.prepareStatement(orderSql)) {
+            while (productRows.next()) {
+                int productId = productRows.getInt("productID");
+                order.setInt(1, customerId);
+                order.setInt(2, productId);
+                order.setInt(3, customerId);
+                order.setInt(4, productId);
+                order.addBatch();
+            }
+            order.executeBatch();
+        } catch (SQLException exception) {
+            throw new RuntimeException("Could not prepare review demonstration purchases", exception);
+        }
+    }
+
     private int[] ensureSampleProducts() throws SQLException {
         int chefId = 0;
         try (Statement statement = connection.createStatement();

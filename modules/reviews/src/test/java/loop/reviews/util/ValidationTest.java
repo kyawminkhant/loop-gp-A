@@ -39,4 +39,10 @@ class ValidationTest {
         assertFalse(Validation.isValidRating(0));
         assertFalse(Validation.isValidRating(6));
     }
+
+    @Test
+    void reviewCommentCannotExceedFiveHundredCharacters() {
+        assertFalse(Validation.exceedsCommentLimit("a".repeat(500)));
+        assertTrue(Validation.exceedsCommentLimit("a".repeat(501)));
+    }
 }

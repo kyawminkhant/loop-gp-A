@@ -87,6 +87,7 @@ public class LoginController {
         SessionManager.setCurrentCustomer(customer);
 
         if (SessionManager.openPersonalizedProducts()) {
+            AnimationUtil.disableBackgroundAmbient();
             return;
         }
 
@@ -104,5 +105,11 @@ public class LoginController {
     private void handleGoToSuperAdmin(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         NavigationUtil.switchScene(stage, "/view/SuperAdmin.fxml", "/styles/app.css");
+    }
+
+    @FXML
+    private void handleGoToDriverLogin(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        NavigationUtil.switchScene(stage, "/view/DriverLogin.fxml", "/styles/app.css");
     }
 }

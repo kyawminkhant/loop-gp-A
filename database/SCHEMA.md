@@ -1,6 +1,6 @@
 # Simplified shared database schema
 
-All components use `database/loop.db`. The database contains 30 real tables,
+All components use `database/loop.db`. The database contains 32 real tables,
 down from 53, plus four compatibility views.
 
 ## Shared Product catalogue
@@ -45,6 +45,8 @@ Customer order history is read from the shared `orders_Orders` table.
 ## Inventory
 
 - `inventory_Stock`
+- `inventory_Warehouses`
+- `inventory_WarehouseDeliveries`
 - `inventory_stock_analytics`
 - `inventory_stock_moreStorageLocations`
 - `inventory_stock_TransactionLog`
@@ -56,6 +58,14 @@ analytics, warehouse totals, reports, additions, and transfers. The older
 analytics/location tables remain as imported historical reference data; they
 are not used as competing stock totals. Transfers are atomic and append an
 entry to `inventory_stock_TransactionLog`.
+
+`inventory_Warehouses` maps customer address keywords to ten service areas.
+Current-year `inventory_Stock` has one ingredient row per service-area
+warehouse, while older years remain unchanged. `inventory_WarehouseDeliveries`
+stores inbound shipments as Scheduled, In Transit, or Delivered. Completing a
+delivery increases only its destination stock and appends a transaction-log
+entry. Customer profiles display their assigned warehouse, and the personalised
+Product catalogue uses that warehouse when checking required ingredients.
 
 ## Delivery
 
@@ -94,5 +104,7 @@ or restore reviews without hiding them automatically.
 
 ## Migration
 
-The one-time migration used to preserve and consolidate the original data is
-stored in `database/migrations/001_simplify_shared_schema.sql`.
+The data-preserving migrations are stored in `database/migrations`.
+`001_simplify_shared_schema.sql` consolidates the original component data and
+`002_location_inventory_deliveries.sql` adds location stock and inbound
+deliveries.

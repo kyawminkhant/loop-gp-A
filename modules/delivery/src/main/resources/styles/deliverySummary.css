@@ -89,3 +89,60 @@
     -fx-pref-height: 5;
     -fx-pref-width: 60;
 }
+
+/* LOOP warm restaurant theme */
+.deliverysummary {
+    -fx-background-color: linear-gradient(to bottom, #fbf3e2 0%, #f2e6c9 100%);
+    -fx-font-family: "Times New Roman", "Georgia", serif;
+}
+
+.title {
+    -fx-background-color: #edbd68;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+    -fx-text-fill: #68151f;
+}
+
+.back-button {
+    -fx-background-color: #fff8ea;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-text-fill: #68151f;
+}
+
+.back-button:hover {
+    -fx-background-color: #ffe5ae;
+}
+
+.summary-container {
+    -fx-background-color: rgba(255, 248, 234, 0.94);
+    -fx-border-color: #8a2b2b;
+    -fx-border-width: 2;
+}
+
+.summary-card,
+.summarybox {
+    -fx-background-color: #fff0d2;
+    -fx-background-radius: 12;
+    -fx-border-color: #d2a05b;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 16;
+    -fx-spacing: 6;
+    -fx-pref-width: 220;
+}
+
+.number {
+    -fx-text-fill: #68151f;
+}
+
+.label {
+    -fx-text-fill: #5b382d;
+}
+
+.bar-green { -fx-background-color: #4e9a62; }
+.bar-yellow { -fx-background-color: #e3a63f; }
+.bar-red { -fx-background-color: #b24c3c; }
+.bar-blue { -fx-background-color: #8a2b2b; }

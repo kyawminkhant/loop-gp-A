@@ -32,6 +32,8 @@ public class FoodBarData {
     private final String goalIconLocation;
     private final String cuisineIconLocation;
     private final String actionImageLocation;
+    private final boolean available;
+    private final String availabilityMessage;
 
     public FoodBarData(
             int productId,
@@ -61,6 +63,47 @@ public class FoodBarData {
             String goalIconLocation,
             String cuisineIconLocation,
             String actionImageLocation) {
+
+        this(productId, productName, shortDescription, extendedDescription,
+                price, spiceLevel, averageRating, ratingCount, dietary,
+                healthGoal, cuisine, country, createdDate, totalCalories,
+                totalProtein, totalCarbohydrates, totalSugars, totalFat,
+                totalSaturatedFat, totalFiber, totalSodium,
+                productImageLocation, productImageLocations,
+                dietaryIconLocation, goalIconLocation, cuisineIconLocation,
+                actionImageLocation, true, "");
+    }
+
+    public FoodBarData(
+            int productId,
+            String productName,
+            String shortDescription,
+            String extendedDescription,
+            double price,
+            int spiceLevel,
+            double averageRating,
+            int ratingCount,
+            String dietary,
+            String healthGoal,
+            String cuisine,
+            String country,
+            String createdDate,
+            double totalCalories,
+            double totalProtein,
+            double totalCarbohydrates,
+            double totalSugars,
+            double totalFat,
+            double totalSaturatedFat,
+            double totalFiber,
+            double totalSodium,
+            String productImageLocation,
+            List<String> productImageLocations,
+            String dietaryIconLocation,
+            String goalIconLocation,
+            String cuisineIconLocation,
+            String actionImageLocation,
+            boolean available,
+            String availabilityMessage) {
 
         this.productId = productId;
         this.productName = productName;
@@ -97,6 +140,9 @@ public class FoodBarData {
         this.goalIconLocation = goalIconLocation;
         this.cuisineIconLocation = cuisineIconLocation;
         this.actionImageLocation = actionImageLocation;
+        this.available = available;
+        this.availabilityMessage = availabilityMessage == null
+                ? "" : availabilityMessage;
     }
 
     public int getProductId() { return productId; }
@@ -132,4 +178,6 @@ public class FoodBarData {
     public String getGoalIconLocation() { return goalIconLocation; }
     public String getCuisineIconLocation() { return cuisineIconLocation; }
     public String getActionImageLocation() { return actionImageLocation; }
+    public boolean isAvailable() { return available; }
+    public String getAvailabilityMessage() { return availabilityMessage; }
 }

@@ -66,7 +66,8 @@ public class ReviewDao {
      * FR6: reviews for a product with sort + optional filters.
      * @param sort one of "date", "rating_desc", "rating_asc", "helpful".
      * @param minStars 0 to ignore, else 1..5 exact star filter.
-     * @param keyword null/blank to ignore, else case-insensitive substring on comment.
+     * @param keyword null/blank to ignore, else case-insensitive substring on
+     *                comment, customer name, or customer email.
      * Only Active reviews are shown to normal users.
      */
     public List<Review> findByProduct(int productId, String sort, int minStars, String keyword) {
@@ -78,8 +79,13 @@ public class ReviewDao {
             params.add(minStars);
         }
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql.append(" AND LOWER(r.comment_text) LIKE ?");
-            params.add("%" + keyword.trim().toLowerCase() + "%");
+            String match = "%" + keyword.trim().toLowerCase() + "%";
+            sql.append(" AND (LOWER(r.comment_text) LIKE ?")
+               .append(" OR LOWER(u.name) LIKE ?")
+               .append(" OR LOWER(u.email) LIKE ?)");
+            params.add(match);
+            params.add(match);
+            params.add(match);
         }
         switch (sort == null ? "helpful" : sort) {
             case "date":
@@ -232,6 +238,13 @@ public class ReviewDao {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("delete review flags failed", e);
+        }
+        try (PreparedStatement ps = conn().prepareStatement(
+                "DELETE FROM reviews_admin_moderation_log WHERE review_id=?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("delete review moderation history failed", e);
         }
         try (PreparedStatement ps = conn().prepareStatement("DELETE FROM reviews_reviews WHERE id=?")) {
             ps.setInt(1, id);

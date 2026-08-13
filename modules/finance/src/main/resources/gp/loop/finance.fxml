@@ -34,6 +34,7 @@
                         <SeparatorMenuItem />
                         <MenuItem onAction="#exportCsvReport" text="Export CSV (30 days)" />
                         <MenuItem onAction="#showExecutiveSummary" text="Executive summary" />
+                        <MenuItem onAction="#openDietaryBreakdown" text="Revenue by dietary type" />
                      </items>
                   </MenuButton>
                </children>

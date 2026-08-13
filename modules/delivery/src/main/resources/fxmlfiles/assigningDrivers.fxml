@@ -11,7 +11,7 @@
             stylesheets="@../styles/assigningDrivers.css"
             styleClass="assigningdrivers">
     <center>
-        <HBox>
+        <HBox  alignment="CENTER" styleClass="page-container">
             <ImageView fx:id="logo" fitWidth="150" preserveRatio="true">
                 <image><Image url="@../images/logo.png"/></image>
             </ImageView>

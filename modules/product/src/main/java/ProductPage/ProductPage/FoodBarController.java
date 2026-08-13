@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -33,6 +34,7 @@ public class FoodBarController {
     @FXML private HBox ratingStarsBox;
 
     @FXML private Label foodNameLabel;
+    @FXML private Label availabilityLabel;
     @FXML private Label priceLabel;
     @FXML private Label calorieLabel;
     @FXML private Label reviewCountLabel;
@@ -57,6 +59,16 @@ public class FoodBarController {
     public void setData(FoodBarData data) {
         this.data = data;
         foodNameLabel.setText(data.getProductName());
+        boolean unavailable = !data.isAvailable();
+        availabilityLabel.setText(data.getAvailabilityMessage());
+        availabilityLabel.setVisible(unavailable);
+        availabilityLabel.setManaged(unavailable);
+        availabilityLabel.setTooltip(unavailable
+                ? new Tooltip(data.getAvailabilityMessage()) : null);
+        foodCardButton.getStyleClass().remove("food-card-unavailable");
+        if (unavailable) {
+            foodCardButton.getStyleClass().add("food-card-unavailable");
+        }
         priceLabel.setText(String.format("\u00A3%,.2f", data.getPrice()));
         if (calorieLabel != null) {
             calorieLabel.setText(
@@ -90,7 +102,7 @@ public class FoodBarController {
 
     @FXML
     private void handleFoodClick() {
-        if (selectionHandler != null && data != null) {
+        if (selectionHandler != null && data != null && data.isAvailable()) {
             selectionHandler.accept(data);
         }
     }

@@ -11,10 +11,14 @@
             stylesheets="@../styles/acceptdelivery.css"
             styleClass="root">
     <center>
-        <VBox spacing="12">
-            <ImageView fx:id="logo" fitWidth="150" preserveRatio="true">
-                <image><Image url="@../images/logo.png"/></image>
-            </ImageView>
+        <VBox VBox.vgrow="ALWAYS">
+             <HBox spacing="12" alignment="CENTER_LEFT">
+                <Button text="← Back"
+                        onAction="#goBack"
+                        styleClass="back-button"/>
+                <ImageView fx:id="logo"/>
+            </HBox>       
+           
             <VBox styleClass="main-container" spacing="8" alignment="TOP_CENTER">
                 <Label text="Accept Delivery" styleClass="header-label"/>
                 <Label text="Available jobs come directly from Orders."/>

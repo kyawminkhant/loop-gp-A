@@ -12,6 +12,10 @@
     <center>
         <VBox alignment="CENTER" spacing="20">
             <Label text="Successfully Delivered" styleClass="success-pill"/>
+            <HBox alignment="CENTER" spacing="12">
+                <Button text="Back to Routes" onAction="#backToRoutes" styleClass="primary-button"/>
+                <Button text="Sign Out" onAction="#signOut" styleClass="secondary-button"/>
+            </HBox>
         </VBox>
     </center>
 </BorderPane>

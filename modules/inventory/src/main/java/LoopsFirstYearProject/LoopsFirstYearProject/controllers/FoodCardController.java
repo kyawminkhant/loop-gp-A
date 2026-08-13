@@ -1,5 +1,6 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.controllers;
 
+import LoopsFirstYearProject.LoopsFirstYearProject.App;
 import dao.FoodItemDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -182,6 +183,7 @@ public class FoodCardController implements Initializable {
                         FXMLLoader popupLoader = new FXMLLoader(
                                 getClass().getResource("/fxmlFiles/foodItemDetailPopup.fxml"));
                         Parent root = popupLoader.load();
+                        App.applyTheme(root);
 
                         // Access the Detail Controller to populate data
                         FoodItemDetailPopupController popupController = popupLoader.getController();
@@ -256,6 +258,8 @@ public class FoodCardController implements Initializable {
 
             Parent root =
                     loader.load();
+
+            App.applyTheme(root);
 
 
             Stage stage =

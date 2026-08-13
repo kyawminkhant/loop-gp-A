@@ -20,6 +20,7 @@ import gp.loop.db.Database;
 import gp.loop.model.OrderRow;
 import gp.loop.service.FinanceReporting;
 import gp.loop.service.FinanceService;
+import gp.loop.service.LocationFinanceService;
 import gp.loop.service.ReportingService;
 
 /**
@@ -106,5 +107,40 @@ class DatabaseReportingTest {
         assertTrue(lines.size() >= 5, "expected comment, header and 3 data rows");
         assertTrue(lines.get(1).startsWith("OrderID,OrderDate,OrderTotal"));
         Files.deleteIfExists(out);
+    }
+
+    @Test
+    void locationReportCombinesFinanceAndInventoryData() throws Exception {
+        try (var connection = Database.getConnection();
+             var statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS inventory_Warehouses ("
+                    + "warehouseID TEXT PRIMARY KEY, name TEXT NOT NULL, "
+                    + "serviceArea TEXT NOT NULL, addressAliases TEXT NOT NULL)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS inventory_Stock ("
+                    + "stockYear INTEGER NOT NULL, stockCode TEXT NOT NULL, "
+                    + "ingredientID INTEGER NOT NULL, stockQuantity INTEGER NOT NULL, "
+                    + "warehouseID TEXT, capacity INTEGER NOT NULL, "
+                    + "PRIMARY KEY(stockYear, stockCode))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS inventory_WarehouseDeliveries ("
+                    + "deliveryID INTEGER PRIMARY KEY, warehouseID TEXT NOT NULL, "
+                    + "ingredientID INTEGER NOT NULL, quantity INTEGER NOT NULL, "
+                    + "status TEXT NOT NULL, expectedAt TEXT NOT NULL, "
+                    + "createdAt TEXT, updatedAt TEXT)");
+            statement.executeUpdate("INSERT OR IGNORE INTO inventory_Warehouses VALUES "
+                    + "('WH-01','Central Kitchen Warehouse','Central London','london')");
+            statement.executeUpdate("INSERT OR IGNORE INTO inventory_Stock VALUES "
+                    + "(2026,'LOC-WH01-001',1,125,'WH-01',500)");
+            statement.executeUpdate("INSERT OR IGNORE INTO inventory_WarehouseDeliveries VALUES "
+                    + "(1,'WH-01',1,80,'Scheduled','2026-08-12 10:00:00',"
+                    + "'2026-08-11 10:00:00','2026-08-11 10:00:00')");
+        }
+
+        List<gp.loop.model.LocationFinanceRow> rows =
+                new LocationFinanceService().listLocationPerformance();
+        assertEquals(1, rows.size());
+        assertEquals(3, rows.get(0).getOrderCount());
+        assertEquals(104.97, rows.get(0).getRevenue(), 1e-6);
+        assertEquals(125, rows.get(0).getStockUnits());
+        assertEquals(1, rows.get(0).getActiveDeliveries());
     }
 }

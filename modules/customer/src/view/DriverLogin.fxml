@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.DriverLoginController"
+            styleClass="page-root">
+    <center>
+        <StackPane>
+            <VBox alignment="CENTER" spacing="14" styleClass="glass-card"
+                  prefWidth="560" maxWidth="560">
+                <padding>
+                    <Insets top="48" right="72" bottom="48" left="72"/>
+                </padding>
+
+                <ImageView fitWidth="190" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/nobglooplogo.png"/>
+                    </image>
+                </ImageView>
+
+                <Label text="Driver Portal" styleClass="brand-title-small"/>
+                <Label text="Sign in to accept deliveries and manage your active routes"
+                       styleClass="helper-text" wrapText="true"/>
+
+                <VBox spacing="6" maxWidth="Infinity">
+                    <Label text="Driver ID" styleClass="field-label"/>
+                    <TextField fx:id="driverIdField" promptText="Enter your driver ID"
+                               styleClass="glass-input" maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox spacing="6" maxWidth="Infinity">
+                    <Label text="Password" styleClass="field-label"/>
+                    <PasswordField fx:id="passwordField" promptText="Enter your password"
+                                   styleClass="glass-input" maxWidth="Infinity"/>
+                </VBox>
+
+                <Label fx:id="messageLabel" styleClass="message-label" wrapText="true"/>
+
+                <Button text="Driver Log In" onAction="#handleLogin" defaultButton="true"
+                        styleClass="primary-button" maxWidth="Infinity"/>
+                <Button text="Back to Customer Login" onAction="#handleBackToCustomerLogin"
+                        styleClass="secondary-button" maxWidth="Infinity"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

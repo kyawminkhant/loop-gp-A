@@ -6,9 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import services.InventoryDeliveryService;
 import java.io.IOException;
+import java.net.URL;
 
 public class App extends Application {
+
+    private static final double MINIMUM_WIDTH = 1000;
+    private static final double MINIMUM_HEIGHT = 650;
+    private static final double DEFAULT_WIDTH = 1200;
+    private static final double DEFAULT_HEIGHT = 800;
 
     private static Scene scene;
     private static Stage primaryStage; 
@@ -18,6 +25,7 @@ public class App extends Application {
         primaryStage = stage;
         
         try {
+            InventoryDeliveryService.startAutomaticUpdates();
             LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.verifySharedSchema();
             System.out.println("Inventory connected to shared database: "
                     + LoopsFirstYearProject.LoopsFirstYearProject.db.DBConnection.getDatabasePath());
@@ -29,7 +37,7 @@ public class App extends Application {
         Parent root = loadFXML(startView);
         scene = stage.getScene();
         if (scene == null) {
-            scene = new Scene(root, 840, 700);
+            scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         } else {
             scene.setRoot(root);
         }
@@ -37,6 +45,17 @@ public class App extends Application {
          
         stage.setScene(scene);
         stage.setTitle("Inventory Management System");
+        stage.setResizable(true);
+        stage.setMinWidth(MINIMUM_WIDTH);
+        stage.setMinHeight(MINIMUM_HEIGHT);
+        if (!stage.isMaximized()) {
+            if (stage.getWidth() < MINIMUM_WIDTH) {
+                stage.setWidth(DEFAULT_WIDTH);
+            }
+            if (stage.getHeight() < MINIMUM_HEIGHT) {
+                stage.setHeight(DEFAULT_HEIGHT);
+            }
+        }
          
         try {
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
@@ -64,7 +83,18 @@ public class App extends Application {
     @SuppressWarnings("exports")
 	public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/fxmlFiles/" + fxml + ".fxml"));
-        return fxmlLoader.load();
+        Parent root = fxmlLoader.load();
+        applyTheme(root);
+        return root;
+    }
+
+    /** Applies the shared hub palette to main pages and modal Inventory windows. */
+    public static void applyTheme(Parent root) {
+        URL sharedTheme = App.class.getResource("/styles/hub-theme.css");
+        if (root != null && sharedTheme != null
+                && !root.getStylesheets().contains(sharedTheme.toExternalForm())) {
+            root.getStylesheets().add(sharedTheme.toExternalForm());
+        }
     }
 
     public static void main(String[] args) {

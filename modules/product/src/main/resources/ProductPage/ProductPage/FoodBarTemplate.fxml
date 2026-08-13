@@ -48,6 +48,14 @@
                        wrapText="false"
                        styleClass="food-name" />
 
+                <Label fx:id="availabilityLabel"
+                       text="Unavailable from WH-05 - Croydon"
+                       visible="false"
+                       managed="false"
+                       maxWidth="540"
+                       textOverrun="ELLIPSIS"
+                       styleClass="availability-label" />
+
                 <HBox alignment="CENTER_LEFT" spacing="11">
                     <HBox fx:id="ratingStarsBox"
                           alignment="CENTER_LEFT"

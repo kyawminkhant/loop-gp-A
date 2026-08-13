@@ -8,6 +8,7 @@ public class ChefReview {
     private String reviewText;
     private String createdAt;
     private String chefName;
+    private String reviewerName;
 
     public ChefReview() {}
 
@@ -25,4 +26,6 @@ public class ChefReview {
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     public String getChefName() { return chefName; }
     public void setChefName(String chefName) { this.chefName = chefName; }
+    public String getReviewerName() { return reviewerName; }
+    public void setReviewerName(String reviewerName) { this.reviewerName = reviewerName; }
 }

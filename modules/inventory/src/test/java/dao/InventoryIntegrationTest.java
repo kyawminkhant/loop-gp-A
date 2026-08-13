@@ -100,7 +100,7 @@ class InventoryIntegrationTest {
         assertEquals(beforeTotal, ingredientTotal(fixture.ingredientId));
         assertEquals(beforeSource - 1,
                 warehouseTotal(fixture.ingredientId, fixture.sourceWarehouse));
-        assertEquals(1,
+        assertEquals(fixture.destinationQuantity + 1,
                 warehouseTotal(fixture.ingredientId, fixture.destinationWarehouse));
         assertEquals(beforeLogs + 1, logCount());
     }
@@ -122,38 +122,41 @@ class InventoryIntegrationTest {
             while (result.next()) {
                 int ingredientId = result.getInt("ingredientID");
                 String source = result.getString("sourceWarehouse");
-                String destination = findUnusedWarehouse(connection, ingredientId, source);
+                DestinationFixture destination = findDestinationWarehouse(
+                        connection, ingredientId, source);
                 if (destination != null) {
                     return new TransferFixture(
                             ingredientId,
                             result.getString("ingredientName"),
                             source,
-                            destination,
-                            result.getInt("stockQuantity"));
+                            destination.warehouse,
+                            result.getInt("stockQuantity"),
+                            destination.quantity);
                 }
             }
         }
         throw new IllegalStateException("No transferable stock fixture found.");
     }
 
-    private static String findUnusedWarehouse(
+    private static DestinationFixture findDestinationWarehouse(
             Connection connection, int ingredientId, String source) throws Exception {
         String sql = """
-                SELECT DISTINCT UPPER(TRIM(candidate.warehouseID)) AS warehouseID
+                SELECT UPPER(TRIM(candidate.warehouseID)) AS warehouseID,
+                       candidate.stockQuantity
                 FROM inventory_Stock candidate
                 WHERE candidate.stockYear=2026
+                  AND candidate.ingredientID=?
                   AND UPPER(TRIM(candidate.warehouseID))<>?
-                  AND NOT EXISTS (
-                    SELECT 1 FROM inventory_Stock existing
-                    WHERE existing.stockYear=2026 AND existing.ingredientID=?
-                      AND UPPER(TRIM(existing.warehouseID))=UPPER(TRIM(candidate.warehouseID)))
+                  AND candidate.stockQuantity < candidate.capacity
                 ORDER BY warehouseID LIMIT 1
                 """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, source);
-            statement.setInt(2, ingredientId);
+            statement.setInt(1, ingredientId);
+            statement.setString(2, source);
             try (ResultSet result = statement.executeQuery()) {
-                return result.next() ? result.getString(1) : null;
+                return result.next()
+                        ? new DestinationFixture(result.getString(1), result.getInt(2))
+                        : null;
             }
         }
     }
@@ -221,18 +224,31 @@ class InventoryIntegrationTest {
         private final String sourceWarehouse;
         private final String destinationWarehouse;
         private final int sourceQuantity;
+        private final int destinationQuantity;
 
         private TransferFixture(
                 int ingredientId,
                 String product,
                 String sourceWarehouse,
                 String destinationWarehouse,
-                int sourceQuantity) {
+                int sourceQuantity,
+                int destinationQuantity) {
             this.ingredientId = ingredientId;
             this.product = product;
             this.sourceWarehouse = sourceWarehouse;
             this.destinationWarehouse = destinationWarehouse;
             this.sourceQuantity = sourceQuantity;
+            this.destinationQuantity = destinationQuantity;
+        }
+    }
+
+    private static final class DestinationFixture {
+        private final String warehouse;
+        private final int quantity;
+
+        private DestinationFixture(String warehouse, int quantity) {
+            this.warehouse = warehouse;
+            this.quantity = quantity;
         }
     }
 }

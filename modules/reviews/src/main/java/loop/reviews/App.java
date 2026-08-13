@@ -62,6 +62,9 @@ public class App extends Application {
                 selected = users.findOrCreateCustomer(customerName, customerEmail);
                 if (!"guest@loop.local".equalsIgnoreCase(customerEmail)) {
                     Database.get().ensureCustomerReviewActivity(selected.getId());
+                    if ("review.demo@loop.demo".equalsIgnoreCase(customerEmail)) {
+                        Database.get().ensureReviewSubmissionDemoPurchases(selected.getId());
+                    }
                 }
             }
             Session.setCurrentUser(selected);

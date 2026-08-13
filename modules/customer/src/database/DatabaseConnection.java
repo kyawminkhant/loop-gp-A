@@ -45,7 +45,9 @@ public class DatabaseConnection {
         new DemoCustomer("006", "Aisha Rahman", "aisha@loop.demo", "demo123",
                 "07123456794", "17 Park View, Croydon"),
         new DemoCustomer("007", "Oliver Green", "oliver@loop.demo", "demo123",
-                "07123456795", "6 Station Road, Wimbledon")
+                "07123456795", "6 Station Road, Wimbledon"),
+        new DemoCustomer("008", "Alex Morgan", "review.demo@loop.demo", "demo123",
+                "07123456796", "18 Demo Lane, London")
     };
     private static final DemoMenuItem[] DEMO_MENU_ITEMS = {
         new DemoMenuItem(1, "Kimchi Fried Rice", 9.99),
@@ -361,7 +363,8 @@ public class DatabaseConnection {
 
             seedOrder(conn, customer, deliveredDate, "Delivered",
                     first, 1, second, 1);
-            seedOrder(conn, customer, activeDate, activeStatuses[index],
+            seedOrder(conn, customer, activeDate,
+                    activeStatuses[index % activeStatuses.length],
                     second, 2, first, 1);
         }
     }

@@ -9,6 +9,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -67,11 +68,17 @@ final class HubNavigation {
             return;
         }
 
-        ImageView logo = findLoopLogo(root);
+        /*
+         * Orders and Delivery draw their logo as a text Label rather than an ImageView, so the
+         * search below now matches those too. Previously they were missed and an image logo was
+         * injected on top of the existing text, which looked broken.
+         */
+        Node logo = findLoopLogo(root);
         if (logo == null && root instanceof Pane) {
-            logo = createHubLogo();
-            ((Pane) root).getChildren().add(logo);
-            logo.toFront();
+            ImageView injected = createHubLogo();
+            ((Pane) root).getChildren().add(injected);
+            injected.toFront();
+            logo = injected;
         }
 
         if (logo != null) {
@@ -79,20 +86,42 @@ final class HubNavigation {
         }
     }
 
-    private ImageView findLoopLogo(Node node) {
-        if (node instanceof ImageView && isLoopLogo((ImageView) node)) {
-            return (ImageView) node;
+    private Node findLoopLogo(Node node) {
+        if (node instanceof ImageView && isLoopLogo((ImageView) node)
+                && hasUsableImage((ImageView) node)) {
+            return node;
+        }
+        if (node instanceof Label && isLoopTextLogo((Label) node)) {
+            return node;
         }
 
         if (node instanceof Parent) {
             for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
-                ImageView match = findLoopLogo(child);
+                Node match = findLoopLogo(child);
                 if (match != null) {
                     return match;
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * Four Delivery screens declare an ImageView for images/logo.png, but that file is not in the
+     * module, so the logo was invisible and unclickable while still blocking the fallback logo.
+     * Treat a logo whose image did not load as absent so a working one is added instead.
+     */
+    private boolean hasUsableImage(ImageView imageView) {
+        Image image = imageView.getImage();
+        return image != null && !image.isError() && image.getWidth() > 0;
+    }
+
+    /** Orders and Delivery use a styled "Loop" text label as their logo. */
+    private boolean isLoopTextLogo(Label label) {
+        boolean logoStyle = label.getStyleClass().stream()
+                .map(this::lower)
+                .anyMatch(style -> style.contains("logo"));
+        return logoStyle || "loop".equals(lower(label.getText()).trim());
     }
 
     private boolean isLoopLogo(ImageView imageView) {
@@ -128,7 +157,7 @@ final class HubNavigation {
         return logo;
     }
 
-    private void wireLogo(ImageView logo) {
+    private void wireLogo(Node logo) {
         if (Boolean.TRUE.equals(logo.getProperties().get(NAVIGATION_MARKER))) {
             return;
         }

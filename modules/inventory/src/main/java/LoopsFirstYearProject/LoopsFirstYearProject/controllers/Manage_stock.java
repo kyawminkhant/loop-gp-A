@@ -166,6 +166,8 @@ public class Manage_stock {
 
             Parent root = loader.load();
 
+            App.applyTheme(root);
+
 
 
             ManageStockPopup popup =

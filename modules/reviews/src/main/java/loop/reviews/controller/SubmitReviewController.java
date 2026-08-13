@@ -143,6 +143,11 @@ public class SubmitReviewController {
             errorLabel.setText("Please write a comment before submitting.");
             return;
         }
+        if (Validation.exceedsCommentLimit(comment)) {
+            errorLabel.setText("Review must be at most "
+                    + Validation.MAX_COMMENT_LENGTH + " characters.");
+            return;
+        }
         String bad = Validation.firstDisallowedChar(comment);
         if (bad != null) {
             errorLabel.setText("Comment contains a disallowed character: " + bad);
