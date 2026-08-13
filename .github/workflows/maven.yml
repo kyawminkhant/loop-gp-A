@@ -1,0 +1,2 @@
+# Reverted: removed Java CI with Maven workflow
+# The original commit 9c25c68 added this file. It's been reverted by replacing the file contents with this note.
