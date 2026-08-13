@@ -56,9 +56,9 @@ public class App extends Application {
                         .orElseThrow(() -> new IllegalStateException("No seeded review administrator found"));
             } else {
                 String customerName = System.getProperty(
-                        "loop.review.customer.name", "Guest");
+                        "loop.review.customer.name", "Tasmia Biswas");
                 String customerEmail = System.getProperty(
-                        "loop.review.customer.email", "guest@loop.local");
+                        "loop.review.customer.email", "tasmia@loop.com");
                 selected = users.findOrCreateCustomer(customerName, customerEmail);
                 if (!"guest@loop.local".equalsIgnoreCase(customerEmail)) {
                     Database.get().ensureCustomerReviewActivity(selected.getId());

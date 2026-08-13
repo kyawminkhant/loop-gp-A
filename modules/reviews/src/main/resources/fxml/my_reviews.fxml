@@ -25,7 +25,7 @@
             <VBox spacing="12" styleClass="content">
                 <padding><Insets top="20" right="26" bottom="20" left="26"/></padding>
                 <Label text="Edit or delete your reviews within the time window" styleClass="page-title"/>
-                <Label text="Reviews can be changed for 5 minutes after posting. After that they lock permanently."
+                <Label text="Reviews can be changed for 24 hours after posting. After that they lock permanently."
                        styleClass="page-subtitle"/>
                 <ScrollPane fitToWidth="true" styleClass="scroll" VBox.vgrow="ALWAYS">
                     <VBox fx:id="reviewList" spacing="12"/>
