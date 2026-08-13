@@ -203,11 +203,6 @@ public final class DeliveryDAO {
                     + "WHERE EXISTS (SELECT 1 FROM orders_Orders orders "
                     + "WHERE orders.orderID = delivery_Deliveries.orderID "
                     + "AND orders.status <> delivery_Deliveries.status)");
-            statement.executeUpdate("UPDATE delivery_Deliveries SET driver = CASE abs(orderID) % 5 "
-                    + "WHEN 0 THEN 'Iman' WHEN 1 THEN 'Efrin' WHEN 2 THEN 'Prakash' "
-                    + "WHEN 3 THEN 'Jonny' ELSE 'Samira' END "
-                    + "WHERE (driver IS NULL OR trim(driver) = '') "
-                    + "AND status IN ('Out For Delivery', 'Delivered')");
         }
     }
 
