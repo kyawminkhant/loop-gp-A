@@ -76,3 +76,89 @@
 .label {
     -fx-text-fill: #2d5d34;
 }
+
+/* LOOP warm restaurant theme */
+.root,
+.main-container {
+    -fx-background-color: linear-gradient(to bottom, #fbf3e2 0%, #f2e6c9 100%);
+    -fx-font-family: "Times New Roman", "Georgia", serif;
+}
+
+.logo-text,
+.page-title,
+.delivery-label,
+.label {
+    -fx-text-fill: #68151f;
+}
+
+.page-title {
+    -fx-background-color: #edbd68;
+    -fx-background-radius: 20;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-padding: 10 28;
+}
+
+.route-container {
+    -fx-background-color: rgba(255, 248, 234, 0.94);
+    -fx-border-color: #8a2b2b;
+    -fx-border-width: 2;
+}
+
+.route {
+    -fx-background-color: #fff0d2;
+    -fx-border-color: #d2a05b;
+}
+
+.route-text {
+    -fx-text-fill: #5b382d;
+}
+
+.status-button {
+    -fx-background-color: #ffe5ae;
+    -fx-text-fill: #68151f;
+}
+
+.arrived-button {
+    -fx-background-color: #8a2b2b;
+    -fx-text-fill: #fff8ea;
+}
+
+.arrived-button:hover {
+    -fx-background-color: #68151f;
+}
+
+.route-container > .viewport {
+    -fx-background-color: transparent;
+}
+
+.secondary-button,
+.sign-out-button {
+    -fx-background-radius: 20;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.secondary-button {
+    -fx-background-color: #edbd68;
+    -fx-text-fill: #68151f;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #f2cf8f;
+}
+
+.sign-out-button {
+    -fx-background-color: #fff8ea;
+    -fx-text-fill: #68151f;
+}
+
+.sign-out-button:hover {
+    -fx-background-color: #ffe5ae;
+}

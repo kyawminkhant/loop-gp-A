@@ -13,7 +13,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.LoginController"
+            fx:controller="controllers.DriverLoginController"
             styleClass="page-root">
     <center>
         <StackPane>
@@ -23,38 +23,34 @@
                     <Insets top="48" right="72" bottom="48" left="72"/>
                 </padding>
 
-                <ImageView fx:id="logoImage" fitWidth="190" preserveRatio="true">
+                <ImageView fitWidth="190" preserveRatio="true">
                     <image>
                         <Image url="@/images/nobglooplogo.png"/>
                     </image>
                 </ImageView>
 
-                <Label text="Customer Portal" styleClass="brand-title-small"/>
-                <Label text="Sign in to manage your account, preferences and orders"
-                       styleClass="helper-text"/>
+                <Label text="Driver Portal" styleClass="brand-title-small"/>
+                <Label text="Sign in to accept deliveries and manage your active routes"
+                       styleClass="helper-text" wrapText="true"/>
 
                 <VBox spacing="6" maxWidth="Infinity">
-                    <Label text="Email" styleClass="field-label"/>
-                    <TextField fx:id="emailField" promptText="you@example.com" styleClass="glass-input"
-                               maxWidth="Infinity"/>
+                    <Label text="Driver ID" styleClass="field-label"/>
+                    <TextField fx:id="driverIdField" promptText="Enter your driver ID"
+                               styleClass="glass-input" maxWidth="Infinity"/>
                 </VBox>
 
                 <VBox spacing="6" maxWidth="Infinity">
                     <Label text="Password" styleClass="field-label"/>
-                    <PasswordField fx:id="passwordField" promptText="Enter your password" styleClass="glass-input"
-                                   maxWidth="Infinity"/>
+                    <PasswordField fx:id="passwordField" promptText="Enter your password"
+                                   styleClass="glass-input" maxWidth="Infinity"/>
                 </VBox>
 
                 <Label fx:id="messageLabel" styleClass="message-label" wrapText="true"/>
 
-                <Button text="Log In" onAction="#handleLogin" defaultButton="true"
+                <Button text="Driver Log In" onAction="#handleLogin" defaultButton="true"
                         styleClass="primary-button" maxWidth="Infinity"/>
-                <Button text="Create an Account" onAction="#handleGoToRegister"
+                <Button text="Back to Customer Login" onAction="#handleBackToCustomerLogin"
                         styleClass="secondary-button" maxWidth="Infinity"/>
-                <Button text="Driver Access →" onAction="#handleGoToDriverLogin"
-                        styleClass="admin-link-button" maxWidth="Infinity"/>
-                <Button text="Super Admin Access →" onAction="#handleGoToSuperAdmin"
-                        styleClass="admin-link-button" maxWidth="Infinity"/>
             </VBox>
         </StackPane>
     </center>

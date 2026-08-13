@@ -11,3 +11,48 @@
     -fx-font-weight: bold;
     -fx-padding: 40 70;
 }
+
+/* LOOP warm restaurant theme */
+.page {
+    -fx-background-color: linear-gradient(to bottom, #fbf3e2 0%, #f2e6c9 100%);
+    -fx-font-family: "Times New Roman", "Georgia", serif;
+}
+
+.success-pill {
+    -fx-background-color: #cce8cf;
+    -fx-border-color: #257238;
+    -fx-border-radius: 60;
+    -fx-border-width: 2;
+    -fx-text-fill: #0d2714;
+    -fx-effect: dropshadow(gaussian, rgba(38, 10, 8, 0.22), 16, 0.12, 0, 5);
+}
+
+.primary-button,
+.secondary-button {
+    -fx-background-radius: 20;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 24;
+    -fx-cursor: hand;
+}
+
+.primary-button {
+    -fx-background-color: #edbd68;
+    -fx-text-fill: #68151f;
+}
+
+.primary-button:hover {
+    -fx-background-color: #f2cf8f;
+}
+
+.secondary-button {
+    -fx-background-color: #fff8ea;
+    -fx-text-fill: #68151f;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #ffe5ae;
+}
