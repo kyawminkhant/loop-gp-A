@@ -168,7 +168,7 @@ public class SubmitReviewController {
         r.setCreatedAt(System.currentTimeMillis());
         String moderationReason = ContentModeration.flagReason(comment);
         r.setStatus(moderationReason == null ? Review.ACTIVE : Review.FLAGGED);
-        r.setEditDurationSeconds(300);
+        r.setEditDurationSeconds(86400); // 24h edit/delete window (was 300s/5min)
         String storedImagePath = null;
         try {
             if (selectedImageFile != null) {
