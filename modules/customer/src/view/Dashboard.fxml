@@ -158,8 +158,12 @@
                 <VBox spacing="18" styleClass="tab-body">
                     <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
 
-                    <Label text="Read-only view of your past orders (dummy data)."
-                           styleClass="section-intro"/>
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label text="Read-only view of your past orders (dummy data)."
+                               styleClass="section-intro" HBox.hgrow="ALWAYS"/>
+                        <Button text="Refresh Orders" onAction="#handleRefreshOrderHistory"
+                                styleClass="secondary-button"/>
+                    </HBox>
 
                     <HBox spacing="18">
                         <VBox styleClass="stat-card" alignment="CENTER" spacing="6">
