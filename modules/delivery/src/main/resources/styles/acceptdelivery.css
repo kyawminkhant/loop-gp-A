@@ -71,3 +71,20 @@
 .label {
     -fx-text-fill: #2d5d34;
 }
+
+.back-button {
+    -fx-background-color: #E4F0E7;
+    -fx-text-fill: #1B4D2E;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #1B4D2E;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.back-button:hover {
+    -fx-background-color: #D3E6D8;
+}
