@@ -1,5 +1,6 @@
 package LoopsFirstYearProject.LoopsFirstYearProject.db;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -13,9 +14,7 @@ import java.util.Set;
 /** Central connection point for Inventory's part of the shared LOOP database. */
 public final class DBConnection {
 
-    private static final Path SHARED_DATABASE = Paths.get(
-            System.getProperty("loop.db.path", "database/loop.db"))
-            .toAbsolutePath().normalize();
+    private static final Path SHARED_DATABASE = resolveSharedDatabasePath();
     private static final String SHARED_URL = "jdbc:sqlite:" + SHARED_DATABASE;
     private static final Set<String> REQUIRED_TABLES = Set.of(
             "product_Ingredient",
@@ -23,6 +22,36 @@ public final class DBConnection {
             "inventory_stock_TransactionLog");
 
     private DBConnection() { }
+
+    /**
+     * Resolves the shared database both from the repository root and when the
+     * Inventory project is launched directly from Eclipse. Maven supplies
+     * loop.db.path explicitly; Eclipse commonly uses modules/inventory as its
+     * working directory, so ../../database/loop.db is the required fallback.
+     */
+    private static Path resolveSharedDatabasePath() {
+        String configuredPath = System.getProperty("loop.db.path");
+        if (configuredPath != null && !configuredPath.isBlank()) {
+            return normalise(Paths.get(configuredPath));
+        }
+
+        Path[] candidates = {
+                Paths.get("..", "..", "database", "loop.db"),
+                Paths.get("..", "database", "loop.db"),
+                Paths.get("database", "loop.db")
+        };
+        for (Path candidate : candidates) {
+            Path resolved = normalise(candidate);
+            if (Files.isRegularFile(resolved)) {
+                return resolved;
+            }
+        }
+        return normalise(Paths.get("database", "loop.db"));
+    }
+
+    private static Path normalise(Path path) {
+        return path.toAbsolutePath().normalize();
+    }
 
     /** Opens the one database used by Product and Inventory. */
     public static Connection getConnection() throws SQLException {

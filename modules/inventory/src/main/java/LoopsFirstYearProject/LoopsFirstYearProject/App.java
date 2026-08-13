@@ -12,6 +12,11 @@ import java.net.URL;
 
 public class App extends Application {
 
+    private static final double MINIMUM_WIDTH = 1000;
+    private static final double MINIMUM_HEIGHT = 650;
+    private static final double DEFAULT_WIDTH = 1200;
+    private static final double DEFAULT_HEIGHT = 800;
+
     private static Scene scene;
     private static Stage primaryStage; 
     
@@ -32,7 +37,7 @@ public class App extends Application {
         Parent root = loadFXML(startView);
         scene = stage.getScene();
         if (scene == null) {
-            scene = new Scene(root, 840, 700);
+            scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         } else {
             scene.setRoot(root);
         }
@@ -40,6 +45,17 @@ public class App extends Application {
          
         stage.setScene(scene);
         stage.setTitle("Inventory Management System");
+        stage.setResizable(true);
+        stage.setMinWidth(MINIMUM_WIDTH);
+        stage.setMinHeight(MINIMUM_HEIGHT);
+        if (!stage.isMaximized()) {
+            if (stage.getWidth() < MINIMUM_WIDTH) {
+                stage.setWidth(DEFAULT_WIDTH);
+            }
+            if (stage.getHeight() < MINIMUM_HEIGHT) {
+                stage.setHeight(DEFAULT_HEIGHT);
+            }
+        }
          
         try {
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
