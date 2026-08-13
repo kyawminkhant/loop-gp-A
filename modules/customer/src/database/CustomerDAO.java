@@ -85,7 +85,9 @@ public class CustomerDAO {
         String insertCustomer = "INSERT INTO customer_Customers (customerID, personID, deliveryAddress, idCardNo, idCardImagePath, status) VALUES (?, ?, ?, ?, ?, 'Active')";
         String insertPreference = "INSERT INTO customer_CustomerPreference (preferenceID, customerID, favoriteCategories, notificationSettings, deliveryInstructions) VALUES (?, ?, 'General', 'Enabled', '')";
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
 
             try (PreparedStatement ps1 = conn.prepareStatement(insertPerson)) {
@@ -116,8 +118,11 @@ public class CustomerDAO {
             return true;
 
         } catch (SQLException e) {
+            rollbackQuietly(conn);
             e.printStackTrace();
             return false;
+        } finally {
+            closeQuietly(conn);
         }
     }
 
@@ -180,7 +185,9 @@ public class CustomerDAO {
         String updatePerson = "UPDATE customer_People SET name = ?, mobile = ? WHERE personID = ?";
         String updateCustomer = "UPDATE customer_Customers SET deliveryAddress = ? WHERE customerID = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
 
             try (PreparedStatement ps1 = conn.prepareStatement(updatePerson)) {
@@ -200,8 +207,11 @@ public class CustomerDAO {
             return true;
 
         } catch (SQLException e) {
+            rollbackQuietly(conn);
             e.printStackTrace();
             return false;
+        } finally {
+            closeQuietly(conn);
         }
     }
 
@@ -209,7 +219,9 @@ public class CustomerDAO {
         String updateEmail = "UPDATE customer_People SET email = ? WHERE personID = ?";
         String updateIdCard = "UPDATE customer_Customers SET idCardNo = ? WHERE customerID = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
 
             try (PreparedStatement ps1 = conn.prepareStatement(updateEmail)) {
@@ -228,8 +240,11 @@ public class CustomerDAO {
             return true;
 
         } catch (SQLException e) {
+            rollbackQuietly(conn);
             e.printStackTrace();
             return false;
+        } finally {
+            closeQuietly(conn);
         }
     }
 
@@ -252,7 +267,9 @@ public class CustomerDAO {
             WHERE customerID = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
 
             try (PreparedStatement ps1 = conn.prepareStatement(updatePerson)) {
@@ -283,8 +300,11 @@ public class CustomerDAO {
             return true;
 
         } catch (SQLException e) {
+            rollbackQuietly(conn);
             e.printStackTrace();
             return false;
+        } finally {
+            closeQuietly(conn);
         }
     }
 
@@ -437,6 +457,26 @@ public class CustomerDAO {
             e.printStackTrace();
         }
         return customers;
+    }
+
+    private void closeQuietly(Connection conn) {
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException closeException) {
+            closeException.printStackTrace();
+        }
+    }
+
+    private void rollbackQuietly(Connection conn) {
+        try {
+            if (conn != null) {
+                conn.rollback();
+            }
+        } catch (SQLException rollbackException) {
+            rollbackException.printStackTrace();
+        }
     }
 
     private Customer mapRowToCustomer(ResultSet rs) throws SQLException {
