@@ -339,6 +339,15 @@ public class DashboardController {
         orderTable.setItems(FXCollections.observableArrayList(orders));
     }
 
+    @FXML
+    private void handleRefreshOrderHistory(ActionEvent event) {
+        if (!ordersLoaded) {
+            setupOrderTable();
+            ordersLoaded = true;
+        }
+        loadOrderHistory();
+    }
+
     private void setupChefReviews() {
         chefComboBox.setItems(FXCollections.observableArrayList(chefReviewDAO.getChefs()));
         chefComboBox.setOnAction(event -> handleChefSelected());
