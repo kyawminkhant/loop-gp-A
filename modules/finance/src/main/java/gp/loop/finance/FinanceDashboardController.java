@@ -45,8 +45,13 @@ public class FinanceDashboardController {
 
     private int dateRangeDays = 30;
 
+    /** Selected dietary type (Vegan, Halal, ...), or {@code null} for all customers. */
+    private String dietaryFilter;
+
     @FXML
     private MenuButton menuDateRange;
+    @FXML
+    private MenuButton menuCustomer;
     @FXML
     private Label kpiRevenueValue;
     @FXML
@@ -110,6 +115,50 @@ public class FinanceDashboardController {
         clipToRoundedBorder(paneBarChart, 100);
         wireDashboardNavigation();
         wireTooltips();
+        populateDietaryMenu();
+        refreshAll();
+    }
+
+    /**
+     * Fills the customer filter with the dietary types the Product component offers, so the
+     * dashboard can be narrowed to customers who ordered vegan, halal, vegetarian food and so on.
+     * The menu is hidden when those tables are unavailable (this module running standalone).
+     */
+    private void populateDietaryMenu() {
+        if (menuCustomer == null) {
+            return;
+        }
+        try {
+            List<String> types = reporting.availableDietaryTypes();
+            menuCustomer.getItems().clear();
+
+            if (types.isEmpty()) {
+                menuCustomer.setVisible(false);
+                menuCustomer.setManaged(false);
+                return;
+            }
+
+            javafx.scene.control.MenuItem all = new javafx.scene.control.MenuItem("All customers");
+            all.setOnAction(e -> applyDietaryFilter(null));
+            menuCustomer.getItems().add(all);
+            menuCustomer.getItems().add(new javafx.scene.control.SeparatorMenuItem());
+
+            for (String type : types) {
+                javafx.scene.control.MenuItem item =
+                        new javafx.scene.control.MenuItem("Ordered " + type);
+                item.setOnAction(e -> applyDietaryFilter(type));
+                menuCustomer.getItems().add(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            menuCustomer.setVisible(false);
+            menuCustomer.setManaged(false);
+        }
+    }
+
+    private void applyDietaryFilter(String dietary) {
+        dietaryFilter = dietary;
+        menuCustomer.setText(dietary == null ? "Customer: All" : "Customer: " + dietary);
         refreshAll();
     }
 
@@ -170,12 +219,12 @@ public class FinanceDashboardController {
         LocalDate prevStart = start.minusDays(dateRangeDays);
         LocalDate prevEndEx = start;
 
-        double rev = reporting.revenueBetween(start, endEx);
-        double revPrev = reporting.revenueBetween(prevStart, prevEndEx);
-        int ord = reporting.orderCountBetween(start, endEx);
-        int ordPrev = reporting.orderCountBetween(prevStart, prevEndEx);
-        double prof = reporting.profitBetween(start, endEx);
-        double profPrev = reporting.profitBetween(prevStart, prevEndEx);
+        double rev = reporting.revenueBetween(start, endEx, dietaryFilter);
+        double revPrev = reporting.revenueBetween(prevStart, prevEndEx, dietaryFilter);
+        int ord = reporting.orderCountBetween(start, endEx, dietaryFilter);
+        int ordPrev = reporting.orderCountBetween(prevStart, prevEndEx, dietaryFilter);
+        double prof = reporting.profitBetween(start, endEx, dietaryFilter);
+        double profPrev = reporting.profitBetween(prevStart, prevEndEx, dietaryFilter);
 
         double aov = ord > 0 ? rev / ord : 0;
         double aovPrev = ordPrev > 0 ? revPrev / ordPrev : 0;
@@ -267,8 +316,10 @@ public class FinanceDashboardController {
     private void refreshTable() throws Exception {
         LocalDate start = windowStartInclusive();
         LocalDate today = LocalDate.now();
+        java.util.Set<Long> allowed = reporting.orderIdsForDietary(dietaryFilter);
         List<OrderRow> rows = finance.listRecentOrders(500).stream()
                 .filter(o -> o.getOrderDateLocal().map(d -> !d.isBefore(start) && !d.isAfter(today)).orElse(false))
+                .filter(o -> dietaryFilter == null || allowed.contains(o.getOrderId()))
                 .limit(80)
                 .collect(Collectors.toList());
         tableOrders.setItems(FXCollections.observableArrayList(rows));

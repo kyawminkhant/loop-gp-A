@@ -122,6 +122,11 @@ public class FinanceController {
     }
 
     @FXML
+    private void openDietaryBreakdown() throws IOException {
+        App.setRoot("dietary-breakdown");
+    }
+
+    @FXML
     private void backToHome() throws IOException {
         App.setRoot("finance-dashboard");
     }
