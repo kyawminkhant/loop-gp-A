@@ -10,11 +10,27 @@ import model.Delivery;
 
 import java.io.IOException;
 
+import java.io.IOException;
+
+import javafx.fxml.FXML;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import main.App;
+import javafx.event.ActionEvent;
+
 public class Acceptdelivery {
 
     @FXML private VBox ordersContainer;
     @FXML private Label statusLabel;
 
+    @FXML private ImageView logoImage;
+
+    @FXML private VBox card204;
+    @FXML private VBox card205;
+    @FXML private VBox card203;
+    @FXML private VBox card207;
+    @FXML private VBox card208;
+    
     @FXML
     public void initialize() {
         refreshAvailableOrders();
@@ -55,4 +71,7 @@ public class Acceptdelivery {
             statusLabel.setText("Delivery accepted, but the active route page could not open.");
         }
     }
+    
+    
+    
 }
