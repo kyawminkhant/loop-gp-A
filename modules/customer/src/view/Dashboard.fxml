@@ -194,13 +194,19 @@
                 </VBox>
             </Tab>
 
+            <!-- Chef reviews are not part of the customer portal. -->
+            <!--
             <Tab fx:id="chefReviewsTab" text="Chef Reviews">
                 <ScrollPane fitToWidth="true" styleClass="tab-scroll">
                     <VBox spacing="18" styleClass="tab-body">
                         <padding><Insets top="22" right="28" bottom="25" left="28"/></padding>
 
-                        <Label text="Rate a chef from 1–5 stars and leave a short review. One review per chef."
-                               styleClass="section-intro"/>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="Rate a chef from 1–5 stars and leave a short review. One review per chef."
+                                   styleClass="section-intro" HBox.hgrow="ALWAYS"/>
+                            <Button text="Refresh Chefs" onAction="#handleRefreshChefs"
+                                    styleClass="secondary-button"/>
+                        </HBox>
 
                         <HBox spacing="18">
                             <VBox styleClass="info-card" spacing="13" HBox.hgrow="ALWAYS">
@@ -231,6 +237,25 @@
                         </HBox>
 
                         <VBox styleClass="info-card" spacing="12">
+                            <Label text="Chef Comments" styleClass="card-title"/>
+                            <Label fx:id="chefCommentsLabel" text="Select a chef to read customer comments."
+                                   styleClass="helper-text" wrapText="true"/>
+                            <Separator/>
+                            <TableView fx:id="chefCommentsTable" prefHeight="230">
+                                <placeholder>
+                                    <Label text="Select a chef to view their customer comments."
+                                           styleClass="helper-text"/>
+                                </placeholder>
+                                <columns>
+                                    <TableColumn fx:id="chefCommentReviewerColumn" text="Customer" prefWidth="150"/>
+                                    <TableColumn fx:id="chefCommentRatingColumn" text="Rating" prefWidth="95"/>
+                                    <TableColumn fx:id="chefCommentTextColumn" text="Comment" prefWidth="355"/>
+                                    <TableColumn fx:id="chefCommentDateColumn" text="Date" prefWidth="110"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                        <VBox styleClass="info-card" spacing="12">
                             <Label text="My Reviews" styleClass="card-title"/>
                             <Separator/>
                             <TableView fx:id="reviewTable" prefHeight="200">
@@ -248,6 +273,7 @@
                     </VBox>
                 </ScrollPane>
             </Tab>
+            -->
 
         </TabPane>
     </center>

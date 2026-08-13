@@ -73,6 +73,12 @@ public class DashboardController {
     @FXML private Label selectedChefNameLabel;
     @FXML private Label selectedChefSpecialityLabel;
     @FXML private Label selectedChefRatingLabel;
+    @FXML private Label chefCommentsLabel;
+    @FXML private TableView<ChefReview> chefCommentsTable;
+    @FXML private TableColumn<ChefReview, String> chefCommentReviewerColumn;
+    @FXML private TableColumn<ChefReview, String> chefCommentRatingColumn;
+    @FXML private TableColumn<ChefReview, String> chefCommentTextColumn;
+    @FXML private TableColumn<ChefReview, String> chefCommentDateColumn;
     @FXML private TableView<ChefReview> reviewTable;
     @FXML private TableColumn<ChefReview, String> reviewChefNameColumn;
     @FXML private TableColumn<ChefReview, String> reviewRatingColumn;
@@ -349,7 +355,7 @@ public class DashboardController {
     }
 
     private void setupChefReviews() {
-        chefComboBox.setItems(FXCollections.observableArrayList(chefReviewDAO.getChefs()));
+        refreshChefList();
         chefComboBox.setOnAction(event -> handleChefSelected());
 
         ratingComboBox.setItems(FXCollections.observableArrayList(
@@ -366,6 +372,14 @@ public class DashboardController {
         );
         reviewTextColumn.setCellValueFactory(new PropertyValueFactory<>("reviewText"));
         reviewDateColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+
+        chefCommentReviewerColumn.setCellValueFactory(new PropertyValueFactory<>("reviewerName"));
+        chefCommentRatingColumn.setCellValueFactory(data ->
+                new SimpleStringProperty("★".repeat(data.getValue().getRating()))
+        );
+        chefCommentTextColumn.setCellValueFactory(new PropertyValueFactory<>("reviewText"));
+        chefCommentDateColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+        clearChefComments();
     }
 
     private void handleChefSelected() {
@@ -375,16 +389,24 @@ public class DashboardController {
             selectedChefNameLabel.setText("-");
             selectedChefSpecialityLabel.setText("-");
             selectedChefRatingLabel.setText("-");
+            clearChefComments();
             return;
         }
 
         selectedChefNameLabel.setText(chef.getChefName());
         selectedChefSpecialityLabel.setText(chef.getSpeciality());
 
-        int stars = (int) Math.round(chef.getAverageRating());
-        selectedChefRatingLabel.setText(
-                "★".repeat(stars) + "☆".repeat(5 - stars) + "  (" + chef.getAverageRating() + ")"
-        );
+        if (chef.getReviewCount() == 0) {
+            selectedChefRatingLabel.setText("New chef — no reviews yet");
+        } else {
+            int stars = (int) Math.round(chef.getAverageRating());
+            selectedChefRatingLabel.setText(
+                    "★".repeat(stars) + "☆".repeat(5 - stars)
+                            + "  (" + chef.getAverageRating() + ", "
+                            + chef.getReviewCount() + " reviews)"
+            );
+        }
+        loadChefComments(chef);
         AnimationUtil.pulse(selectedChefRatingLabel);
     }
 
@@ -441,8 +463,9 @@ public class DashboardController {
             selectedChefNameLabel.setText("-");
             selectedChefSpecialityLabel.setText("-");
             selectedChefRatingLabel.setText("-");
+            clearChefComments();
 
-            chefComboBox.setItems(FXCollections.observableArrayList(chefReviewDAO.getChefs()));
+            refreshChefList();
             loadMyReviews();
         } else {
             setReviewMessage("Failed to submit review. Please try again.", false);
@@ -453,6 +476,43 @@ public class DashboardController {
         reviewTable.setItems(FXCollections.observableArrayList(
                 chefReviewDAO.getReviewsByCustomer(currentCustomer.getCustomerID())
         ));
+    }
+
+    private void loadChefComments(Chef chef) {
+        List<ChefReview> reviews = chefReviewDAO.getReviewsByChef(chef.getChefID());
+        chefCommentsTable.setItems(FXCollections.observableArrayList(reviews));
+        chefCommentsLabel.setText(reviews.isEmpty()
+                ? "No customer comments have been submitted for " + chef.getChefName() + " yet."
+                : "Recent customer comments for " + chef.getChefName() + ".");
+    }
+
+    private void clearChefComments() {
+        if (chefCommentsTable != null) {
+            chefCommentsTable.getItems().clear();
+        }
+        if (chefCommentsLabel != null) {
+            chefCommentsLabel.setText("Select a chef to read customer comments.");
+        }
+    }
+
+    @FXML
+    private void handleRefreshChefs(ActionEvent event) {
+        refreshChefList();
+        setReviewMessage("Chef directory refreshed.", true);
+    }
+
+    private void refreshChefList() {
+        Chef selectedChef = chefComboBox.getValue();
+        List<Chef> chefs = chefReviewDAO.getChefs();
+        chefComboBox.setItems(FXCollections.observableArrayList(chefs));
+
+        if (selectedChef != null) {
+            chefs.stream()
+                    .filter(chef -> chef.getChefID().equals(selectedChef.getChefID()))
+                    .findFirst()
+                    .ifPresent(chefComboBox::setValue);
+            handleChefSelected();
+        }
     }
 
     private void setReviewMessage(String message, boolean success) {

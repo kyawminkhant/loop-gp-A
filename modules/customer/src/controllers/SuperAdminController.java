@@ -1,5 +1,6 @@
 package controllers;
 
+import database.ChefReviewDAO;
 import database.CustomerDAO;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import models.Customer;
+import models.Chef;
 import models.OrderHistoryItem;
 import utils.AnimationUtil;
 import utils.NavigationUtil;
@@ -44,6 +46,13 @@ public class SuperAdminController {
     @FXML private TableColumn<Customer, String> addressColumn;
     @FXML private TableColumn<Customer, String> statusColumn;
 
+    @FXML private TextField chefNameField;
+    @FXML private TextField chefSpecialityField;
+    @FXML private Label chefMessageLabel;
+    @FXML private TableView<Chef> chefTable;
+    @FXML private TableColumn<Chef, String> chefNameColumn;
+    @FXML private TableColumn<Chef, String> chefSpecialityColumn;
+
     @FXML private VBox detailPanel;
     @FXML private Label detailTitleLabel;
     @FXML private TextField detailNameField;
@@ -66,6 +75,7 @@ public class SuperAdminController {
     @FXML private TableColumn<OrderHistoryItem, Double> detailOrderTotalColumn;
 
     private final CustomerDAO customerDAO = new CustomerDAO();
+    private final ChefReviewDAO chefReviewDAO = new ChefReviewDAO();
     private Customer selectedCustomer;
     private Timeline liveRefreshTimer;
     private boolean suppressSelectionListener;
@@ -76,7 +86,9 @@ public class SuperAdminController {
         setupTable();
         setupDetailCombos();
         setupOrderTable();
+        setupChefTable();
         loadCustomers("");
+        loadChefs();
         hideDetailPanel();
 
         searchField.setOnAction(event -> loadCustomers(searchField.getText()));
@@ -122,6 +134,15 @@ public class SuperAdminController {
             }
             openDetailPanel(newValue, true);
         });
+    }
+
+    private void setupChefTable() {
+        chefNameColumn.setCellValueFactory(new PropertyValueFactory<>("chefName"));
+        chefSpecialityColumn.setCellValueFactory(new PropertyValueFactory<>("speciality"));
+    }
+
+    private void loadChefs() {
+        chefTable.setItems(FXCollections.observableArrayList(chefReviewDAO.getChefs()));
     }
 
     private void openDetailPanel(Customer customer, boolean animate) {
@@ -384,6 +405,54 @@ public class SuperAdminController {
             AnimationUtil.pulse(updateMessageLabel);
         } else {
             AnimationUtil.shake(updateMessageLabel);
+        }
+    }
+
+    @FXML
+    private void handleAddChef(ActionEvent event) {
+        if (adminPanel.isDisable()) {
+            setChefMessage("Unlock Super Admin access first.", false);
+            return;
+        }
+
+        String chefName = chefNameField.getText().trim();
+        String speciality = chefSpecialityField.getText().trim();
+        if (chefName.length() < 2 || speciality.length() < 2) {
+            setChefMessage("Enter a chef name and speciality of at least 2 characters.", false);
+            return;
+        }
+        if (chefName.length() > 80 || speciality.length() > 100) {
+            setChefMessage("Chef name must be under 80 characters and speciality under 100.", false);
+            return;
+        }
+        if (ValidationUtil.containsUnsafeCharacters(chefName)
+                || ValidationUtil.containsUnsafeCharacters(speciality)) {
+            setChefMessage("Chef details contain unsupported characters.", false);
+            return;
+        }
+        if (chefReviewDAO.chefNameExists(chefName)) {
+            setChefMessage("A chef with that name is already in the directory.", false);
+            return;
+        }
+
+        if (chefReviewDAO.addChef(chefName, speciality)) {
+            chefNameField.clear();
+            chefSpecialityField.clear();
+            loadChefs();
+            setChefMessage(chefName + " was added to the chef directory.", true);
+            AnimationUtil.fadeInContent(chefTable);
+        } else {
+            setChefMessage("Could not add the chef. Please try again.", false);
+        }
+    }
+
+    private void setChefMessage(String message, boolean success) {
+        chefMessageLabel.setStyle(success ? "-fx-text-fill: #2f6b3f;" : "-fx-text-fill: #b03a2e;");
+        chefMessageLabel.setText(message);
+        if (success) {
+            AnimationUtil.pulse(chefMessageLabel);
+        } else {
+            AnimationUtil.shake(chefMessageLabel);
         }
     }
 
