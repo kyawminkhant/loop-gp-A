@@ -22,7 +22,10 @@ public class Main extends Application {
             String requestedView = System.getProperty("loop.start", "login");
             boolean openDashboard = "dashboard".equalsIgnoreCase(requestedView)
                     && SessionManager.getCurrentCustomer() != null;
-            String startFxml = openDashboard ? "/view/Dashboard.fxml" : "/view/Login.fxml";
+            boolean openDriverLogin = "driver-login".equalsIgnoreCase(requestedView);
+            String startFxml = openDashboard
+                    ? "/view/Dashboard.fxml"
+                    : openDriverLogin ? "/view/DriverLogin.fxml" : "/view/Login.fxml";
             Parent root = FXMLLoader.load(getClass().getResource(startFxml));
             Scene scene = primaryStage.getScene();
             if (scene == null) {

@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import main.App;
+import main.DriverSession;
 import model.Delivery;
 
 import java.io.IOException;
@@ -22,12 +23,13 @@ public class Activeroute {
 
     private void refreshRoutes() {
         routeContainer.getChildren().clear();
-        if (DeliveryDAO.getActiveDeliveries().isEmpty()) {
+        var routes = DeliveryDAO.getActiveDeliveriesForDriver(DriverSession.getDriverName());
+        if (routes.isEmpty()) {
             routeContainer.getChildren().add(new Label("No active routes."));
             return;
         }
 
-        for (Delivery delivery : DeliveryDAO.getActiveDeliveries()) {
+        for (Delivery delivery : routes) {
             VBox route = new VBox(7);
             route.getStyleClass().add("route");
             Label heading = new Label(delivery.getDeliveryId()
@@ -55,6 +57,27 @@ public class Activeroute {
         } catch (IOException exception) {
             exception.printStackTrace();
             statusLabel.setText("Order delivered, but the confirmation page could not open.");
+        }
+    }
+
+    @FXML
+    private void showAvailableDeliveries() {
+        setRoot("deliveryaccept");
+    }
+
+    @FXML
+    private void signOut() {
+        if (!DriverSession.returnToLogin()) {
+            setRoot("deliveryaccept");
+        }
+    }
+
+    private void setRoot(String fxml) {
+        try {
+            App.setRoot(fxml);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            statusLabel.setText("Could not open " + fxml + ".");
         }
     }
 }

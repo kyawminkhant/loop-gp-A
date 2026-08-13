@@ -87,3 +87,66 @@
 .back-button:hover {
     -fx-background-color: #a6cdf0;
 }
+
+/* LOOP warm restaurant theme */
+.assigningdrivers {
+    -fx-background-color: linear-gradient(to bottom, #fbf3e2 0%, #f2e6c9 100%);
+    -fx-font-family: "Times New Roman", "Georgia", serif;
+}
+
+.logo-text,
+.order-id {
+    -fx-text-fill: #68151f;
+}
+
+.section-title {
+    -fx-background-color: #edbd68;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-text-fill: #68151f;
+}
+
+.main-container {
+    -fx-background-color: rgba(255, 248, 234, 0.94);
+    -fx-border-color: #8a2b2b;
+    -fx-border-width: 2;
+}
+
+.Driver {
+    -fx-background-color: #fff0d2;
+    -fx-border-color: #d2a05b;
+}
+
+.customername {
+    -fx-text-fill: #5b382d;
+}
+
+.action-button {
+    -fx-background-color: #edbd68;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-text-fill: #68151f;
+}
+
+.action-button:hover {
+    -fx-background-color: #f2cf8f;
+}
+
+.action-button:disabled {
+    -fx-background-color: #ead8c0;
+    -fx-text-fill: #7a5a4a;
+}
+
+.back-button {
+    -fx-background-color: #fff8ea;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-text-fill: #68151f;
+}
+
+.back-button:hover {
+    -fx-background-color: #ffe5ae;
+}

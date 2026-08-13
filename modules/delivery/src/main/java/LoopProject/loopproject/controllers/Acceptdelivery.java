@@ -1,43 +1,30 @@
 package LoopProject.loopproject.controllers;
 
 import DAO.DeliveryDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import main.App;
+import main.DriverSession;
 import model.Delivery;
 
 import java.io.IOException;
-
-import java.io.IOException;
-
-import javafx.fxml.FXML;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import main.App;
-import javafx.event.ActionEvent;
 
 public class Acceptdelivery {
 
     @FXML private VBox ordersContainer;
     @FXML private Label statusLabel;
 
-    @FXML private ImageView logoImage;
-
-    @FXML private VBox card204;
-    @FXML private VBox card205;
-    @FXML private VBox card203;
-    @FXML private VBox card207;
-    @FXML private VBox card208;
-    
-    
     @FXML
     private void goBack(ActionEvent event) {
-        try {
-            App.setRoot("login");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!DriverSession.returnToLogin()) {
+            try {
+                App.setRoot("delivery");
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
         }
     }
     
@@ -70,7 +57,7 @@ public class Acceptdelivery {
     }
 
     private void acceptOrder(Delivery delivery) {
-        if (!DeliveryDAO.assignDriver(delivery.getOrderId(), "Current Driver")) {
+        if (!DeliveryDAO.assignDriver(delivery.getOrderId(), DriverSession.getDriverName())) {
             statusLabel.setText("Could not accept order #" + delivery.getOrderId() + ".");
             return;
         }

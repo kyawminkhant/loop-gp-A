@@ -20,13 +20,22 @@ On Windows, double-click `run-hub.cmd` from the repository root. The Java launch
 
 ## Login details
 
-Only the **Customers** component has authentication. A ready-to-use customer and the Customer Super Admin access are included:
+Authentication is hosted by the **Customers** component for customers, drivers,
+and the Customer Super Admin. Ready-to-use accounts are included:
 
 | Access | Email | Password |
 | --- | --- | --- |
 | Demo Customer | `customer@loop.com` | `customer123` |
 | Review Submission Demo | `review.demo@loop.demo` | `demo123` |
+| Delivery Driver | Driver ID `iman` | `driver123` |
 | Customer Super Admin | No email required | `admin123` |
+
+The other driver IDs are `efrin`, `prakash`, `jonny`, and `samira`; all use
+the shared demo password `driver123`. Select **Driver Access** on the Customer
+login page, or choose **Delivery & Logistics > Driver Workspace** from the Hub.
+Both routes open the same Customer-owned Driver Login page. After login, a
+driver can accept an available delivery, see only routes assigned to their
+driver identity, mark a route delivered, and sign out back to Driver Login.
 
 Additional preference demo accounts use the shared password `demo123`:
 `maya@loop.demo`, `noah@loop.demo`, `zara@loop.demo`, `liam@loop.demo`,
@@ -59,7 +68,8 @@ the seller catalogue manager in the same window. **Back To Admin** returns to
 the Customer administrator page. Review Moderation is available beside it.
 
 Products, Orders, Delivery, Inventory, Reviews, and Finance do not contain
-separate login pages. Reviews opens as the active Customer account, or as
+their own login pages. Driver authentication is kept in Customers, while
+Delivery supplies the post-login workspace. Reviews opens as the active Customer account, or as
 **Guest** when no Customer session exists. The **Reviews** breadcrumb on a
 food-details page opens that food's reviews, and **Back to Food** returns to the
 same item. Customers cannot flag other customers' reviews. A local content

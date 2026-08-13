@@ -88,3 +88,66 @@
 .back-button:hover {
     -fx-background-color: #D3E6D8;
 }
+
+/* LOOP warm restaurant theme */
+.root,
+.main-container {
+    -fx-background-color: linear-gradient(to bottom, #fbf3e2 0%, #f2e6c9 100%);
+    -fx-font-family: "Times New Roman", "Georgia", serif;
+}
+
+.logo-text,
+.order-id-label,
+.label {
+    -fx-text-fill: #68151f;
+}
+
+.header-label {
+    -fx-background-color: #edbd68;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 30;
+    -fx-border-width: 2;
+    -fx-text-fill: #68151f;
+}
+
+.orders-container {
+    -fx-background-color: rgba(255, 248, 234, 0.94);
+    -fx-border-color: #8a2b2b;
+    -fx-border-width: 2;
+}
+
+.order-card {
+    -fx-background-color: #fff0d2;
+    -fx-border-color: #d2a05b;
+}
+
+.order-name-label {
+    -fx-text-fill: #5b382d;
+}
+
+.accept-button {
+    -fx-background-color: #edbd68;
+    -fx-border-color: #8a2b2b;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-text-fill: #68151f;
+}
+
+.accept-button:hover {
+    -fx-background-color: #f2cf8f;
+}
+
+.back-button {
+    -fx-background-color: #fff8ea;
+    -fx-border-color: #8a2b2b;
+    -fx-text-fill: #68151f;
+}
+
+.back-button:hover {
+    -fx-background-color: #ffe5ae;
+}
+
+.edge-to-edge,
+.edge-to-edge > .viewport {
+    -fx-background-color: transparent;
+}

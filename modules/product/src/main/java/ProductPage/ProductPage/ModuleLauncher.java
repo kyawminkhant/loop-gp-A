@@ -30,7 +30,13 @@ public final class ModuleLauncher {
                 new orders.App().start(stage);
                 break;
             case "delivery":
-                new main.App().start(stage);
+                if ("driver".equalsIgnoreCase(startView)) {
+                    registerCustomerNavigation(currentScene, stage);
+                    System.setProperty("loop.start", "driver-login");
+                    new application.Main().start(stage);
+                } else {
+                    new main.App().start(stage);
+                }
                 break;
             case "inventory":
                 new LoopsFirstYearProject.LoopsFirstYearProject.App().start(stage);
@@ -116,6 +122,21 @@ public final class ModuleLauncher {
                         "Could not open Product Management.", exception);
             }
         });
+
+        SessionManager.setDriverDeliveryNavigator(driverName -> {
+            try {
+                main.DriverSession.start(driverName,
+                        () -> returnToDriverLogin(scene, stage));
+                System.setProperty("loop.start", "driver");
+                new main.App().start(stage);
+                HubNavigation.install(stage);
+            } catch (Exception exception) {
+                main.DriverSession.clear();
+                exception.printStackTrace();
+                throw new IllegalStateException(
+                        "Could not open the Driver Delivery workspace.", exception);
+            }
+        });
     }
 
     private static void configureReviewCustomer() {
@@ -158,6 +179,22 @@ public final class ModuleLauncher {
             exception.printStackTrace();
             throw new IllegalStateException(
                     "Could not return to Customer Super Admin.", exception);
+        }
+    }
+
+    private static void returnToDriverLogin(Scene scene, Stage stage) {
+        try {
+            SessionManager.clearDriver();
+            scene.setRoot(FXMLLoader.load(
+                    application.Main.class.getResource("/view/DriverLogin.fxml")));
+            scene.getStylesheets().setAll(
+                    application.Main.class.getResource("/styles/app.css").toExternalForm());
+            stage.setTitle("LOOP Driver Login");
+            HubNavigation.install(stage);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new IllegalStateException(
+                    "Could not return to Driver Login.", exception);
         }
     }
 }

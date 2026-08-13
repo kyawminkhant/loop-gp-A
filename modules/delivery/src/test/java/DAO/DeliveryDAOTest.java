@@ -51,10 +51,13 @@ class DeliveryDAOTest {
         assertTrue(DeliveryDAO.assignDriver(1, "Iman"));
         assertEquals("Out For Delivery", orderStatus(1));
         assertEquals("Out For Delivery", deliveryStatus(1));
+        assertEquals(1, DeliveryDAO.getActiveDeliveriesForDriver("iman").size());
+        assertEquals(0, DeliveryDAO.getActiveDeliveriesForDriver("Samira").size());
 
         assertTrue(DeliveryDAO.markDelivered(1));
         assertEquals("Delivered", orderStatus(1));
         assertEquals("Delivered", deliveryStatus(1));
+        assertEquals(0, DeliveryDAO.getActiveDeliveriesForDriver("Iman").size());
 
         execute("UPDATE orders_Orders SET status = 'Preparing' WHERE orderID = 2");
         assertEquals("Preparing", deliveryStatus(2));

@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.function.Consumer;
+
 import models.Customer;
 
 public class SessionManager {
@@ -8,6 +10,8 @@ public class SessionManager {
     private static Runnable personalizedProductNavigator;
     private static Runnable reviewAdminNavigator;
     private static Runnable productManagementNavigator;
+    private static String currentDriverName;
+    private static Consumer<String> driverDeliveryNavigator;
 
     public static void setCurrentCustomer(Customer customer) {
         currentCustomer = customer;
@@ -55,6 +59,30 @@ public class SessionManager {
         }
         productManagementNavigator.run();
         return true;
+    }
+
+    public static void setCurrentDriverName(String driverName) {
+        currentDriverName = driverName;
+    }
+
+    public static String getCurrentDriverName() {
+        return currentDriverName;
+    }
+
+    public static void setDriverDeliveryNavigator(Consumer<String> navigator) {
+        driverDeliveryNavigator = navigator;
+    }
+
+    public static boolean openDriverDelivery() {
+        if (driverDeliveryNavigator == null || currentDriverName == null) {
+            return false;
+        }
+        driverDeliveryNavigator.accept(currentDriverName);
+        return true;
+    }
+
+    public static void clearDriver() {
+        currentDriverName = null;
     }
 
     public static void clear() {

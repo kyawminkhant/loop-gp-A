@@ -69,9 +69,6 @@ public class AssigningDrivers {
     @FXML
     private void goBack() {
         setRoot("delivery");
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
     }
 
     @FXML
