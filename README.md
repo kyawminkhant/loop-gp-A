@@ -2,6 +2,27 @@
 
 This repository collects seven Java/JavaFX components in independently editable module folders. All components use the single normalized SQLite database at `database/loop.db`.
 
+## Quick start
+
+### Requirements
+
+- JDK 21
+- Maven 3.9 or newer (the included Maven wrapper is used as a fallback on macOS and Linux)
+
+### Run the integrated application
+
+Clone the repository and start the Team Hub from the repository root:
+
+```bash
+git clone https://github.com/kyawminkhant/loop-gp-A.git
+cd loop-gp-A
+```
+
+- **Windows:** double-click `run-hub.cmd`.
+- **macOS/Linux:** run `sh run-hub.sh`.
+
+The launch scripts build all modules and open the Product Team Hub, from which the connected components can be explored in one JavaFX window.
+
 ## Modules
 
 - `modules/customer` - customer management
